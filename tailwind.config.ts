@@ -9,12 +9,12 @@ module.exports = withMT({
   darkMode: "selector",
   theme: {
     colors: {
-      primary: "#1E0094",
+      primary: "#0267FF",
       "primary-dark": "#160065",
       "primary-light": "#069bff",
-      secondary: "#FF5F05",
-      "secondary-dark": "#CC4B04",
-      "secondary-light": "#FF8F47",
+      secondary: "#0267FF",
+      "secondary-dark": "#160065",
+      "secondary-light": "#069bff",
       slate: {
         50: "#f8fafc",
         100: "#f1f5f9",

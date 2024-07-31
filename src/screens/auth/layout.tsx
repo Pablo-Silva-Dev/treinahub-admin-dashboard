@@ -33,7 +33,7 @@ export const AuthenticationLayout: React.FC<AuthenticationLayoutProps> = ({
       <section className="flex flex-col w-full lg:w-1/2 bg-gradient-to-t from-secondary-light to-secondary-dark p-10 md:p-20">
         <div className="flex flex-col m-auto">
           <Title
-            content="Gerencie seu negócio de maneira simples e otimizada"
+            content="Gerencie seus treinamentos de maneira simples e otimizada"
             className="text-white mb-6 text-xl lg:text-3xl max-w-xs lg:max-w-lg font-bold"
           />
           <img src={dashboard_background} alt="logo_text" width={800} />
