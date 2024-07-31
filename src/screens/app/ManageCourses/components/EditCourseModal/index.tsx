@@ -6,8 +6,8 @@ import { Subtitle } from "@/components/typography/Subtitle";
 import { Title } from "@/components/typography/Title";
 import { useThemeStore } from "@/store/theme";
 import {
-  reactModalCustomStyles,
-  reactModalCustomStylesDark,
+    reactModalCustomStyles,
+    reactModalCustomStylesDark,
 } from "@/styles/react-modal";
 import { KeyboardEvent, MouseEvent } from "react";
 import Modal from "react-modal";
@@ -38,23 +38,23 @@ export function EditCourseModal({
       }
     >
       <Title
-        content="Atualização dos dados do curso"
+        content="Atualização dos dados do treinamento"
         className="text-center text-black dark:text-white mb-4 font-bold text-[14px] md:text-lg"
       />
       <Subtitle
-        content="Você pode alterar o nome, descrição e imagem de capa do curso"
+        content="Você pode alterar o nome, descrição e imagem de capa do treinamento"
         className="text-center text-gray-700 dark:text-gray-100  text-[13px] md:text-[14px]"
       />
 
       <div className="my-4">
-        <TextInput inputLabel="Nome" placeholder="Novo nome do curso" />
+        <TextInput inputLabel="Nome" placeholder="Novo nome do treinamento" />
       </div>
       <div className="my-4">
-        <TextAreaInput label="Descrição" placeholder="Descrição do curso" />
+        <TextAreaInput label="Descrição" placeholder="Descrição do treinamento" />
       </div>
       <div className="mt-4 mb-8">
         <FileInput
-          label="Capa do curso"
+          label="Capa do treinamento"
           labelDescription="Tamanho máximo do arquivo: 2MB"
         />
       </div>

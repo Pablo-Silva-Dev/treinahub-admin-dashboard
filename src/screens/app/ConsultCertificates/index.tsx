@@ -18,7 +18,7 @@ export function ConsultCertificates() {
 
   const handleDownloadCertificate = () =>
     (window.location.href =
-      "https://pscodepscoursetrack.blob.core.windows.net/certificates/curso-de-react-pablo-santana-silva2-certificado.png");
+      "https://pscodepscoursetrack.blob.core.windows.net/certificates/treinamento-de-react-pablo-santana-silva2-certificado.png");
 
   const selectInputOptions = certificates
     .map((certificate) => ({

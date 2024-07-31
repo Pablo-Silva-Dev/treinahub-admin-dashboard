@@ -8,25 +8,25 @@ import { IModule } from "@/interfaces/dtos/Module";
 import { collapseLongString } from "@/utils/formats";
 import { sortItems } from "@/utils/sorting";
 import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  IconButton,
-  Tooltip,
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+    IconButton,
+    Tooltip,
 } from "@material-tailwind/react";
 import { useCallback, useEffect, useState } from "react";
 import { IoMdTrash } from "react-icons/io";
 import {
-  MdEdit,
-  MdKeyboardDoubleArrowLeft,
-  MdKeyboardDoubleArrowRight,
+    MdEdit,
+    MdKeyboardDoubleArrowLeft,
+    MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
 
 const TABLE_HEAD = [
   { label: "Módulo", propRef: "name" },
   { label: "Descrição", propRef: "description" },
-  { label: "Curso", propRef: "course_name" },
+  { label: "Treinamento", propRef: "course_name" },
   { label: "Duração", propRef: "duration" },
   { label: "Aulas", propRef: "total_classes" },
   { label: "Ações", propRef: "" },

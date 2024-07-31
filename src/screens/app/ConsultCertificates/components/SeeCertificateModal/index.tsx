@@ -4,8 +4,8 @@ import { Title } from "@/components/typography/Title";
 import { ICertificate } from "@/interfaces/dtos/Certificate";
 import { useThemeStore } from "@/store/theme";
 import {
-  reactModalCustomStyles,
-  reactModalCustomStylesDark,
+    reactModalCustomStyles,
+    reactModalCustomStylesDark,
 } from "@/styles/react-modal";
 import { KeyboardEvent, MouseEvent } from "react";
 import Modal from "react-modal";
@@ -54,7 +54,7 @@ export function SeeCertificateModal({
       </div>
       <div className="flex flex-row w-full my-4">
         <Subtitle
-          content="Curso:"
+          content="Treinamento:"
           className="text-center text-gray-700 dark:text-gray-100  text-[13px] md:text-[14px]"
         />
         <Subtitle
@@ -64,7 +64,7 @@ export function SeeCertificateModal({
       </div>
       <div className="flex flex-row w-full my-4">
         <img
-          src="https://pscodepscoursetrack.blob.core.windows.net/certificates/curso-de-react-pablo-santana-silva2-certificado.png"
+          src="https://pscodepscoursetrack.blob.core.windows.net/certificates/treinamento-de-react-pablo-santana-silva2-certificado.png"
           width={600}
           height={300}
           alt="certifado_de_conclusao"

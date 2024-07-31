@@ -1,6 +1,6 @@
 import {
-  DESCRIPTION_MIN_MESSAGE,
-  REQUIRED_FIELD_MESSAGE,
+    DESCRIPTION_MIN_MESSAGE,
+    REQUIRED_FIELD_MESSAGE,
 } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
@@ -91,10 +91,10 @@ export function RegisterModule() {
           </div>
           <div className="w-full mb-4">
             <SelectInput
-              label="Selecione um curso"
+              label="Selecione um treinamento"
               options={coursesOptions}
-              placeholder="Selecione um curso"
-              defaultValue="Selecione um curso"
+              placeholder="Selecione um treinamento"
+              defaultValue="Selecione um treinamento"
               onSelectOption={handleCourseSelect as never}
             />
             {errors.course && (

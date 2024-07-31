@@ -8,23 +8,23 @@ import { ICertificate } from "@/interfaces/dtos/Certificate";
 import { collapseLongString } from "@/utils/formats";
 import { sortCertificates } from "@/utils/sorting";
 import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  IconButton,
-  Tooltip,
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+    IconButton,
+    Tooltip,
 } from "@material-tailwind/react";
 import { useCallback, useEffect, useState } from "react";
 import {
-  MdKeyboardDoubleArrowLeft,
-  MdKeyboardDoubleArrowRight,
-  MdOutlineFileDownload,
-  MdZoomIn,
+    MdKeyboardDoubleArrowLeft,
+    MdKeyboardDoubleArrowRight,
+    MdOutlineFileDownload,
+    MdZoomIn,
 } from "react-icons/md";
 
 const TABLE_HEAD = [
-  { label: "Curso", propRef: "name" },
+  { label: "Treinamento", propRef: "name" },
   { label: "Aluno", propRef: "user_name" },
   { label: "Ações", propRef: "" },
 ];

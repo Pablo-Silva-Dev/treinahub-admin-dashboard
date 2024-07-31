@@ -45,11 +45,11 @@ const appRoutesBase: route[] = [
     element: <ManageUsers />,
   },
   {
-    path: "/dashboard/cadastrar-curso",
+    path: "/dashboard/cadastrar-treinamento",
     element: <RegisterCourse />,
   },
   {
-    path: "/dashboard/gerenciar-cursos",
+    path: "/dashboard/cadastrar-treinamentos",
     element: <ManageCourses />,
   },
   {

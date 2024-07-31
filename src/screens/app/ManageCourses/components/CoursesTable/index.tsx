@@ -8,23 +8,23 @@ import { ICourse } from "@/interfaces/dtos/Course";
 import { collapseLongString } from "@/utils/formats";
 import { sortItems } from "@/utils/sorting";
 import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  IconButton,
-  Tooltip,
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+    IconButton,
+    Tooltip,
 } from "@material-tailwind/react";
 import { useCallback, useEffect, useState } from "react";
 import { IoMdTrash } from "react-icons/io";
 import {
-  MdEdit,
-  MdKeyboardDoubleArrowLeft,
-  MdKeyboardDoubleArrowRight,
+    MdEdit,
+    MdKeyboardDoubleArrowLeft,
+    MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
 
 const TABLE_HEAD = [
-  { label: "Curso", propRef: "name" },
+  { label: "Treinamento", propRef: "name" },
   { label: "Descrição", propRef: "description" },
   { label: "Duração", propRef: "duration" },
   { label: "Alunos cadastrados", propRef: "students" },
@@ -169,7 +169,7 @@ export function CoursesTable({
                     </td>
                     <td className={classes}>
                       <Tooltip
-                        content="Editar dados do curso"
+                        content="Editar dados do treinamento"
                         className="hidden lg:flex"
                       >
                         <IconButton
@@ -183,7 +183,7 @@ export function CoursesTable({
                     </td>
                     <td className={classes}>
                       <Tooltip
-                        content="Remover curso"
+                        content="Remover treinamento"
                         className="hidden lg:flex"
                       >
                         <IconButton

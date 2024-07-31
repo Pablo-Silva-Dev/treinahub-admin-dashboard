@@ -14,46 +14,18 @@ const menuItems = [
     icon: "users",
   },
   {
-    title: "Cursos",
+    title: "Treinamentos",
     actions: [
       {
-        title: "Cadastrar curso",
-        link: "cadastrar-curso",
+        title: "Cadastrar treinamento",
+        link: "cadastrar-treinamento",
       },
       {
-        title: "Gerenciar cursos",
-        link: "gerenciar-cursos",
+        title: "Gerenciar treinamentos",
+        link: "cadastrar-treinamentos",
       },
     ],
     icon: "book-open",
-  },
-  {
-    title: "Módulos",
-    actions: [
-      {
-        title: "Cadastrar módulo",
-        link: "cadastrar-modulo",
-      },
-      {
-        title: "Gerenciar módulos",
-        link: "gerenciar-modulos",
-      },
-    ],
-    icon: "book",
-  },
-  {
-    title: "Tutores",
-    actions: [
-      {
-        title: "Cadastrar tutor",
-        link: "cadastrar-tutor",
-      },
-      {
-        title: "Gerenciar tutores",
-        link: "gerenciar-tutores",
-      },
-    ],
-    icon: "user-check",
   },
   {
     title: "Videoaulas",
@@ -415,7 +387,7 @@ const courses = [
   },
   {
     name: "PHP Essencial",
-    description: "Curso essencial de PHP para desenvolvimento web",
+    description: "Treinamento essencial de PHP para desenvolvimento web",
     duration: "120 horas",
     cover_url:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyYVWu68oFmJYoMCvfy0PfgnKi9cFCtFptfg&s",
@@ -1050,39 +1022,27 @@ const classes = [
 
 const dashboardMetrics = [
   {
-    title: "Alunos cadastrados",
-    iconName: "user",
-    metric: 23438,
+    title: "Usuarios cadastrados",
+    iconName: "users",
+    metric: 142,
     link: "/dashboard/gerenciar-usuarios",
   },
   {
-    title: "Cursos publicados",
+    title: "Treinamentos disponíveis",
     iconName: "book-open",
-    metric: 12,
-    link: "/dashboard/gerenciar-cursos",
+    metric: 4,
+    link: "/dashboard/cadastrar-treinamentos",
   },
   {
-    title: "Módulos registrados",
-    iconName: "book",
-    metric: 124,
-    link: "/dashboard/gerenciar-modulos",
-  },
-  {
-    title: "Tutores disponíveis",
-    iconName: "user-check",
-    metric: 32,
-    link: "/dashboard/gerenciar-tutores",
-  },
-  {
-    title: "Videoaulas online",
+    title: "Videoaulas adicionadas",
     iconName: "play-circle",
-    metric: 948,
+    metric: 45,
     link: "/dashboard/gerenciar-videoaulas",
   },
   {
     title: "Certificados emitidos",
     iconName: "star",
-    metric: 1740,
+    metric: 37,
     link: "/dashboard/consultar-certificados",
   },
 ];
@@ -1130,7 +1090,7 @@ const certificates = [
   {
     course: {
       name: "PHP Essencial",
-      description: "Curso essencial de PHP para desenvolvimento web",
+      description: "Treinamento essencial de PHP para desenvolvimento web",
       duration: "120 horas",
       cover_url:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyYVWu68oFmJYoMCvfy0PfgnKi9cFCtFptfg&s",
@@ -1620,5 +1580,6 @@ export {
   modules,
   tutors,
   userMetrics,
-  users,
+  users
 };
+

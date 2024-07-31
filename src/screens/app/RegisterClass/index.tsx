@@ -1,8 +1,8 @@
 import {
-  DESCRIPTION_MIN_MESSAGE,
-  FILE_MAX_SIZE_MESSAGE,
-  FILE_TYPE_UNSUPPORTED_MESSAGE,
-  REQUIRED_FIELD_MESSAGE,
+    DESCRIPTION_MIN_MESSAGE,
+    FILE_MAX_SIZE_MESSAGE,
+    FILE_TYPE_UNSUPPORTED_MESSAGE,
+    REQUIRED_FIELD_MESSAGE,
 } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
@@ -13,9 +13,9 @@ import { TextInput } from "@/components/inputs/TextInput";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { IFile, UploadedFile } from "@/components/miscellaneous/UploadedFile";
 import {
-  coursesOptions,
-  modulesOptions,
-  tutorOptions,
+    coursesOptions,
+    modulesOptions,
+    tutorOptions,
 } from "@/data/placeholders";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
@@ -163,11 +163,11 @@ export function RegisterClass() {
           <div className="w-full flex flex-col md:flex-row mb-4">
             <div className="w-full">
               <SelectInput
-                label="Selecione um curso"
+                label="Selecione um treinamento"
                 options={coursesOptions}
                 onSelectOption={handleCourseSelect as never}
-                placeholder="Selecione um curso"
-                defaultValue="Selecione um curso"
+                placeholder="Selecione um treinamento"
+                defaultValue="Selecione um treinamento"
                 widthVariant="mid"
               />
               {errors && errors.course && (

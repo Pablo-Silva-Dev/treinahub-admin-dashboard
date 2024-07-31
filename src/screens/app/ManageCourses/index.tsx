@@ -23,11 +23,11 @@ export function ManageCourses() {
       <div className="flex flex-col  w-full mx-auto xl:pr-8">
         <div className="mb-2 flex flex-row w-[full] justify-between items-center">
           <div className="mr-3 ml-4">
-            <ScreenTitleIcon screenTitle="Cursos" iconName="book-open" />
+            <ScreenTitleIcon screenTitle="Treinamentos" iconName="book-open" />
           </div>
           <div className="mr-4">
-            <Link to="/dashboard/cadastrar-curso">
-              <PlusButton title="Cadastrar novo curso" />
+            <Link to="/dashboard/cadastrar-treinamento">
+              <PlusButton title="Cadastrar novo treinamento" />
             </Link>
           </div>
         </div>
@@ -40,7 +40,7 @@ export function ManageCourses() {
         </div>
       </div>
       <DeleteModal
-        resource="curso"
+        resource="treinamento"
         isOpen={isDeleteModalOpen}
         onClose={handleToggleDeleteModal}
         onRequestClose={handleToggleDeleteModal}

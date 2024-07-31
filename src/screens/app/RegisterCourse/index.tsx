@@ -1,8 +1,8 @@
 import {
-  DESCRIPTION_MIN_MESSAGE,
-  FILE_MAX_SIZE_MESSAGE,
-  FILE_TYPE_UNSUPPORTED_MESSAGE,
-  REQUIRED_FIELD_MESSAGE,
+    DESCRIPTION_MIN_MESSAGE,
+    FILE_MAX_SIZE_MESSAGE,
+    FILE_TYPE_UNSUPPORTED_MESSAGE,
+    REQUIRED_FIELD_MESSAGE,
 } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
@@ -94,13 +94,13 @@ export function RegisterCourse() {
     <main className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-800 w-full">
       <div className="flex flex-col items-center w-[90%] lg:w-[560px] mx-auto">
         <div className="mb-4 w-full">
-          <ScreenTitleIcon screenTitle="Cadastrar curso" iconName="book-open" />
+          <ScreenTitleIcon screenTitle="Cadastrar treinamento" iconName="book-open" />
         </div>
         <form className="w-full" onSubmit={handleSubmit(registerCourse)}>
           <div className="w-full mb-4">
             <TextInput
               inputLabel="Nome"
-              placeholder="Nome do curso"
+              placeholder="Nome do treinamento"
               {...register("name")}
             />
             {errors.name && (
@@ -117,7 +117,7 @@ export function RegisterCourse() {
                 descriptionValue?.length ? descriptionValue.length : 0
               }
               maxTextLength={MAX_COURSE_DESCRIPTION_LENGTH}
-              placeholder="Descrição do curso"
+              placeholder="Descrição do treinamento"
               {...register("description")}
             />
             {errors.description && (
@@ -139,7 +139,7 @@ export function RegisterCourse() {
               />
             ) : (
               <FileInput
-                label="Capa do curso"
+                label="Capa do treinamento"
                 labelDescription="Selecione um arquivo de até 2MB"
                 onUpload={handleUploadFile}
                 {...register("cover_file", { onChange: handleUploadFile })}
@@ -152,7 +152,7 @@ export function RegisterCourse() {
             )}
           </div>
           <div className="w-full mt-2">
-            <Button type="submit" title="Cadastrar Curso" disabled={!isValid} />
+            <Button type="submit" title="Cadastrar Treinamento" disabled={!isValid} />
           </div>
         </form>
       </div>
