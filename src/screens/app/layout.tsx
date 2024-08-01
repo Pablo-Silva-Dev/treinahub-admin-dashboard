@@ -20,7 +20,7 @@ import {
   ListItem,
 } from "@material-tailwind/react";
 import FeatherIcon from "feather-icons-react";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import {
   MdClose,
@@ -31,9 +31,15 @@ import {
 } from "react-icons/md";
 import Modal from "react-modal";
 import { Link, useNavigate } from "react-router-dom";
+import LoadingBar from "react-top-loading-bar";
 
 interface DashboardLayoutProps {
   children: ReactNode;
+}
+
+interface LoadingBarProps {
+  staticStart: () => void;
+  complete: () => void;
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
@@ -67,6 +73,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const { theme, toggleTheme } = useThemeStore();
 
   const navigate = useNavigate();
+
+  const ref = useRef<LoadingBarProps>(null);
 
   const handleOpenedAccordionIndexes = (idx: number) => {
     const filteredAccordionIndexes = openedAccordionIndexes.filter(
@@ -126,9 +134,16 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     setIsMobileMenuModalOpen(false);
   }, [breadCrumbBase, breadCrumbAction]);
 
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.staticStart();
+      ref.current.complete();
+    }
+  }, [window.location.pathname]);
+
   return (
     <section className="flex flex-col h-screen overflow-hidden">
-      {/* TODO-PABLO: Add a similar to NextProgress bar page loading for indicating page loading */}
+      <LoadingBar ref={ref as never} height={4} color="#0267FF" />
       <Toaster />
       <div className="flex flex-row w-full min-h-screen">
         <nav className="hidden xl:flex flex-col w-[320px] min-h-screen overflow-auto p-8 bg-white dark:bg-slate-900 items-start">

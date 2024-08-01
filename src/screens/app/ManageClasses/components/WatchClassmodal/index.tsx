@@ -50,7 +50,6 @@ export function WatchClassModal({
         };
 
   const vimeoVideo = "https://vimeo.com/993530822?share=copy";
-  const youtubeVideo = "https://www.youtube.com/embed/aqz-KE-bpKQ";
 
   return (
     <Modal
