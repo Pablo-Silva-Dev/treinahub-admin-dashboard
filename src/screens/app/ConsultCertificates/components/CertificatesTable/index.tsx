@@ -8,19 +8,19 @@ import { ICertificate } from "@/interfaces/dtos/Certificate";
 import { collapseLongString } from "@/utils/formats";
 import { sortCertificates } from "@/utils/sorting";
 import {
-    Button,
-    Card,
-    CardBody,
-    CardFooter,
-    IconButton,
-    Tooltip,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  IconButton,
+  Tooltip,
 } from "@material-tailwind/react";
 import { useCallback, useEffect, useState } from "react";
 import {
-    MdKeyboardDoubleArrowLeft,
-    MdKeyboardDoubleArrowRight,
-    MdOutlineFileDownload,
-    MdZoomIn,
+  MdKeyboardDoubleArrowLeft,
+  MdKeyboardDoubleArrowRight,
+  MdOutlineFileDownload,
+  MdZoomIn,
 } from "react-icons/md";
 
 const TABLE_HEAD = [
@@ -42,14 +42,14 @@ export function CertificatesTable({
 }: CertificatesTableProps) {
   const [page, setPage] = useState(1);
   const [pagesListIndex, setPagesListIndex] = useState(0);
-  const [sortedCourses, setSortedCourses] = useState<ICertificate[]>([]);
+  const [sortedTrainings, setSortedTrainings] = useState<ICertificate[]>([]);
   const [tableData, setTableData] = useState<ICertificate[]>([]);
   const [itemsPerPage, setItemsPerPage] = useState(
     itemsPerPageOptions[0].value
   );
 
   const pages = Array.from(
-    { length: Math.ceil(sortedCourses.length / itemsPerPage) },
+    { length: Math.ceil(sortedTrainings.length / itemsPerPage) },
     (_, idx) => idx + 1
   );
 
@@ -63,11 +63,11 @@ export function CertificatesTable({
   const currentTableData = useCallback(() => {
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    setTableData(sortedCourses.slice(startIndex, endIndex) as never);
-  }, [itemsPerPage, page, sortedCourses]);
+    setTableData(sortedTrainings.slice(startIndex, endIndex) as never);
+  }, [itemsPerPage, page, sortedTrainings]);
 
   useEffect(() => {
-    setSortedCourses(certificates);
+    setSortedTrainings(certificates);
   }, [certificates]);
 
   useEffect(() => {
@@ -80,7 +80,7 @@ export function CertificatesTable({
 
   const handleSort = (propRef: string, sortType: "asc" | "desc") => {
     const sortedData = sortCertificates([...certificates], propRef, sortType);
-    setSortedCourses(sortedData);
+    setSortedTrainings(sortedData);
     setPage(1);
   };
 

@@ -6,8 +6,8 @@ import { FollowUserProgress } from "@/screens/app/FollowUserProgress";
 import { Home } from "@/screens/app/Home";
 import { DashboardLayout } from "@/screens/app/layout";
 import { ManageClasses } from "@/screens/app/ManageClasses";
-import { ManageCourses } from "@/screens/app/ManageCourses";
 import { ManageModules } from "@/screens/app/ManageModules";
+import { ManageTrainings } from "@/screens/app/ManageTrainings";
 import { ManageTutors } from "@/screens/app/ManageTutors";
 import { ManageUsers } from "@/screens/app/ManageUsers";
 import { RegisterClass } from "@/screens/app/RegisterClass";
@@ -49,8 +49,8 @@ const appRoutesBase: route[] = [
     element: <RegisterCourse />,
   },
   {
-    path: "/dashboard/cadastrar-treinamentos",
-    element: <ManageCourses />,
+    path: "/dashboard/gerenciar-treinamentos",
+    element: <ManageTrainings />,
   },
   {
     path: "/dashboard/cadastrar-modulo",

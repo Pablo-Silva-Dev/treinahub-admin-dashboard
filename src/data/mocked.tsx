@@ -1,3 +1,5 @@
+import lace_training_bg from "@/assets/info_card_placeholder.png";
+
 const menuItems = [
   {
     title: "Usuários",
@@ -22,7 +24,7 @@ const menuItems = [
       },
       {
         title: "Gerenciar treinamentos",
-        link: "cadastrar-treinamentos",
+        link: "gerenciar-treinamentos",
       },
     ],
     icon: "book-open",
@@ -57,7 +59,7 @@ const menuItems = [
       {
         title: "Acompanhar progresso do usuário",
         link: "acompanhar-progresso-do-usuario",
-      }
+      },
     ],
     icon: "plus-circle",
   },
@@ -1031,7 +1033,7 @@ const dashboardMetrics = [
     title: "Treinamentos disponíveis",
     iconName: "book-open",
     metric: 4,
-    link: "/dashboard/cadastrar-treinamentos",
+    link: "/dashboard/gerenciar-treinamentos",
   },
   {
     title: "Videoaulas adicionadas",
@@ -1571,6 +1573,33 @@ const userMetrics = [
   },
 ];
 
+const trainings = [
+  {
+    training: "Treinamento de laço",
+    description:
+      "Aprenda a gerenciar todos os dados do seu torneio de laço. Entenda como registrar ompetidores, regras, visualizar resultados e muito mais...",
+    cover_url: lace_training_bg,
+  },
+  {
+    training: "Treinamento de montaria em touros",
+    description:
+      "Desenvolva habilidades para gerenciar competições de montaria em touros. Saiba como cadastrar participantes, configurar regras e registrar pontuações.",
+    cover_url: lace_training_bg,
+  },
+  {
+    training: "Treinamento de provas de três tambores",
+    description:
+      "Entenda o processo de organização das provas de três tambores. Aprenda a cadastrar competidores, definir tempos e analisar desempenhos.",
+    cover_url: lace_training_bg,
+  },
+  {
+    training: "Treinamento de Team Roping",
+    description:
+      "Aprenda a gerenciar eventos de Team Roping. Conheça os detalhes sobre o registro de equipes, controle de tempo e regras específicas da modalidade.",
+    cover_url: lace_training_bg,
+  },
+];
+
 export {
   certificates,
   classes,
@@ -1578,8 +1607,8 @@ export {
   dashboardMetrics,
   menuItems,
   modules,
+  trainings,
   tutors,
   userMetrics,
-  users
+  users,
 };
-

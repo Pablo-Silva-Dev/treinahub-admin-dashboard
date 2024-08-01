@@ -12,7 +12,7 @@ import {
 import { KeyboardEvent, MouseEvent } from "react";
 import Modal from "react-modal";
 
-interface EditCourseModalProps {
+interface EditTrainingModalProps {
   isOpen: boolean;
   onRequestClose: (
     event: MouseEvent<Element, MouseEvent> | KeyboardEvent<Element>
@@ -21,12 +21,12 @@ interface EditCourseModalProps {
   onClose: () => void;
 }
 
-export function EditCourseModal({
+export function EditTrainingModal({
   isOpen,
   onRequestClose,
   onConfirmAction,
   onClose,
-}: EditCourseModalProps) {
+}: EditTrainingModalProps) {
   const { theme } = useThemeStore();
 
   return (

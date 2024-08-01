@@ -37,6 +37,7 @@ export function ManageClasses() {
           </div>
         </div>
         <div className="lg:w-full flex-col flex md:items-center px-4">
+          {/* TODO-Pablo: update navigation params to receive classes from specific trainings */}
           <ClassesTable
             classes={classes}
             onDeleteClass={handleToggleDeleteModal}
