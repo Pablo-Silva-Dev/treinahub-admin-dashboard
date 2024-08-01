@@ -181,12 +181,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             </Accordion>
           ))}
         </nav>
-        <div className="flex flex-1 flex-col pb-0 bg-gray-100 dark:bg-slate-800 h-screen w-full overflow-y-auto">
+        <div className="flex flex-1 flex-col justify-between pb-0 bg-gray-100 dark:bg-slate-800 h-screen w-full overflow-y-auto">
           <header
             className={
               !isMobileMenuModalOpen
                 ? "w-full flex flex-row justify-between items-center border-bottom-2 lg:p-4 p-3 fixed bg-gray-50 dark:bg-slate-700 border-b-gray-200 dark:border-b-slate-600 border-b-2 z-50"
-                  : "w-full flex flex-row justify-between items-center border-bottom-2 mb-[400px] lg:p-4 p-3 fixed bg-gray-50 dark:bg-slate-700 border-b-gray-200 dark:border-b-slate-600 border-b-2"
+                : "w-full flex flex-row justify-between items-center border-bottom-2 mb-[400px] lg:p-4 p-3 fixed bg-gray-50 dark:bg-slate-700 border-b-gray-200 dark:border-b-slate-600 border-b-2"
             }
           >
             <div className="flex flex-row">
@@ -235,7 +235,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             </div>
           </header>
           <div className="mt-[96px]">{children}</div>
-          <footer className="flex bg-gray-100 dark:bg-slate-800 items-center justify-center md:p-8 px-2 py-8">
+          <footer className="flex bg-gray-100 dark:bg-slate-800 items-center justify-center md:p-8 px-2 my-8 mx-auto">
             <CompanyFooterLink
               companyText="Desenvolvido por PS Code. Acesse nosso site "
               companyLink="https://www.pablosilvadev.com.br"
