@@ -85,14 +85,14 @@ export function EditFaqQuestionModal({
         className="text-center text-black dark:text-white mb-4 font-bold text-[14px] md:text-lg"
       />
       <Subtitle
-        content="Você pode alterar dados de nome, telefone e/ou biografia do tutor"
+        content="Você pode alterar o conteúdo da pergunta e/ou resposta"
         className="text-center text-gray-700 dark:text-gray-100  text-[13px] md:text-[14px]"
       />
       <form onSubmit={handleSubmit(handleUpdateFaqQuestion)}>
         <div className="my-4">
           <TextInput
-            inputLabel="Nome"
-            placeholder="Nome do tutor"
+            inputLabel="Pergunta"
+            placeholder="Conteúdo da pergunta"
             {...register("question")}
           />
           {errors && errors.question && (
@@ -101,8 +101,8 @@ export function EditFaqQuestionModal({
         </div>
         <div className="my-4">
           <TextAreaInput
-            label="Biografia"
-            placeholder="Novo biografia do tutor"
+            label="Resposta"
+            placeholder="Conteúdo da resposta"
             {...register("answer")}
           />
           {errors && errors.answer && (
