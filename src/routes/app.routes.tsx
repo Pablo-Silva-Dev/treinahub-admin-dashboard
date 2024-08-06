@@ -6,6 +6,7 @@ import { FollowUserProgress } from "@/screens/app/FollowUserProgress";
 import { Home } from "@/screens/app/Home";
 import { DashboardLayout } from "@/screens/app/layout";
 import { ManageClasses } from "@/screens/app/ManageClasses";
+import { ManageFaqQuestions } from "@/screens/app/ManageFaqQuestions";
 import { ManageModules } from "@/screens/app/ManageModules";
 import { ManageSupportContact } from "@/screens/app/ManageSupportContact";
 import { ManageTrainings } from "@/screens/app/ManageTrainings";
@@ -77,6 +78,10 @@ const appRoutesBase: route[] = [
   {
     path: "/dashboard/cadastrar-pergunta-frequente",
     element: <RegisterFaqQuestion />,
+  },
+  {
+    path: "/dashboard/gerenciar-perguntas-frequentes",
+    element: <ManageFaqQuestions />,
   },
   {
     path: "/dashboard/gerenciar-contato-de-suporte",

@@ -70,6 +70,10 @@ const menuItems = [
         title: "Cadastrar pergunta frequente",
         link: "cadastrar-pergunta-frequente",
       },
+      {
+        title: "Gerenciar perguntas frequentes",
+        link: "gerenciar-perguntas-frequentes",
+      },
     ],
     icon: "help-circle",
   },
@@ -1620,11 +1624,64 @@ const trainings = [
   },
 ];
 
+const faqQuestions = [
+  {
+    question: "Como faço para falar com o suporte?",
+    answer:
+      "Para falar com o suporte basta acessar o Whatsapp de contato do administrador do seu treinamento.",
+  },
+  {
+    question: "Como faço para acompanhar meu progresso?",
+    answer:
+      "Para acompanhar seu progresso, acesse a seção 'Meu Progresso' no painel do aluno.",
+  },
+  {
+    question: "Como faço para assistir as videoaulas?",
+    answer:
+      "Para assistir as videoaulas, vá até a aba 'Cursos' e selecione o módulo desejado.",
+  },
+  {
+    question: "Qual é o horário de atendimento do suporte?",
+    answer:
+      "O suporte está disponível de segunda a sexta-feira, das 9h às 18h.",
+  },
+  {
+    question: "Como posso redefinir minha senha?",
+    answer:
+      "Para redefinir sua senha, clique em 'Esqueci minha senha' na página de login e siga as instruções.",
+  },
+  {
+    question: "Posso acessar o conteúdo pelo celular?",
+    answer:
+      "Sim, nosso conteúdo é acessível em dispositivos móveis através do navegador ou do aplicativo dedicado.",
+  },
+  {
+    question: "Como faço para emitir um certificado?",
+    answer:
+      "Para emitir um certificado, conclua todos os módulos do curso e clique em 'Emitir Certificado' na página do curso.",
+  },
+  {
+    question: "Há algum custo adicional para emitir o certificado?",
+    answer: "Não, a emissão do certificado está inclusa no valor do curso.",
+  },
+  {
+    question: "Como faço para alterar meus dados cadastrais?",
+    answer:
+      "Para alterar seus dados cadastrais, acesse 'Minha Conta' e edite as informações desejadas.",
+  },
+  {
+    question: "O que fazer se encontrar um erro no conteúdo?",
+    answer:
+      "Se encontrar um erro no conteúdo, por favor, reporte ao suporte através do Whatsapp ou do e-mail de contato.",
+  },
+];
+
 export {
   certificates,
   classes,
   courses,
   dashboardMetrics,
+  faqQuestions,
   menuItems,
   modules,
   trainings,
