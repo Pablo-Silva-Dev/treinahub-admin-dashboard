@@ -44,16 +44,6 @@ const menuItems = [
     icon: "play-circle",
   },
   {
-    title: "Suporte",
-    actions: [
-      {
-        title: "Gerenciar contato",
-        link: "gerenciar-contato-de-suporte",
-      },
-    ],
-    icon: "help-circle",
-  },
-  {
     title: "Certificados",
     actions: [
       {
@@ -62,6 +52,26 @@ const menuItems = [
       },
     ],
     icon: "star",
+  },
+  {
+    title: "Suporte",
+    actions: [
+      {
+        title: "Gerenciar contato",
+        link: "gerenciar-contato-de-suporte",
+      },
+    ],
+    icon: "message-square",
+  },
+  {
+    title: "FAQ",
+    actions: [
+      {
+        title: "Cadastrar pergunta frequente",
+        link: "cadastrar-pergunta-frequente",
+      },
+    ],
+    icon: "help-circle",
   },
   {
     title: "Outras ações",

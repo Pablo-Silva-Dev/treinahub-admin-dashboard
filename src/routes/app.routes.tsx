@@ -13,6 +13,7 @@ import { ManageTutors } from "@/screens/app/ManageTutors";
 import { ManageUsers } from "@/screens/app/ManageUsers";
 import { RegisterClass } from "@/screens/app/RegisterClass";
 import { RegisterCourse } from "@/screens/app/RegisterCourse";
+import { RegisterFaqQuestion } from "@/screens/app/RegisterFaqQuestion";
 import { RegisterModule } from "@/screens/app/RegisterModule";
 import { RegisterTutor } from "@/screens/app/RegisterTutor";
 import { RegisterUser } from "@/screens/app/RegisterUser";
@@ -72,6 +73,10 @@ const appRoutesBase: route[] = [
   {
     path: "/dashboard/cadastrar-videoaula",
     element: <RegisterClass />,
+  },
+  {
+    path: "/dashboard/cadastrar-pergunta-frequente",
+    element: <RegisterFaqQuestion />,
   },
   {
     path: "/dashboard/gerenciar-contato-de-suporte",
