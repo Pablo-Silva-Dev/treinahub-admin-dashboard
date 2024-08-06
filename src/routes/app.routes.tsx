@@ -7,6 +7,7 @@ import { Home } from "@/screens/app/Home";
 import { DashboardLayout } from "@/screens/app/layout";
 import { ManageClasses } from "@/screens/app/ManageClasses";
 import { ManageModules } from "@/screens/app/ManageModules";
+import { ManageSupportContact } from "@/screens/app/ManageSupportContact";
 import { ManageTrainings } from "@/screens/app/ManageTrainings";
 import { ManageTutors } from "@/screens/app/ManageTutors";
 import { ManageUsers } from "@/screens/app/ManageUsers";
@@ -71,6 +72,10 @@ const appRoutesBase: route[] = [
   {
     path: "/dashboard/cadastrar-videoaula",
     element: <RegisterClass />,
+  },
+  {
+    path: "/dashboard/gerenciar-contato-de-suporte",
+    element: <ManageSupportContact />,
   },
   {
     path: "/dashboard/gerenciar-videoaulas",

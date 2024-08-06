@@ -44,6 +44,16 @@ const menuItems = [
     icon: "play-circle",
   },
   {
+    title: "Suporte",
+    actions: [
+      {
+        title: "Gerenciar contato",
+        link: "gerenciar-contato-de-suporte",
+      },
+    ],
+    icon: "help-circle",
+  },
+  {
     title: "Certificados",
     actions: [
       {
