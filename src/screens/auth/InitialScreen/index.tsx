@@ -1,6 +1,7 @@
 import { Title } from "@/components/typography/Title";
 import { UsersRepositories } from "@/repositories/usersRepositories";
 import { useAuthenticationStore } from "@/store/auth";
+import { useLoading } from "@/store/loading";
 import { showAlertError } from "@/utils/alerts";
 import { jwtDecode } from "jwt-decode";
 import { SignInForm, SignInFormInputs } from "./components/SignInForm";
@@ -11,9 +12,11 @@ interface IJwtPayload {
 
 export function InitialScreen() {
   const { signIn } = useAuthenticationStore();
+  const { isLoading, setIsLoading } = useLoading();
 
   const handleSignIn = async (data: SignInFormInputs) => {
     try {
+      setIsLoading(true);
       const usersRepository = new UsersRepositories();
       const user = await usersRepository.authenticateUser(data);
       const jwtPayload: IJwtPayload = jwtDecode(user.token);
@@ -29,6 +32,8 @@ export function InitialScreen() {
           showAlertError("Credenciais incorretas.");
         console.log(error);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -38,7 +43,7 @@ export function InitialScreen() {
         content="Entrar na plataforma"
         className="text-black dark:text-white mb-6 text-xl font-bold md:text-3xl font-secondary"
       />
-      <SignInForm onSubmit={handleSignIn} />
+      <SignInForm onSubmit={handleSignIn} isLoading={isLoading} />
     </div>
   );
 }

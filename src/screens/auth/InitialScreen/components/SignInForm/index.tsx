@@ -20,9 +20,10 @@ export interface SignInFormInputs {
 
 interface SignInFormProps {
   onSubmit: (data: SignInFormInputs) => void;
+  isLoading: boolean;
 }
 
-export function SignInForm({ onSubmit }: SignInFormProps) {
+export function SignInForm({ onSubmit, isLoading }: SignInFormProps) {
   const validationSchema = yup.object({
     email: yup
       .string()
@@ -71,7 +72,7 @@ export function SignInForm({ onSubmit }: SignInFormProps) {
           <LinkButton title="Esqueci minha senha" />
         </Link>
       </div>
-      <Button title="Acessar a plataforma" type="submit" disabled={!isValid} />
+      <Button title="Acessar a plataforma" type="submit" disabled={!isValid} isLoading={isLoading}/>
       <div className="flex flex-row w-full mt-6 justify-between items-center">
         <span className="text-gray-700 dark:text-gray-100 text-sm">
           Não tem uma conta?
