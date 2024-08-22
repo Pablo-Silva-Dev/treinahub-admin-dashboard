@@ -1,4 +1,7 @@
 import { HeaderNavigation } from "@/components/miscellaneous/HeaderNavigation";
+import { UsersRepositories } from "@/repositories/usersRepositories";
+import { useLoading } from "@/store/loading";
+import { showAlertError } from "@/utils/alerts";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CodeInputCard from "./components/CodeInputCard";
@@ -7,31 +10,57 @@ import RecoveryPasswordForm, {
 } from "./components/RecoveryPasswordForm";
 
 export function RecoveryPassword() {
-  const RESEND_CODE_TIMER = 59;
+  const RESEND_CODE_TIMER = 60;
 
   const [wasCodeSent, setWasCodeSent] = useState(false);
   const [isCodeValid, setIsCodeValid] = useState(false);
   const [code, setCode] = useState("");
+  const [apiCode, setApiCode] = useState("");
   const [resendCodeTimer, setResendCodeTimer] = useState(RESEND_CODE_TIMER);
   const [ableToResendCode, setAbleToResendCode] = useState(false);
+  const [email, setEmail] = useState("");
+  const [cpf, setCpf] = useState("");
 
   const navigate = useNavigate();
 
-  const handleSendConfirmationCode = (data: RecoveryPasswordInputs) => {
-    console.log(data);
-    setWasCodeSent(true);
-  };
+  const { isLoading, setIsLoading } = useLoading();
+  const usersRepository = new UsersRepositories();
 
-  const handleResendCode = () => {
+  const handleSendConfirmationCode = useCallback(
+    async (data: RecoveryPasswordInputs) => {
+      try {
+        setIsLoading(true);
+        setEmail(data.email);
+        setCpf(data.cpf);
+        const recoveryCode =
+          await usersRepository.getRecoveryPasswordCodeByEmail(data);
+        if (recoveryCode) {
+          setWasCodeSent(true);
+          setApiCode(recoveryCode);
+        }
+      } catch (error) {
+        if (typeof error === "object" && error !== null && "STATUS" in error) {
+          const typedError = error as { STATUS: number };
+          if (typedError.STATUS === 404) {
+            showAlertError("Usuário não encontrado");
+          }
+        }
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
+
+  const handleResendCode = async (data: RecoveryPasswordInputs) => {
+    await handleSendConfirmationCode(data);
     setAbleToResendCode(false);
     setResendCodeTimer(RESEND_CODE_TIMER);
   };
 
-  //TODO-PABLO: Implement function to send recovery password
-  const API_CODE = "123456";
-
   const checkCode = useCallback(() => {
-    if (code === API_CODE) {
+    if (wasCodeSent && code === apiCode) {
       setIsCodeValid(true);
     } else {
       setIsCodeValid(false);
@@ -68,15 +97,19 @@ export function RecoveryPassword() {
       {wasCodeSent ? (
         <CodeInputCard
           code={code}
+          cpf={cpf}
           onChangeCode={(val) => setCode(val)}
-          emailAddress="johndoe@gmail.com"
+          email="johndoe@gmail.com"
           isInvalidCode={wasCodeSent && !isCodeValid}
-          onResendCode={handleResendCode}
+          onResendCode={() => handleResendCode({ email, cpf })}
           timeToResendCode={resendCodeTimer}
           ableToResendCode={ableToResendCode}
         />
       ) : (
-        <RecoveryPasswordForm onSubmit={handleSendConfirmationCode} />
+        <RecoveryPasswordForm
+          onSubmit={handleSendConfirmationCode}
+          isLoading={isLoading}
+        />
       )}
     </div>
   );

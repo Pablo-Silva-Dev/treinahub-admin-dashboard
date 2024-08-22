@@ -16,10 +16,12 @@ export interface RecoveryPasswordInputs {
 
 interface RecoveryPasswordFormProps {
   onSubmit: (data: RecoveryPasswordInputs) => void;
+  isLoading: boolean;
 }
 
 export default function RecoveryPasswordForm({
   onSubmit,
+  isLoading,
 }: RecoveryPasswordFormProps) {
   const validationSchema = yup.object({
     email: yup.string().required(REQUIRED_FIELD_MESSAGE),
@@ -74,6 +76,7 @@ export default function RecoveryPasswordForm({
           onClick={() => {}}
           title="Receber Código"
           disabled={!cpfValue || !emailValue}
+          isLoading={isLoading}
         />
       </div>
     </form>
