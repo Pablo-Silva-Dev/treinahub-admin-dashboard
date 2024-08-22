@@ -3,13 +3,17 @@ import { Title } from "@/components/typography/Title";
 import { dashboardMetrics } from "@/data/mocked";
 import Feather from "feather-icons-react";
 import MetricsCard from "./components/MetricsCard";
+import { useAuthenticationStore } from "@/store/auth";
 
 export function Home() {
+
+  const {user} = useAuthenticationStore()
+
   return (
     <main className="w-full flex flex-1  flex-col p-4">
       <div className=" w-full flex flex-col md:ml-4 ">
         <div className="flex flex-col justify-between mb-6 mx-auto md:mx-[120px] w-[80%]">
-          <GreetUser userName="John Doe" />
+          <GreetUser userName={user.name} />
           <div className="flex w-full">
             <Feather
               icon="bar-chart-2"
