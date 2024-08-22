@@ -54,7 +54,7 @@ const reactModalCustomStylesDark = {
   },
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    zIndex: 999, 
+    zIndex: 999,
   },
 };
 
@@ -73,7 +73,52 @@ const reactMobileMenuModalCustomStylesDark = {
   },
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    zIndex: 999, 
+    zIndex: 999,
+  },
+};
+
+const reactTermsAndPolicyModalCustomStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    opacity: 1,
+    borderRadius: 8,
+    padding: 32,
+    maxWidth: "70vw",
+    maxHeight: "80vh",
+    zIndex: 1000,
+    overflowX: "hidden",
+  },
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 999,
+  },
+};
+
+const reactTermsAndPolicyModalCustomStylesDark = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    opacity: 1,
+    borderRadius: 8,
+    padding: 32,
+    maxWidth: "90vw",
+    backgroundColor: "#1e293b",
+    maxHeight: "80vh",
+    zIndex: 1000,
+    overflowX: "hidden",
+  },
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 999,
   },
 };
 
@@ -82,4 +127,6 @@ export {
   reactMobileMenuModalCustomStylesDark,
   reactModalCustomStyles,
   reactModalCustomStylesDark,
+  reactTermsAndPolicyModalCustomStyles,
+  reactTermsAndPolicyModalCustomStylesDark,
 };

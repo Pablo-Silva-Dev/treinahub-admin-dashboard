@@ -1,3 +1,4 @@
+import { CheckboxProps } from "@material-tailwind/react/";
 import { AccordionProps } from "@material-tailwind/react/components/Accordion";
 import { AccordionBodyProps } from "@material-tailwind/react/components/AccordionBody";
 import { AccordionHeaderProps } from "@material-tailwind/react/components/AccordionHeader";
@@ -26,4 +27,5 @@ declare module "@material-tailwind/react" {
   export const Breadcrumbs: React.FC<BreadcrumbsProps>;
   export const ListItem: React.FC<ListItemProps>;
   export const Spinner: React.FC<SpinnerProps>;
+  export const Checkbox: React.FC<CheckboxProps>;
 }
