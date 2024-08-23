@@ -5,7 +5,11 @@ import { Text } from "@/components/typography/Text";
 import { Title } from "@/components/typography/Title";
 import { itemsPerPageOptions } from "@/data/placeholders";
 import { IUser } from "@/interfaces/dtos/User";
-import { collapseLongString, formatFirstAndLastName } from "@/utils/formats";
+import {
+  collapseLongString,
+  formatDate,
+  formatFirstAndLastName,
+} from "@/utils/formats";
 import { sortItems } from "@/utils/sorting";
 import {
   Button,
@@ -28,7 +32,7 @@ const TABLE_HEAD = [
   { label: "Email", propRef: "email" },
   { label: "CPF", propRef: "cpf" },
   { label: "Telefone", propRef: "phone" },
-  { label: "Data de nascimento", propRef: "birthDate" },
+  { label: "Data de nascimento", propRef: "birth_date" },
   { label: "Ações", propRef: "" },
 ];
 
@@ -93,9 +97,9 @@ export function UsersTable({
         <table className="w-full table-auto text-left">
           <thead>
             <tr className="bg-gray-200 dark:bg-slate-700">
-              {TABLE_HEAD.map((head) => (
+              {TABLE_HEAD.map((head, i) => (
                 <th
-                  key={head.label}
+                  key={head.label + i}
                   className="bg-gray-200 dark:bg-slate-700 px-2 py-2 lg:p-4 "
                 >
                   <Title
@@ -106,12 +110,12 @@ export function UsersTable({
               ))}
             </tr>
             <tr>
-              {TABLE_HEAD.map((head) => (
+              {TABLE_HEAD.map((head, i) => (
                 <th
-                  key={head.label}
+                  key={head.label + i}
                   className="bg-white dark:bg-slate-900  py-1 px-4"
                 >
-                  {head.propRef && head.propRef !== "birthDate" && (
+                  {head.propRef && head.propRef !== "birth_date" && (
                     <div className="flex flex-row ml-[-8px]">
                       <SortButton
                         onClick={() => handleSort(head.propRef, "asc")}
@@ -128,14 +132,14 @@ export function UsersTable({
             </tr>
           </thead>
           <tbody className=" w-[90%] lg:w-full">
-            {tableData.map(({ name, birthDate, cpf, email, phone }, index) => {
+            {tableData.map(({ name, birth_date, cpf, email, phone }, index) => {
               const isLast = index === tableData.length - 1;
               const classes = isLast
                 ? "md:py-1 py-0"
                 : "md:py-1 py-0 border-b border-gray-200 dark:border-gray-800";
               return (
                 <tr
-                  key={name}
+                  key={name + index}
                   className="even:bg-gray-50 dark:even:bg-slate-800"
                 >
                   <td className={classes}>
@@ -166,7 +170,7 @@ export function UsersTable({
                   </td>
                   <td className={classes}>
                     <Text
-                      content={birthDate}
+                      content={formatDate(birth_date)}
                       className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
                     />
                   </td>

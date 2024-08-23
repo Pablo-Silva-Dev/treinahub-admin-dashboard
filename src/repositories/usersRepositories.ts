@@ -24,7 +24,7 @@ export class UsersRepositories implements IUsersRepository {
   }
   async listUsers(): Promise<IUserDTO[] | []> {
     try {
-      const response = await api.get<IApiSuccessResponse<IUserDTO[] | []>>(
+      const response = await api.get<IApiSuccessResponse<IUserDTO[]>>(
         "/users/list"
       );
       return response.data.RES;

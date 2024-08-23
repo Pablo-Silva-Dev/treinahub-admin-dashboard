@@ -4,7 +4,7 @@ export interface IUser {
   cpf: string;
   email: string;
   phone: string;
-  birthDate: string;
+  birth_date: string;
   password?: string;
 }
 
@@ -13,7 +13,7 @@ export interface ICreateUserDTO {
   cpf: string;
   email: string;
   phone: string;
-  birthDate: string;
+  birth_date: string;
   password: string;
 }
 

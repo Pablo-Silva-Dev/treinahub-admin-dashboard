@@ -1,7 +1,11 @@
 import { PlusButton } from "@/components/buttons/PlusButton";
+import { ErrorMessage } from "@/components/inputs/ErrorMessage";
+import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
-import { users } from "@/data/mocked";
-import { useState } from "react";
+import { IUserDTO } from "@/repositories/interfaces/usersRepositoriesInterface";
+import { UsersRepositories } from "@/repositories/usersRepositories";
+import { useQuery } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { EditUserModal } from "./components/EditUserModal";
@@ -10,6 +14,7 @@ import { UsersTable } from "./components/UsersTable";
 export function ManageUsers() {
   const [isDeleteModalOpen, setIsDeleteModalUserOpen] = useState(false);
   const [isEditUserModalOpen, setIsEditModalUserOpen] = useState(false);
+  const [users, setUsers] = useState<IUserDTO[]>([]);
 
   const handleToggleEditUserModal = () => {
     setIsEditModalUserOpen(!isEditUserModalOpen);
@@ -17,6 +22,22 @@ export function ManageUsers() {
   const handleToggleDeleteModal = () => {
     setIsDeleteModalUserOpen(!isDeleteModalOpen);
   };
+
+  const usersRepository = new UsersRepositories();
+
+  const getUsers = useCallback(async () => {
+    try {
+      const users = await usersRepository.listUsers();
+      setUsers(users);
+      return users;
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const usersQuery = useQuery({ queryKey: ["users"], queryFn: getUsers });
+
+  const { isLoading, error } = usersQuery;
 
   return (
     <main className="flex flex-1 flex-col w-[90%] lg:w-full mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
@@ -32,11 +53,17 @@ export function ManageUsers() {
           </div>
         </div>
         <div className="lg:w-full flex-col flex md:items-center px-4">
-          <UsersTable
-            users={users}
-            onDeleteUser={handleToggleDeleteModal}
-            onUpdateUser={handleToggleEditUserModal}
-          />
+          {isLoading ? (
+            <Loading />
+          ) : error ? (
+            <ErrorMessage errorMessage={error.message} />
+          ) : (
+            <UsersTable
+              users={users}
+              onDeleteUser={handleToggleDeleteModal}
+              onUpdateUser={handleToggleEditUserModal}
+            />
+          )}
         </div>
       </div>
       <DeleteModal

@@ -25,7 +25,7 @@ export interface IUserDTO {
   cpf: string;
   email: string;
   phone: string;
-  birth_date: Date;
+  birth_date: string;
   password: string;
   cep?: string;
   street?: string;
