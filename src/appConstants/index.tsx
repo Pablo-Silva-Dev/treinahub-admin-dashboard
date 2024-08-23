@@ -12,6 +12,7 @@ const FILE_MAX_SIZE_MESSAGE =
   "Arquivo muito grande. O arquivo deve ter no máximo ";
 const FILE_TYPE_UNSUPPORTED_MESSAGE =
   "Formato inválido. Forneça um arquivo do tipo  ";
+const NAVIGATION_TIMER = 1000
 
 export {
   ANSWER_MIN_MESSAGE, 
@@ -25,6 +26,7 @@ export {
   PASSWORD_MESSAGES_NOT_MATCH,
   PASSWORD_MIN_LENGTH_MESSAGE,
   PHONE_INVALID_MESSAGE,
-  REQUIRED_FIELD_MESSAGE
+  REQUIRED_FIELD_MESSAGE,
+  NAVIGATION_TIMER
 };
 

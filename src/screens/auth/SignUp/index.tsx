@@ -1,13 +1,41 @@
+import { NAVIGATION_TIMER } from "@/appConstants/index";
 import { HeaderNavigation } from "@/components/miscellaneous/HeaderNavigation";
+import { UsersRepositories } from "@/repositories/usersRepositories";
+import { useLoading } from "@/store/loading";
+import { showAlertError, showAlertSuccess } from "@/utils/alerts";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { PrivacyPolicyModal } from "./components/PrivacyPolicyModal";
 import SignUpForm from "./components/SignUpForm";
 import { UseTermsModal } from "./components/UseTermsModal";
 
 export function SignUp() {
-  //TODO-PABLO: Submit data to real API
-  const handleSubmit = (data: any) => {
-    console.log(data);
+  const { isLoading, setIsLoading } = useLoading();
+  const navigate = useNavigate();
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+
+  const usersRepositories = new UsersRepositories();
+
+  const handleSubmit = async (data: any) => {
+    try {
+      setIsLoading(true);
+      await usersRepositories.registerUser(data);
+      showAlertSuccess("Cadastro realizado com sucesso!");
+      setTimeout(() => {
+        navigate("/");
+      }, NAVIGATION_TIMER);
+    } catch (error) {
+      if (typeof error === "object" && error !== null && "STATUS" in error) {
+        const typedError = error as { STATUS: number };
+        if (typedError.STATUS === 409)
+          showAlertError(
+            "Já existe um usuário cadastrado com os dados informados."
+          );
+        console.log(error);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const [useTermsModal, setUseTermsModal] = useState(false);
@@ -30,6 +58,9 @@ export function SignUp() {
         onSubmit={handleSubmit}
         onOpenUseTermsModal={handleToggleUseTermsModal}
         onOpenPrivacyPolicyModal={handleTogglePrivacyPolicyModal}
+        isLoading={isLoading}
+        passwordConfirmation={passwordConfirmation}
+        setPasswordConfirmation={setPasswordConfirmation}
       />
       <UseTermsModal
         onClose={handleToggleUseTermsModal}

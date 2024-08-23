@@ -1,3 +1,4 @@
+import { NAVIGATION_TIMER } from "@/appConstants/index";
 import { HeaderNavigation } from "@/components/miscellaneous/HeaderNavigation";
 import { UsersRepositories } from "@/repositories/usersRepositories";
 import { useLoading } from "@/store/loading";
@@ -29,7 +30,7 @@ export function UpdatePassword() {
           showAlertSuccess("Senha alterada com sucesso!");
           setTimeout(() => {
             navigate("/");
-          }, 2000);
+          }, NAVIGATION_TIMER);
         }
       } catch (error) {
         if (typeof error === "object" && error !== null && "STATUS" in error) {

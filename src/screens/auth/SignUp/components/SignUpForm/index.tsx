@@ -3,9 +3,7 @@ import {
   CPF_INVALID_MESSAGE,
   EMAIL_INVALID_MESSAGE,
   MIN_PASSWORD_LENGTH,
-  PASSWORD_MESSAGES_NOT_MATCH,
   PASSWORD_MIN_LENGTH_MESSAGE,
-  PHONE_INVALID_MESSAGE,
   REQUIRED_FIELD_MESSAGE,
 } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
@@ -14,6 +12,7 @@ import { MaskedTextInput } from "@/components/inputs/MaskedTextInput";
 import { PasswordTextInput } from "@/components/inputs/PasswordInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { PasswordRequirements } from "@/components/miscellaneous/PasswordRequirements";
+import { formatPhoneNumber } from "@/utils/formats";
 import { birthDateMask, cpfMask, phoneMask } from "@/utils/masks";
 import {
   birthDateValidationRegex,
@@ -22,7 +21,7 @@ import {
 } from "@/utils/regex";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Checkbox } from "@material-tailwind/react/";
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -30,22 +29,27 @@ export interface SignUpFormInputs {
   name: string;
   email: string;
   cpf: string;
-  birthDate: string;
+  birth_date: string;
   phone: string;
   password: string;
-  passwordConfirmation: string;
 }
 
 interface SignUpFormProps {
   onSubmit: (data: SignUpFormInputs) => void;
   onOpenUseTermsModal: () => void;
   onOpenPrivacyPolicyModal: () => void;
+  passwordConfirmation: string;
+  setPasswordConfirmation: Dispatch<SetStateAction<string>>;
+  isLoading: boolean;
 }
 
 export default function SignUpForm({
   onSubmit,
   onOpenPrivacyPolicyModal,
   onOpenUseTermsModal,
+  passwordConfirmation,
+  setPasswordConfirmation,
+  isLoading,
 }: SignUpFormProps) {
   const validationSchema = yup.object({
     name: yup.string().required(REQUIRED_FIELD_MESSAGE),
@@ -53,7 +57,7 @@ export default function SignUpForm({
       .string()
       .required(REQUIRED_FIELD_MESSAGE)
       .email(EMAIL_INVALID_MESSAGE),
-    birthDate: yup
+    birth_date: yup
       .string()
       .matches(birthDateValidationRegex, BIRTH_DATE_INVALID_MESSAGE)
       .required(REQUIRED_FIELD_MESSAGE),
@@ -63,16 +67,20 @@ export default function SignUpForm({
       .required(REQUIRED_FIELD_MESSAGE),
     phone: yup
       .string()
-      .matches(phoneValidationRegex, PHONE_INVALID_MESSAGE)
+      .transform((value) => {
+        try {
+          return formatPhoneNumber(value);
+        } catch (error) {
+          console.log("Error at trying to format phone number.", error);
+          return value;
+        }
+      })
+      .matches(phoneValidationRegex)
       .required(REQUIRED_FIELD_MESSAGE),
     password: yup
       .string()
       .min(MIN_PASSWORD_LENGTH, PASSWORD_MIN_LENGTH_MESSAGE)
       .required(REQUIRED_FIELD_MESSAGE),
-    passwordConfirmation: yup
-      .string()
-      .oneOf([yup.ref("password")], PASSWORD_MESSAGES_NOT_MATCH)
-      .required(REQUIRED_FIELD_MESSAGE), // Ensure this message is correct
   });
   const passwordValidated = useRef(false);
 
@@ -90,12 +98,12 @@ export default function SignUpForm({
     onSubmit(data);
   };
 
-  const passwordValue = watch("password");
+  const passwordValue = watch("password") || "";
   const phoneValue = watch("phone");
   const nameValue = watch("name");
   const emailValue = watch("email");
   const cpfValue = watch("cpf");
-  const birthDateValue = watch("birthDate");
+  const birthDateValue = watch("birth_date");
 
   const [wasTermsAccepted, setWasTermsAccepted] = useState(false);
 
@@ -139,10 +147,10 @@ export default function SignUpForm({
                   autoComplete="bday"
                   style={{ width: "99%" }}
                   inputMode="numeric"
-                  {...register("birthDate")}
+                  {...register("birth_date")}
                 />
-                {errors.birthDate && (
-                  <ErrorMessage errorMessage={errors.birthDate.message} />
+                {errors.birth_date && (
+                  <ErrorMessage errorMessage={errors.birth_date.message} />
                 )}
               </div>
               <div className="w-full ml-0.5">
@@ -193,7 +201,7 @@ export default function SignUpForm({
                 <PasswordTextInput
                   inputLabel="Senha"
                   autoComplete="new-password"
-                  placeholder="Mínimo de 6 dígitos"
+                  placeholder="Mínimo de 8 dígitos"
                   {...register("password")}
                 />
                 {errors.password && (
@@ -205,13 +213,14 @@ export default function SignUpForm({
                   inputLabel="Confirmação da senha"
                   placeholder="Confirme a senha"
                   autoComplete="new-password"
-                  {...register("passwordConfirmation")}
+                  value={passwordConfirmation}
+                  onChange={(val) => setPasswordConfirmation(val.target.value)}
                 />
-                {errors.passwordConfirmation && (
-                  <ErrorMessage
-                    errorMessage={errors.passwordConfirmation.message}
-                  />
-                )}
+                {passwordValue.length >= MIN_PASSWORD_LENGTH &&
+                  passwordConfirmation.length >= MIN_PASSWORD_LENGTH &&
+                  passwordValue !== passwordConfirmation && (
+                    <ErrorMessage errorMessage="As senhas não correspondem" />
+                  )}
               </div>
             </>
           )}
@@ -250,7 +259,10 @@ export default function SignUpForm({
             type="submit"
             title="Fazer Cadastro"
             disabled={
-              !isValid || !passwordValidated.current || !wasTermsAccepted
+              !isValid ||
+              !passwordValidated.current ||
+              !wasTermsAccepted ||
+              isLoading
             }
           />
         </div>
