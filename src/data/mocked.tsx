@@ -5,10 +5,6 @@ const menuItems = [
     title: "Usuários",
     actions: [
       {
-        title: "Cadastrar usuário",
-        link: "cadastrar-usuario",
-      },
-      {
         title: "Gerenciar usuários",
         link: "gerenciar-usuarios",
       },

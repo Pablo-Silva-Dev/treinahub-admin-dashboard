@@ -17,7 +17,6 @@ import { RegisterCourse } from "@/screens/app/RegisterCourse";
 import { RegisterFaqQuestion } from "@/screens/app/RegisterFaqQuestion";
 import { RegisterModule } from "@/screens/app/RegisterModule";
 import { RegisterTutor } from "@/screens/app/RegisterTutor";
-import { RegisterUser } from "@/screens/app/RegisterUser";
 import { ErrorPage } from "@/screens/error";
 import { ReactNode } from "react";
 
@@ -38,10 +37,6 @@ const appRoutesBase: route[] = [
   {
     path: "/dashboard",
     element: <Home />,
-  },
-  {
-    path: "/dashboard/cadastrar-usuario",
-    element: <RegisterUser />,
   },
   {
     path: "/dashboard/gerenciar-usuarios",
