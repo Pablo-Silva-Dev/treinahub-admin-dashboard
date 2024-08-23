@@ -5,9 +5,12 @@ import { showAlertError } from "@/utils/alerts";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CodeInputCard from "./components/CodeInputCard";
-import RecoveryPasswordForm, {
-  RecoveryPasswordInputs,
-} from "./components/RecoveryPasswordForm";
+import RecoveryPasswordByEmailForm, {
+  RecoveryPasswordByEmailInputs,
+} from "./components/RecoveryPasswordByEmailForm";
+import RecoveryPasswordBySMSForm, {
+  RecoveryPasswordBySMSInputs,
+} from "./components/RecoveryPasswordBySMS";
 
 export function RecoveryPassword() {
   const RESEND_CODE_TIMER = 60;
@@ -20,15 +23,17 @@ export function RecoveryPassword() {
   const [ableToResendCode, setAbleToResendCode] = useState(false);
   const [email, setEmail] = useState("");
   const [cpf, setCpf] = useState("");
+  const [phone, setPhone] = useState("");
   const [userId, setUserId] = useState("");
+  const [formType, setFormType] = useState<"email" | "sms">("email");
 
   const navigate = useNavigate();
 
   const { isLoading, setIsLoading } = useLoading();
   const usersRepository = new UsersRepositories();
 
-  const handleSendConfirmationCode = useCallback(
-    async (data: RecoveryPasswordInputs) => {
+  const handleSendConfirmationCodeByEmail = useCallback(
+    async (data: RecoveryPasswordByEmailInputs) => {
       try {
         setIsLoading(true);
         setEmail(data.email);
@@ -61,10 +66,57 @@ export function RecoveryPassword() {
     []
   );
 
-  const handleResendCode = async (data: RecoveryPasswordInputs) => {
-    await handleSendConfirmationCode(data);
-    setAbleToResendCode(false);
-    setResendCodeTimer(RESEND_CODE_TIMER);
+  const handleSendConfirmationCodeBySMS = useCallback(
+    async (data: RecoveryPasswordBySMSInputs) => {
+      try {
+        setIsLoading(true);
+        setPhone(data.phone);
+
+        const user = await usersRepository.getUserByPhone(data.phone);
+
+        if (user) {
+          setUserId(user.id as never);
+        }
+
+        const recoveryCode = await usersRepository.getRecoveryPasswordCodeBySMS(
+          data
+        );
+        if (recoveryCode) {
+          setWasCodeSent(true);
+          setApiCode(recoveryCode);
+        }
+      } catch (error) {
+        if (typeof error === "object" && error !== null && "STATUS" in error) {
+          const typedError = error as { STATUS: number };
+          if (typedError.STATUS === 404) {
+            showAlertError("Usuário não encontrado");
+          }
+        }
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
+
+  const handleResendCode = async (
+    data: RecoveryPasswordByEmailInputs | RecoveryPasswordBySMSInputs,
+    communicationType: "email" | "sms"
+  ) => {
+    if (communicationType === "email") {
+      await handleSendConfirmationCodeByEmail(
+        data as RecoveryPasswordByEmailInputs
+      );
+      setAbleToResendCode(false);
+      setResendCodeTimer(RESEND_CODE_TIMER);
+    } else {
+      await handleSendConfirmationCodeBySMS(
+        data as RecoveryPasswordBySMSInputs
+      );
+      setAbleToResendCode(false);
+      setResendCodeTimer(RESEND_CODE_TIMER);
+    }
   };
 
   const checkCode = useCallback(() => {
@@ -74,6 +126,34 @@ export function RecoveryPassword() {
       setIsCodeValid(false);
     }
   }, [code]);
+
+  const handleChangeFormType = (formType: "email" | "sms") => {
+    if (formType !== "email") {
+      setFormType("sms");
+    } else {
+      setFormType("email");
+    }
+  };
+
+  function renderFormType() {
+    if (formType === "email") {
+      return (
+        <RecoveryPasswordByEmailForm
+          onSubmit={handleSendConfirmationCodeByEmail}
+          onReceiveCodeBySMS={() => handleChangeFormType("sms")}
+          isLoading={isLoading}
+        />
+      );
+    } else {
+      return (
+        <RecoveryPasswordBySMSForm
+          onSubmit={handleSendConfirmationCodeBySMS}
+          onReceiveCodeByEmail={() => handleChangeFormType("email")}
+          isLoading={isLoading}
+        />
+      );
+    }
+  }
 
   useEffect(() => {
     checkCode();
@@ -104,22 +184,23 @@ export function RecoveryPassword() {
       <div className="flex flex-row mb-2 w-full sm:w-[400px] ml-8 sm:mx-auto">
         <HeaderNavigation screenTitle="Recuperação de senha" />
       </div>
+      <div className="flex flex-row mt-4 ml-1 w-full max-w-[400px] mx-auto bg-red-200 place-self-center"></div>
       {wasCodeSent ? (
         <CodeInputCard
           code={code}
           cpf={cpf}
+          phone={phone}
           onChangeCode={(val) => setCode(val)}
-          email="johndoe@gmail.com"
+          email={email}
           isInvalidCode={wasCodeSent && !isCodeValid}
-          onResendCode={() => handleResendCode({ email, cpf })}
+          onResendCodeByEmail={() => handleResendCode({ email, cpf }, formType)}
+          onResendCodeBySMS={() => handleResendCode({ phone }, formType)}
+          formType={formType}
           timeToResendCode={resendCodeTimer}
           ableToResendCode={ableToResendCode}
         />
       ) : (
-        <RecoveryPasswordForm
-          onSubmit={handleSendConfirmationCode}
-          isLoading={isLoading}
-        />
+        renderFormType()
       )}
     </div>
   );

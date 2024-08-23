@@ -3,6 +3,7 @@ import {
   IAuthenticateUserRequest,
   IAuthenticateUserResponse,
   IGetRecoveryPasswordCodeByEmailDTO,
+  IGetRecoveryPasswordCodeBySMSDTO,
   IRegisterUserRequest,
   IUpdateUserDTO,
   IUserDTO,
@@ -103,11 +104,13 @@ export class UsersRepositories implements IUsersRepository {
       throw error;
     }
   }
-  async getRecoveryPasswordCodeBySMS(phone: string): Promise<string> {
+  async getRecoveryPasswordCodeBySMS(
+    data: IGetRecoveryPasswordCodeBySMSDTO
+  ): Promise<string> {
     try {
       const response = await api.post<IApiSuccessResponse<string>>(
         "/users/get-recovery-password-code-by-phone",
-        phone
+        data
       );
       return response.data.RES;
     } catch (error) {

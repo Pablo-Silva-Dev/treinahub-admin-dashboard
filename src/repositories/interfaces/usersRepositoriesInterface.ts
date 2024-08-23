@@ -53,6 +53,10 @@ export interface IGetRecoveryPasswordCodeByEmailDTO {
   email: string;
 }
 
+export interface IGetRecoveryPasswordCodeBySMSDTO {
+  phone: string;
+}
+
 export interface IRecoveryCodeDTO {
   code: string;
 }
@@ -72,5 +76,7 @@ export interface IUsersRepository {
   getRecoveryPasswordCodeByEmail(
     data: IGetRecoveryPasswordCodeByEmailDTO
   ): Promise<string>;
-  getRecoveryPasswordCodeBySMS(phone: string): Promise<string>;
+  getRecoveryPasswordCodeBySMS(
+    data: IGetRecoveryPasswordCodeBySMSDTO
+  ): Promise<string>;
 }
