@@ -1,3 +1,4 @@
+import { useAuthenticationStore } from "@/store/auth";
 import axios, {
   AxiosError,
   AxiosResponse,
@@ -30,6 +31,13 @@ export interface IApiErrorResponse {
 }
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const { user } = useAuthenticationStore.getState();
+  const token = user?.token;
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
   console.log(`[${config.method?.toUpperCase()}] - ${config.url}`);
   return config;
 });

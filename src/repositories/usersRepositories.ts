@@ -31,9 +31,9 @@ export class UsersRepositories implements IUsersRepository {
       throw error;
     }
   }
-  async getUserByEmail(email: string): Promise<IUserDTO | void> {
+  async getUserByEmail(email: string): Promise<IUserDTO> {
     try {
-      const response = await api.get<IApiSuccessResponse<IUserDTO | void>>(
+      const response = await api.get<IApiSuccessResponse<IUserDTO>>(
         `/users/get-by-email/${email}`
       );
       return response.data.RES;
@@ -41,9 +41,9 @@ export class UsersRepositories implements IUsersRepository {
       throw error;
     }
   }
-  async getUserByCpf(cpf: string): Promise<IUserDTO | void> {
+  async getUserByCpf(cpf: string): Promise<IUserDTO> {
     try {
-      const response = await api.get<IApiSuccessResponse<IUserDTO | void>>(
+      const response = await api.get<IApiSuccessResponse<IUserDTO>>(
         `/users/get-by-cpf/${cpf}`
       );
       return response.data.RES;
@@ -51,9 +51,9 @@ export class UsersRepositories implements IUsersRepository {
       throw error;
     }
   }
-  async getUserById(id: string): Promise<IUserDTO | void> {
+  async getUserById(id: string): Promise<IUserDTO> {
     try {
-      const response = await api.get<IApiSuccessResponse<IUserDTO | void>>(
+      const response = await api.get<IApiSuccessResponse<IUserDTO>>(
         `/users/get-by-id/${id}`
       );
       return response.data.RES;
@@ -71,9 +71,9 @@ export class UsersRepositories implements IUsersRepository {
       throw error;
     }
   }
-  async updateUser(data: IUpdateUserDTO): Promise<IUserDTO | void> {
+  async updateUser(data: IUpdateUserDTO): Promise<IUserDTO> {
     try {
-      const response = await api.put<IApiSuccessResponse<IUserDTO | void>>(
+      const response = await api.put<IApiSuccessResponse<IUserDTO>>(
         "/users/update",
         data
       );

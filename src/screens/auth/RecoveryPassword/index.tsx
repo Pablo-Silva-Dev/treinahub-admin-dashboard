@@ -20,6 +20,7 @@ export function RecoveryPassword() {
   const [ableToResendCode, setAbleToResendCode] = useState(false);
   const [email, setEmail] = useState("");
   const [cpf, setCpf] = useState("");
+  const [userId, setUserId] = useState("");
 
   const navigate = useNavigate();
 
@@ -32,6 +33,13 @@ export function RecoveryPassword() {
         setIsLoading(true);
         setEmail(data.email);
         setCpf(data.cpf);
+
+        const user = await usersRepository.getUserByEmail(data.email);
+
+        if (user) {
+          setUserId(user.id as never);
+        }
+
         const recoveryCode =
           await usersRepository.getRecoveryPasswordCodeByEmail(data);
         if (recoveryCode) {
@@ -85,7 +93,9 @@ export function RecoveryPassword() {
 
   useEffect(() => {
     if (isCodeValid) {
-      navigate("/redefinir-senha");
+      navigate("/redefinir-senha", {
+        state: userId,
+      });
     }
   }, [isCodeValid, navigate]);
 
