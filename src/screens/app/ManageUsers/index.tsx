@@ -1,9 +1,14 @@
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
-import { IUserDTO } from "@/repositories/interfaces/usersRepositoriesInterface";
+import {
+  IUpdateUserDTO,
+  IUserDTO,
+} from "@/repositories/interfaces/usersRepositoriesInterface";
 import { UsersRepositories } from "@/repositories/usersRepositories";
+import { useLoading } from "@/store/loading";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
+import { formatPhoneNumber } from "@/utils/formats";
 import {
   InvalidateQueryFilters,
   useQuery,
@@ -19,9 +24,20 @@ export function ManageUsers() {
   const [isEditUserModalOpen, setIsEditModalUserOpen] = useState(false);
   const [users, setUsers] = useState<IUserDTO[]>([]);
   const [selectedUser, setSelectedUser] = useState<IUserDTO | null>(null);
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [phone, setPhone] = useState("");
 
   const usersRepository = new UsersRepositories();
   const queryClient = useQueryClient();
+
+  const clearUpdateUserForm = () => {
+    setPassword("");
+    setPasswordConfirmation("");
+    setPhone("");
+  };
+
+  const { isLoading: loading, setIsLoading } = useLoading();
 
   const getUsers = useCallback(async () => {
     try {
@@ -33,9 +49,10 @@ export function ManageUsers() {
     }
   }, []);
 
-  const deleteUser = useCallback(
+  const handleDeleteUser = useCallback(
     async (userId: string) => {
       try {
+        setIsLoading(true);
         await usersRepository.deleteUser(userId);
         showAlertSuccess("Usuário deletado com sucesso");
         setIsDeleteModalUserOpen(false);
@@ -46,6 +63,30 @@ export function ManageUsers() {
           "Houve um erro ao deletar usuário. Por favor, tente novamente mais tarde."
         );
         console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [queryClient]
+  );
+
+  const handleUpdateUser = useCallback(
+    async (data: IUpdateUserDTO) => {
+      try {
+        setIsLoading(true);
+        await usersRepository.updateUser(data);
+        showAlertSuccess("Dados atualizados com sucesso");
+        setIsEditModalUserOpen(false);
+        clearUpdateUserForm();
+        queryClient.invalidateQueries(["users"] as InvalidateQueryFilters);
+        return users;
+      } catch (error) {
+        showAlertError(
+          "Houve um erro ao tentar atualizar dados. Por favor, tente novamente mais tarde."
+        );
+        console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     },
     [queryClient]
@@ -55,7 +96,7 @@ export function ManageUsers() {
     try {
       const user = await usersRepository.getUserById(userId);
       setSelectedUser(user);
-      return users;
+      return user;
     } catch (error) {
       console.log(error);
     }
@@ -71,6 +112,8 @@ export function ManageUsers() {
   const usersQuery = useQuery({ queryKey: ["users"], queryFn: getUsers });
 
   const { isLoading, error } = usersQuery;
+
+  const PHONE_NUMBER_LENGTH = 11;
 
   return (
     <main className="flex flex-1 flex-col w-[90%] lg:w-full mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
@@ -88,6 +131,7 @@ export function ManageUsers() {
           ) : (
             <UsersTable
               users={users}
+              user={selectedUser!}
               onDeleteUser={handleToggleDeleteModal}
               onUpdateUser={handleToggleEditUserModal}
               onSelectUser={getUser}
@@ -100,13 +144,30 @@ export function ManageUsers() {
         isOpen={isDeleteModalOpen}
         onClose={handleToggleDeleteModal}
         onRequestClose={handleToggleDeleteModal}
-        onConfirmAction={() => deleteUser(selectedUser!.id)}
+        onConfirmAction={() => handleDeleteUser(selectedUser!.id)}
       />
       <EditUserModal
         isOpen={isEditUserModalOpen}
         onClose={handleToggleEditUserModal}
         onRequestClose={handleToggleEditUserModal}
-        onConfirmAction={() => console.log("User edited")}
+        onConfirmAction={() =>
+          handleUpdateUser({
+            id: selectedUser!.id,
+            phone:
+              phone.length >= PHONE_NUMBER_LENGTH
+                ? formatPhoneNumber(phone)
+                : selectedUser!.phone,
+            password: password ? password : selectedUser!.password,
+          })
+        }
+        selectedUserId={selectedUser ? selectedUser.id : null}
+        passwordConfirmation={passwordConfirmation}
+        setPasswordConfirmation={setPasswordConfirmation}
+        isLoading={loading}
+        password={password}
+        setPassword={setPassword}
+        phone={phone}
+        setPhone={setPhone}
       />
     </main>
   );

@@ -4,7 +4,10 @@ import { Subtitle } from "@/components/typography/Subtitle";
 import { Text } from "@/components/typography/Text";
 import { Title } from "@/components/typography/Title";
 import { itemsPerPageOptions } from "@/data/placeholders";
-import { IUserDTO } from "@/repositories/interfaces/usersRepositoriesInterface";
+import {
+  IUpdateUserDTO,
+  IUserDTO,
+} from "@/repositories/interfaces/usersRepositoriesInterface";
 import {
   collapseLongString,
   formatDate,
@@ -39,13 +42,15 @@ const TABLE_HEAD = [
 
 interface UsersTableProps {
   users: IUserDTO[];
-  onUpdateUser: () => void;
+  user: IUserDTO;
   onDeleteUser: (userId: string) => void;
+  onUpdateUser: (data: IUpdateUserDTO) => void;
   onSelectUser: (userId: string) => void;
 }
 
 export function UsersTable({
   users,
+  user,
   onDeleteUser,
   onUpdateUser,
   onSelectUser,
@@ -97,6 +102,11 @@ export function UsersTable({
   const handleDeleteUser = (userId: string) => {
     onSelectUser(userId);
     onDeleteUser(userId);
+  };
+
+  const handleEditUser = (userId: string) => {
+    onSelectUser(userId);
+    onUpdateUser(user);
   };
 
   return (
@@ -190,7 +200,7 @@ export function UsersTable({
                       >
                         <IconButton
                           variant="text"
-                          onClick={onUpdateUser}
+                          onClick={() => handleEditUser(id)}
                           className="p-0 bg-transparent hover:bg-transparent hover:p-0 mr-8 lg:mr-4"
                         >
                           <MdEdit className="lg:h-5 lg:w-5 h-3 w-3 p-0 text-gray-700 dark:text-gray-300" />
