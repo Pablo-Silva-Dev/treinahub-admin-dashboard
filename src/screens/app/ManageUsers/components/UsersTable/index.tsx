@@ -4,11 +4,12 @@ import { Subtitle } from "@/components/typography/Subtitle";
 import { Text } from "@/components/typography/Text";
 import { Title } from "@/components/typography/Title";
 import { itemsPerPageOptions } from "@/data/placeholders";
-import { IUser } from "@/interfaces/dtos/User";
+import { IUserDTO } from "@/repositories/interfaces/usersRepositoriesInterface";
 import {
   collapseLongString,
   formatDate,
   formatFirstAndLastName,
+  unformatPhoneNumber,
 } from "@/utils/formats";
 import { sortItems } from "@/utils/sorting";
 import {
@@ -37,20 +38,22 @@ const TABLE_HEAD = [
 ];
 
 interface UsersTableProps {
-  users: IUser[];
+  users: IUserDTO[];
   onUpdateUser: () => void;
-  onDeleteUser: () => void;
+  onDeleteUser: (userId: string) => void;
+  onSelectUser: (userId: string) => void;
 }
 
 export function UsersTable({
   users,
   onDeleteUser,
   onUpdateUser,
+  onSelectUser,
 }: UsersTableProps) {
   const [page, setPage] = useState(1);
   const [pagesListIndex, setPagesListIndex] = useState(0);
-  const [sortedUsers, setSortedUsers] = useState<IUser[]>([]);
-  const [tableData, setTableData] = useState<IUser[]>([]);
+  const [sortedUsers, setSortedUsers] = useState<IUserDTO[]>([]);
+  const [tableData, setTableData] = useState<IUserDTO[]>([]);
   const [itemsPerPage, setItemsPerPage] = useState(
     itemsPerPageOptions[0].value
   );
@@ -89,6 +92,11 @@ export function UsersTable({
     const sortedData = sortItems([...users], propRef, sortType);
     setSortedUsers(sortedData);
     setPage(1);
+  };
+
+  const handleDeleteUser = (userId: string) => {
+    onSelectUser(userId);
+    onDeleteUser(userId);
   };
 
   return (
@@ -132,79 +140,81 @@ export function UsersTable({
             </tr>
           </thead>
           <tbody className=" w-[90%] lg:w-full">
-            {tableData.map(({ name, birth_date, cpf, email, phone }, index) => {
-              const isLast = index === tableData.length - 1;
-              const classes = isLast
-                ? "md:py-1 py-0"
-                : "md:py-1 py-0 border-b border-gray-200 dark:border-gray-800";
-              return (
-                <tr
-                  key={name + index}
-                  className="even:bg-gray-50 dark:even:bg-slate-800"
-                >
-                  <td className={classes}>
-                    <div className="flex items-center gap-3">
-                      <Subtitle
-                        content={formatFirstAndLastName(name)}
+            {tableData.map(
+              ({ id, name, birth_date, cpf, email, phone }, index) => {
+                const isLast = index === tableData.length - 1;
+                const classes = isLast
+                  ? "md:py-1 py-0"
+                  : "md:py-1 py-0 border-b border-gray-200 dark:border-gray-800";
+                return (
+                  <tr
+                    key={name + index}
+                    className="even:bg-gray-50 dark:even:bg-slate-800"
+                  >
+                    <td className={classes}>
+                      <div className="flex items-center gap-3">
+                        <Subtitle
+                          content={formatFirstAndLastName(name)}
+                          className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
+                        />
+                      </div>
+                    </td>
+                    <td className={classes}>
+                      <Text
+                        content={collapseLongString(email, MAX_STRING_LENGTH)}
                         className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
                       />
-                    </div>
-                  </td>
-                  <td className={classes}>
-                    <Text
-                      content={collapseLongString(email, MAX_STRING_LENGTH)}
-                      className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
-                    />
-                  </td>
-                  <td className={classes}>
-                    <Text
-                      content={cpf}
-                      className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
-                    />
-                  </td>
-                  <td className={classes}>
-                    <Text
-                      content={phone}
-                      className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-3 lg:ml-4 min-w-[96px] text-gray-700 dark:text-gray-300"
-                    />
-                  </td>
-                  <td className={classes}>
-                    <Text
-                      content={formatDate(birth_date)}
-                      className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
-                    />
-                  </td>
-                  <td className={classes}>
-                    <Tooltip
-                      className="hidden lg:flex"
-                      content="Editar dados do usuário"
-                    >
-                      <IconButton
-                        variant="text"
-                        onClick={onUpdateUser}
-                        className="p-0 bg-transparent hover:bg-transparent hover:p-0 mr-8 lg:mr-4"
+                    </td>
+                    <td className={classes}>
+                      <Text
+                        content={cpf}
+                        className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
+                      />
+                    </td>
+                    <td className={classes}>
+                      <Text
+                        content={unformatPhoneNumber(phone)}
+                        className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-3 lg:ml-4 min-w-[96px] text-gray-700 dark:text-gray-300"
+                      />
+                    </td>
+                    <td className={classes}>
+                      <Text
+                        content={formatDate(birth_date)}
+                        className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
+                      />
+                    </td>
+                    <td className={classes}>
+                      <Tooltip
+                        className="hidden lg:flex"
+                        content="Editar dados do usuário"
                       >
-                        <MdEdit className="lg:h-5 lg:w-5 h-3 w-3 p-0 text-gray-700 dark:text-gray-300" />
-                      </IconButton>
-                    </Tooltip>
-                  </td>
-                  <td className={classes}>
-                    <Tooltip
-                      content="Remover usuário"
-                      className="hidden lg:flex"
-                    >
-                      <IconButton
-                        variant="text"
-                        className="p-0 bg-transparent hover:bg-transparent hover:p-0 lg:ml-[-40px] ml-[-46px]"
-                        onClick={onDeleteUser}
+                        <IconButton
+                          variant="text"
+                          onClick={onUpdateUser}
+                          className="p-0 bg-transparent hover:bg-transparent hover:p-0 mr-8 lg:mr-4"
+                        >
+                          <MdEdit className="lg:h-5 lg:w-5 h-3 w-3 p-0 text-gray-700 dark:text-gray-300" />
+                        </IconButton>
+                      </Tooltip>
+                    </td>
+                    <td className={classes}>
+                      <Tooltip
+                        content="Remover usuário"
+                        className="hidden lg:flex"
                       >
-                        <IoMdTrash className="lg:h-5 lg:w-5 h-3 w-3 text-red-500 lg:mr-4" />
-                      </IconButton>
-                    </Tooltip>
-                  </td>
-                </tr>
-              );
-            })}
+                        <IconButton
+                          variant="text"
+                          className="p-0 bg-transparent hover:bg-transparent hover:p-0 lg:ml-[-40px] ml-[-46px]"
+                          onClick={() => handleDeleteUser(id)}
+                        >
+                          <IoMdTrash className="lg:h-5 lg:w-5 h-3 w-3 text-red-500 lg:mr-4" />
+                        </IconButton>
+                      </Tooltip>
+                    </td>
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
       </CardBody>

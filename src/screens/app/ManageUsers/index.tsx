@@ -1,12 +1,15 @@
-import { PlusButton } from "@/components/buttons/PlusButton";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { IUserDTO } from "@/repositories/interfaces/usersRepositoriesInterface";
 import { UsersRepositories } from "@/repositories/usersRepositories";
-import { useQuery } from "@tanstack/react-query";
+import { showAlertError, showAlertSuccess } from "@/utils/alerts";
+import {
+  InvalidateQueryFilters,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { EditUserModal } from "./components/EditUserModal";
 import { UsersTable } from "./components/UsersTable";
@@ -15,15 +18,10 @@ export function ManageUsers() {
   const [isDeleteModalOpen, setIsDeleteModalUserOpen] = useState(false);
   const [isEditUserModalOpen, setIsEditModalUserOpen] = useState(false);
   const [users, setUsers] = useState<IUserDTO[]>([]);
-
-  const handleToggleEditUserModal = () => {
-    setIsEditModalUserOpen(!isEditUserModalOpen);
-  };
-  const handleToggleDeleteModal = () => {
-    setIsDeleteModalUserOpen(!isDeleteModalOpen);
-  };
+  const [selectedUser, setSelectedUser] = useState<IUserDTO | null>(null);
 
   const usersRepository = new UsersRepositories();
+  const queryClient = useQueryClient();
 
   const getUsers = useCallback(async () => {
     try {
@@ -34,6 +32,41 @@ export function ManageUsers() {
       console.log(error);
     }
   }, []);
+
+  const deleteUser = useCallback(
+    async (userId: string) => {
+      try {
+        await usersRepository.deleteUser(userId);
+        showAlertSuccess("Usuário deletado com sucesso");
+        setIsDeleteModalUserOpen(false);
+        queryClient.invalidateQueries(["users"] as InvalidateQueryFilters);
+        return users;
+      } catch (error) {
+        showAlertError(
+          "Houve um erro ao deletar usuário. Por favor, tente novamente mais tarde."
+        );
+        console.log(error);
+      }
+    },
+    [queryClient]
+  );
+
+  const getUser = useCallback(async (userId: string) => {
+    try {
+      const user = await usersRepository.getUserById(userId);
+      setSelectedUser(user);
+      return users;
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const handleToggleEditUserModal = () => {
+    setIsEditModalUserOpen(!isEditUserModalOpen);
+  };
+  const handleToggleDeleteModal = () => {
+    setIsDeleteModalUserOpen(!isDeleteModalOpen);
+  };
 
   const usersQuery = useQuery({ queryKey: ["users"], queryFn: getUsers });
 
@@ -57,6 +90,7 @@ export function ManageUsers() {
               users={users}
               onDeleteUser={handleToggleDeleteModal}
               onUpdateUser={handleToggleEditUserModal}
+              onSelectUser={getUser}
             />
           )}
         </div>
@@ -66,7 +100,7 @@ export function ManageUsers() {
         isOpen={isDeleteModalOpen}
         onClose={handleToggleDeleteModal}
         onRequestClose={handleToggleDeleteModal}
-        onConfirmAction={() => console.log("User deleted")}
+        onConfirmAction={() => deleteUser(selectedUser!.id)}
       />
       <EditUserModal
         isOpen={isEditUserModalOpen}

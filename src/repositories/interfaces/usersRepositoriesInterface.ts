@@ -20,7 +20,7 @@ export interface IRegisterUserRequest {
 }
 
 export interface IUserDTO {
-  id?: string;
+  id: string;
   name: string;
   cpf: string;
   email: string;
