@@ -1,10 +1,13 @@
-import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 
+import { PRIMARY_COLOR } from "@/appConstants/index";
+import error_warning from "@/assets/error_warning.svg";
+import error_warning_dark from "@/assets/error_warning_dark.svg";
 import { IUpdateUserDTO, IUserDTO } from "@/repositories/dtos/UserDTO";
 import { UsersRepositories } from "@/repositories/usersRepositories";
 import { useLoading } from "@/store/loading";
+import { useThemeStore } from "@/store/theme";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
 import { formatPhoneNumber } from "@/utils/formats";
 import {
@@ -28,6 +31,7 @@ export function ManageUsers() {
 
   const usersRepository = new UsersRepositories();
   const queryClient = useQueryClient();
+  const { theme } = useThemeStore();
 
   const clearUpdateUserForm = () => {
     setPassword("");
@@ -129,9 +133,18 @@ export function ManageUsers() {
         </div>
         <div className="lg:w-full flex-col flex md:items-center px-4">
           {isLoading ? (
-            <Loading />
+            <div className="w-full mt-[10vh]">
+              <Loading color={PRIMARY_COLOR} />
+            </div>
           ) : error ? (
-            <ErrorMessage errorMessage={error.message} />
+            <div className="w-full mt-[10vh] flex flex-col items-center justify-center">
+              <img
+                src={theme === "light" ? error_warning : error_warning_dark}
+                alt="page_not_found"
+                width={200}
+                height={120}
+              />
+            </div>
           ) : (
             <UsersTable
               users={users}
