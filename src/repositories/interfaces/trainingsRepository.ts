@@ -19,7 +19,7 @@ export interface ITrainingDTO {
 export interface ICreateTrainingDTO {
   name: string;
   description: string;
-  cover_url?: string;
+  file: Blob;
 }
 
 export interface IUpdateTrainingDTO {

@@ -8,10 +8,18 @@ import {
 
 export class TrainingsRepositories implements ITrainingsRepository {
   async createTraining(data: ICreateTrainingDTO): Promise<ITrainingDTO> {
+    const { name, description, file } = data;
+
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("file", file, file.name);
+
     try {
       const response = await api.post<IApiSuccessResponse<ITrainingDTO>>(
         "/trainings/create",
-        data
+        formData
       );
       return response.data.RES;
     } catch (error) {

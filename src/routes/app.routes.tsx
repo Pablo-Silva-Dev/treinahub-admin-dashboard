@@ -10,13 +10,11 @@ import { ManageFaqQuestions } from "@/screens/app/ManageFaqQuestions";
 import { ManageModules } from "@/screens/app/ManageModules";
 import { ManageSupportContact } from "@/screens/app/ManageSupportContact";
 import { ManageTrainings } from "@/screens/app/ManageTrainings";
-import { ManageTutors } from "@/screens/app/ManageTutors";
 import { ManageUsers } from "@/screens/app/ManageUsers";
 import { RegisterClass } from "@/screens/app/RegisterClass";
-import { RegisterCourse } from "@/screens/app/RegisterCourse";
 import { RegisterFaqQuestion } from "@/screens/app/RegisterFaqQuestion";
 import { RegisterModule } from "@/screens/app/RegisterModule";
-import { RegisterTutor } from "@/screens/app/RegisterTutor";
+import { RegisterTraining } from "@/screens/app/RegisterTraining";
 import { ErrorPage } from "@/screens/error";
 import { ReactNode } from "react";
 
@@ -44,7 +42,7 @@ const appRoutesBase: route[] = [
   },
   {
     path: "/dashboard/cadastrar-treinamento",
-    element: <RegisterCourse />,
+    element: <RegisterTraining />,
   },
   {
     path: "/dashboard/gerenciar-treinamentos",
@@ -57,14 +55,6 @@ const appRoutesBase: route[] = [
   {
     path: "/dashboard/gerenciar-modulos",
     element: <ManageModules />,
-  },
-  {
-    path: "/dashboard/cadastrar-tutor",
-    element: <RegisterTutor />,
-  },
-  {
-    path: "/dashboard/gerenciar-tutores",
-    element: <ManageTutors />,
   },
   {
     path: "/dashboard/cadastrar-videoaula",

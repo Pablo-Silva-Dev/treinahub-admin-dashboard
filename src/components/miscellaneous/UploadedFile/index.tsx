@@ -1,6 +1,6 @@
 import Feather from "feather-icons-react";
 
-export interface IFile {
+export interface IFilePreview {
   name: string;
   uri: string;
   size: number;
@@ -8,7 +8,7 @@ export interface IFile {
 }
 
 interface UploadedFileProps {
-  file: IFile;
+  file: IFilePreview;
   onCancel: () => void;
 }
 

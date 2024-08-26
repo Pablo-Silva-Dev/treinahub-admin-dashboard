@@ -7,10 +7,6 @@ import axios, {
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_STAGE_BASEURL,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
 });
 
 export interface IApiSuccessResponse<T> {
