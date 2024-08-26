@@ -81,9 +81,17 @@ export function ManageUsers() {
         queryClient.invalidateQueries(["users"] as InvalidateQueryFilters);
         return users;
       } catch (error) {
-        showAlertError(
-          "Houve um erro ao tentar atualizar dados. Por favor, tente novamente mais tarde."
-        );
+        if (typeof error === "object" && error !== null && "STATUS" in error) {
+          if (error.STATUS === 409) {
+            showAlertError(
+              "Já existe um usuário com os dados fornecidos."
+            );
+          }
+        }else{
+          showAlertError(
+            "Houve um erro ao tentar atualizar dados. Por favor, tente novamente mais tarde."
+          );
+        }
         console.log(error);
       } finally {
         setIsLoading(false);
