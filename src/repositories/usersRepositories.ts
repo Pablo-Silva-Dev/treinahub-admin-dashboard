@@ -1,14 +1,16 @@
 import { api, IApiSuccessResponse } from "@/services/api";
 import {
-  IAuthenticateUserRequest,
-  IAuthenticateUserResponse,
   IGetRecoveryPasswordCodeByEmailDTO,
   IGetRecoveryPasswordCodeBySMSDTO,
-  IRegisterUserRequest,
   IUpdateUserDTO,
   IUserDTO,
+} from "./dtos/UserDTO";
+import {
+  IAuthenticateUserRequest,
+  IAuthenticateUserResponse,
+  IRegisterUserRequest,
   IUsersRepository,
-} from "./interfaces/usersRepositoriesInterface";
+} from "./interfaces/usersRepository";
 
 export class UsersRepositories implements IUsersRepository {
   async registerUser(data: IRegisterUserRequest): Promise<IUserDTO> {
@@ -24,9 +26,8 @@ export class UsersRepositories implements IUsersRepository {
   }
   async listUsers(): Promise<IUserDTO[] | []> {
     try {
-      const response = await api.get<IApiSuccessResponse<IUserDTO[]>>(
-        "/users/list"
-      );
+      const response =
+        await api.get<IApiSuccessResponse<IUserDTO[]>>("/users/list");
       return response.data.RES;
     } catch (error) {
       throw error;

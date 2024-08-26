@@ -1,3 +1,10 @@
+import {
+  IGetRecoveryPasswordCodeByEmailDTO,
+  IGetRecoveryPasswordCodeBySMSDTO,
+  IUpdateUserDTO,
+  IUserDTO,
+} from "../dtos/UserDTO";
+
 export interface IAuthenticateUserRequest {
   email: string;
   password: string;
@@ -17,48 +24,6 @@ export interface IRegisterUserRequest {
   birth_date: Date;
   password: string;
   is_admin?: boolean;
-}
-
-export interface IUserDTO {
-  id: string;
-  name: string;
-  cpf: string;
-  email: string;
-  phone: string;
-  birth_date: string;
-  password: string;
-  cep?: string;
-  street?: string;
-  district?: string;
-  city?: string;
-  uf?: string;
-  residence_number?: string;
-  is_admin: boolean;
-}
-
-export interface IUpdateUserDTO {
-  id: string;
-  phone?: string;
-  password?: string;
-  cep?: string;
-  street?: string;
-  district?: string;
-  city?: string;
-  uf?: string;
-  residence_number?: string;
-}
-
-export interface IGetRecoveryPasswordCodeByEmailDTO {
-  cpf: string;
-  email: string;
-}
-
-export interface IGetRecoveryPasswordCodeBySMSDTO {
-  phone: string;
-}
-
-export interface IRecoveryCodeDTO {
-  code: string;
 }
 
 export interface IUsersRepository {

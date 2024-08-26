@@ -4,10 +4,7 @@ import { Subtitle } from "@/components/typography/Subtitle";
 import { Text } from "@/components/typography/Text";
 import { Title } from "@/components/typography/Title";
 import { itemsPerPageOptions } from "@/data/placeholders";
-import {
-  IUpdateUserDTO,
-  IUserDTO,
-} from "@/repositories/interfaces/usersRepositoriesInterface";
+import { IUpdateUserDTO, IUserDTO } from "@/repositories/dtos/UserDTO";
 import {
   collapseLongString,
   formatDate,

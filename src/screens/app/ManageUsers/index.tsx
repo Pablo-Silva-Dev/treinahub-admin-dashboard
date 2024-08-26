@@ -1,10 +1,8 @@
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
-import {
-  IUpdateUserDTO,
-  IUserDTO,
-} from "@/repositories/interfaces/usersRepositoriesInterface";
+
+import { IUpdateUserDTO, IUserDTO } from "@/repositories/dtos/UserDTO";
 import { UsersRepositories } from "@/repositories/usersRepositories";
 import { useLoading } from "@/store/loading";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
@@ -83,11 +81,9 @@ export function ManageUsers() {
       } catch (error) {
         if (typeof error === "object" && error !== null && "STATUS" in error) {
           if (error.STATUS === 409) {
-            showAlertError(
-              "Já existe um usuário com os dados fornecidos."
-            );
+            showAlertError("Já existe um usuário com os dados fornecidos.");
           }
-        }else{
+        } else {
           showAlertError(
             "Houve um erro ao tentar atualizar dados. Por favor, tente novamente mais tarde."
           );
