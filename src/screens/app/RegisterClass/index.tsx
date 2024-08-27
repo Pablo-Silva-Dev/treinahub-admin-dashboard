@@ -1,8 +1,8 @@
 import {
-    DESCRIPTION_MIN_MESSAGE,
-    FILE_MAX_SIZE_MESSAGE,
-    FILE_TYPE_UNSUPPORTED_MESSAGE,
-    REQUIRED_FIELD_MESSAGE,
+  DESCRIPTION_MIN_MESSAGE,
+  FILE_MAX_SIZE_MESSAGE,
+  FILE_TYPE_UNSUPPORTED_MESSAGE,
+  REQUIRED_FIELD_MESSAGE,
 } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
@@ -11,33 +11,59 @@ import { SelectInput } from "@/components/inputs/SelectInput";
 import { TextAreaInput } from "@/components/inputs/TextAreaInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
-import { IFile, UploadedFile } from "@/components/miscellaneous/UploadedFile";
 import {
-    coursesOptions,
-    modulesOptions,
-    tutorOptions,
-} from "@/data/placeholders";
+  IFilePreview,
+  UploadedFile,
+} from "@/components/miscellaneous/UploadedFile";
+import { ICreateVideoClassDTO } from "@/interfaces/dtos/Class";
+import { TrainingsRepositories } from "@/repositories/trainingsRepository";
+import { VideoClassesRepository } from "@/repositories/videoClassesRepository";
+import { useLoading } from "@/store/loading";
+import {
+  showAlertError,
+  showAlertLoading,
+  showAlertSuccess,
+} from "@/utils/alerts";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import * as yup from "yup";
 
 interface RegisterClassInputs {
   name: string;
   description: string;
-  course: string;
-  tutor: string;
-  module: string;
-  cover_file?: any;
+  training_id: string;
+  img_file: File;
+  video_file: File;
 }
+
+type IOption = {
+  label: string;
+  value: string;
+};
 
 export function RegisterClass() {
   const MIN_CLASS_DESCRIPTION_LENGTH = 24;
   const MAX_CLASS_DESCRIPTION_LENGTH = 250;
   const MAX_CLASS_COVER_FILE_SIZE = 2 * 1024 * 1024; //2MB
+  const MAX_CLASS_VIDEO_FILE_SIZE = 50 * 1024 * 1024; //100MB
 
-  const [wasFileUploaded, setWasFileUploaded] = useState(false);
-  const [file, setFile] = useState<IFile | null>(null);
+  const [wasVideoFileUploaded, setWasVideoFileUploaded] = useState(false);
+  const [wasImageFileUploaded, setWasImageFileUploaded] = useState(false);
+  const [videoFilePreview, setVideoFilePreview] = useState<IFilePreview | null>(
+    null
+  );
+  const [imageFilePreview, setImageFilePreview] = useState<IFilePreview | null>(
+    null
+  );
+  const [videoFile, setVideoFile] = useState<Blob | null>(null);
+  const [imageFile, setImageFile] = useState<Blob | null>(null);
+  const [trainingsOptionsList, setTrainingsOptionsList] = useState<IOption[]>(
+    []
+  );
+
+  const { isLoading, setIsLoading } = useLoading();
 
   const validationSchema = yup.object({
     name: yup.string().required(REQUIRED_FIELD_MESSAGE),
@@ -45,12 +71,10 @@ export function RegisterClass() {
       .string()
       .required(REQUIRED_FIELD_MESSAGE)
       .min(MIN_CLASS_DESCRIPTION_LENGTH, DESCRIPTION_MIN_MESSAGE),
-    course: yup.string().required(REQUIRED_FIELD_MESSAGE),
-    tutor: yup.string().required(REQUIRED_FIELD_MESSAGE),
-    module: yup.string().required(REQUIRED_FIELD_MESSAGE),
-    cover_file: yup
+    training_id: yup.string().required(REQUIRED_FIELD_MESSAGE),
+    video_file: yup
       .mixed()
-      .optional()
+      .required(REQUIRED_FIELD_MESSAGE)
       .test(
         "fileType",
         FILE_TYPE_UNSUPPORTED_MESSAGE + ".mp4, .mov, .avi, .mkv, .webm, .flv",
@@ -72,8 +96,25 @@ export function RegisterClass() {
       )
       .test("fileSize", FILE_MAX_SIZE_MESSAGE + "2MB", (value: any) => {
         if (!value || value.length === 0) return true; // Allow empty file
-        return value[0].size <= MAX_CLASS_COVER_FILE_SIZE;
+        return value[0].size <= MAX_CLASS_VIDEO_FILE_SIZE;
       }),
+    img_file: yup
+      .mixed()
+      .required(REQUIRED_FIELD_MESSAGE)
+      .test("fileSize", FILE_MAX_SIZE_MESSAGE + "2MB", (value: any) => {
+        return value && value[0] && value[0].size <= MAX_CLASS_COVER_FILE_SIZE;
+      })
+      .test(
+        "fileType",
+        FILE_TYPE_UNSUPPORTED_MESSAGE + ".jpeg ou .png",
+        (value: any) => {
+          return (
+            value &&
+            value[0] &&
+            ["image/jpeg", "image/png"].includes(value[0].type)
+          );
+        }
+      ),
   });
 
   const {
@@ -82,50 +123,131 @@ export function RegisterClass() {
     formState: { errors, isValid },
     watch,
     setValue,
-    trigger,
+    reset,
   } = useForm({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
   });
 
-  const handleRegisterClass: SubmitHandler<RegisterClassInputs> = (data) => {
-    console.log(data);
-  };
-
   const descriptionValue = watch("description");
 
-  const handleCourseSelect = (selectedOption: { value: string }) => {
-    setValue("course", selectedOption.value, { shouldValidate: true });
-    trigger("tutor");
+  const handleTrainingSelect = (selectedOption: { value: string }) => {
+    setValue("training_id", selectedOption.value, { shouldValidate: true });
   };
 
-  const handleTutorSelect = (selectedOption: { value: string }) => {
-    setValue("tutor", selectedOption.value, { shouldValidate: true });
-    trigger("module");
-  };
-
-  const handleModuleSelect = (selectedOption: { value: string }) => {
-    setValue("module", selectedOption.value, { shouldValidate: true });
-  };
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      setFile({
-        name: file.name,
-        size: file.size,
-        uri: previewUrl,
-        type: file.type,
+  const handleSelectImageFile = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const imageFile = event.target.files?.[0];
+    if (imageFile) {
+      const previewImageUrl = URL.createObjectURL(imageFile);
+      setImageFilePreview({
+        name: imageFile.name,
+        size: imageFile.size,
+        uri: previewImageUrl,
+        type: imageFile.type,
       });
-      setWasFileUploaded(true);
+      setImageFile(imageFile);
+      setWasImageFileUploaded(true);
     }
   };
 
-  const handleRemoveUploadedFile = () => {
-    setFile(null);
-    setWasFileUploaded(false);
+  const handleSelectVideoFile = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const videoFile = event.target.files?.[0];
+    if (videoFile) {
+      const previewVideoUrl = URL.createObjectURL(videoFile);
+      setVideoFilePreview({
+        name: videoFile.name,
+        size: videoFile.size,
+        uri: previewVideoUrl,
+        type: videoFile.type,
+      });
+      setVideoFile(videoFile);
+      setWasVideoFileUploaded(true);
+    }
   };
+
+  const handleRemoveUploadedFile = (fileType: "video" | "image") => {
+    if (fileType === "image") {
+      setImageFile(null);
+      setWasImageFileUploaded(false);
+    } else {
+      setVideoFile(null);
+      setWasVideoFileUploaded(false);
+    }
+  };
+
+  const setTrainingsOptions = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const trainingsRepositories = new TrainingsRepositories();
+      const trainings = await trainingsRepositories.listTrainings();
+
+      const trainingsOptions = trainings.map((training) => ({
+        label: training.name,
+        value: training.id,
+      }));
+
+      setTrainingsOptionsList(trainingsOptions);
+    } catch (error) {
+      console.log("Error at trying to list trainings: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const handleRegisterVideoClass: SubmitHandler<RegisterClassInputs> =
+    useCallback(
+      async (data: ICreateVideoClassDTO) => {
+        const videoClassesRepository = new VideoClassesRepository();
+        try {
+          setIsLoading(true);
+          showAlertLoading(
+            "Por favor, aguarde enquanto processamos a videoaula..."
+          );
+          if (imageFile && videoFile) {
+            await videoClassesRepository.create({
+              ...data,
+              img_file: imageFile,
+              video_file: videoFile,
+            });
+            showAlertSuccess(
+              "Videoaula cadastrado com sucesso. Avisaremos assim que a videoaula estiver disponível."
+            );
+          }
+          reset();
+          setImageFile(null);
+          setImageFilePreview(null);
+          setVideoFile(null);
+          setVideoFilePreview(null);
+        } catch (error) {
+          if (
+            typeof error === "object" &&
+            error !== null &&
+            "STATUS" in error
+          ) {
+            if (error.STATUS === 409) {
+              showAlertError(
+                "Já existe uma videoaula com estes dados para este treinamento."
+              );
+            } else {
+              showAlertError("Houve um erro ao tentar cadastrar videoaula.");
+            }
+          }
+          console.log(error);
+        } finally {
+          setIsLoading(false);
+          toast.dismiss("loading");
+        }
+      },
+      [videoFilePreview, imageFilePreview]
+    );
+
+  useEffect(() => {
+    setTrainingsOptions();
+  }, []);
 
   return (
     <main className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-800 w-full">
@@ -136,7 +258,10 @@ export function RegisterClass() {
             iconName="play-circle"
           />
         </div>
-        <form className="w-full" onSubmit={handleSubmit(handleRegisterClass)}>
+        <form
+          className="w-full"
+          onSubmit={handleSubmit(handleRegisterVideoClass as never)}
+        >
           <div className="w-full mb-4">
             <TextInput
               inputLabel="Nome"
@@ -147,7 +272,7 @@ export function RegisterClass() {
               <ErrorMessage errorMessage={errors.name?.message} />
             )}
           </div>
-          <div className="w-full mb-4">
+          <div className="w-full mb-6">
             <TextAreaInput
               label="Descrição"
               showTextLength
@@ -160,75 +285,96 @@ export function RegisterClass() {
               <ErrorMessage errorMessage={errors.description?.message} />
             )}
           </div>
-          <div className="w-full flex flex-col md:flex-row mb-4">
+
+          <div className="w-full mb-2">
+            {wasVideoFileUploaded && videoFilePreview ? (
+              <>
+                <UploadedFile
+                  file={{
+                    name: videoFilePreview.name,
+                    size: Number(
+                      (videoFilePreview.size / 1024 / 1024).toFixed(2)
+                    ),
+                    uri: videoFilePreview.uri,
+                    type: videoFilePreview.type,
+                  }}
+                  onCancel={() => handleRemoveUploadedFile("video")}
+                />
+                {errors && errors.video_file && (
+                  <ErrorMessage errorMessage={errors.video_file?.message} />
+                )}
+              </>
+            ) : (
+              <>
+                <FileInput
+                  label="Videoaula"
+                  onUpload={handleSelectVideoFile}
+                  labelDescription="Selecione um arquivo de video .mp4 ou .mov de até 50MB"
+                  {...register("video_file", {
+                    onChange: handleSelectVideoFile as never,
+                  })}
+                />
+                {errors && errors.video_file && (
+                  <ErrorMessage errorMessage={errors.video_file?.message} />
+                )}
+              </>
+            )}
+          </div>
+
+          <div className="w-full mb-6 mt-4">
+            {wasImageFileUploaded && imageFilePreview ? (
+              <>
+                <UploadedFile
+                  file={{
+                    name: imageFilePreview.name,
+                    size: Number(
+                      (imageFilePreview.size / 1024 / 1024).toFixed(2)
+                    ),
+                    uri: imageFilePreview.uri,
+                    type: imageFilePreview.type,
+                  }}
+                  onCancel={() => handleRemoveUploadedFile("image")}
+                />
+                {errors && errors.img_file && (
+                  <ErrorMessage errorMessage={errors.img_file?.message} />
+                )}
+              </>
+            ) : (
+              <>
+                <FileInput
+                  label="Capa da videoaula"
+                  onUpload={handleSelectImageFile}
+                  labelDescription="Selecione um arquivo de imagem .jpeg ou .png de até 2MB"
+                  {...register("img_file", {
+                    onChange: handleSelectImageFile as never,
+                  })}
+                />
+                {errors && errors.img_file && (
+                  <ErrorMessage errorMessage={errors.img_file?.message} />
+                )}
+              </>
+            )}
+          </div>
+          <div className="w-full flex flex-col md:flex-row mb-6">
             <div className="w-full">
               <SelectInput
                 label="Selecione um treinamento"
-                options={coursesOptions}
-                onSelectOption={handleCourseSelect as never}
+                options={trainingsOptionsList}
+                onSelectOption={handleTrainingSelect as never}
                 placeholder="Selecione um treinamento"
                 defaultValue="Selecione um treinamento"
                 widthVariant="mid"
               />
-              {errors && errors.course && (
-                <ErrorMessage errorMessage={errors.course?.message} />
-              )}
-            </div>
-            <div className="w-full">
-              <SelectInput
-                label="Selecione um tutor"
-                options={tutorOptions}
-                onSelectOption={handleTutorSelect as never}
-                placeholder="Selecione um tutor"
-                defaultValue="Selecione um tutor"
-                widthVariant="mid"
-              />
-              {errors && errors.tutor && (
-                <ErrorMessage errorMessage={errors.tutor?.message} />
-              )}
             </div>
           </div>
-          <div className="w-full mb-4">
-            <SelectInput
-              label="Selecione um módulo"
-              options={modulesOptions}
-              onSelectOption={handleModuleSelect as never}
-              placeholder="Selecione um módulo"
-              defaultValue="Selecione um módulo"
-            />
-            {errors && errors.module && (
-              <ErrorMessage errorMessage={errors.module?.message} />
-            )}
-          </div>
-          <div className="w-full mb-2">
-            {wasFileUploaded && file ? (
-              <UploadedFile
-                file={{
-                  name: file.name,
-                  size: Number((file.size / 1024 / 1024).toFixed(2)),
-                  uri: file.uri,
-                  type: file.type,
-                }}
-                onCancel={handleRemoveUploadedFile}
-              />
-            ) : (
-              <FileInput
-                label="Vídeoaula"
-                onUpload={handleFileUpload}
-                labelDescription="Selecione um arquivo de video .mp4 ou .mov de até 2MB"
-                {...register("cover_file", { onChange: handleFileUpload })}
-              />
-            )}
-          </div>
-          <div className="w-full mb-4">
-            {errors.cover_file && (
-              <div>
-                <ErrorMessage errorMessage={errors.cover_file?.message} />
-              </div>
-            )}
-          </div>
+
           <div className="w-full mt-2">
-            <Button title="Cadastrar Aula" type="submit" disabled={!isValid} />
+            <Button
+              title="Cadastrar Aula"
+              type="submit"
+              isLoading={isLoading}
+              disabled={isLoading || !isValid || !imageFile || !videoFile}
+            />
           </div>
         </form>
       </div>

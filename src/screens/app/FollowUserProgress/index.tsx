@@ -17,7 +17,7 @@ export function FollowUserProgress() {
     (metric) => metric.user.name === selectedUser
   );
 
-  const MAX_COURSES_HIDDEN_SCROLL = 5;
+  const MAX_TRAININGS_HIDDEN_SCROLL = 5;
 
   return (
     <main className="flex flex-1 flex-col w-[90%] lg:w-full lg:p-4 mx-auto">
@@ -45,7 +45,7 @@ export function FollowUserProgress() {
         <div
           className={
             selectedUserMetrics.map((course) =>
-              course.user.courses.length > MAX_COURSES_HIDDEN_SCROLL
+              course.user.courses.length > MAX_TRAININGS_HIDDEN_SCROLL
                 ? "w-full flex flex-col max-h-[480px] overflow-y-scroll"
                 : "w-full flex flex-col max-h-[480px]"
             ) as never

@@ -30,10 +30,10 @@ interface RegisterTrainingInputs {
 }
 
 export function RegisterTraining() {
-  const MIN_COURSE_NAME_LENGTH = 16;
-  const MIN_COURSE_DESCRIPTION_LENGTH = 40;
-  const MAX_COURSE_DESCRIPTION_LENGTH = 500;
-  const MAX_COURSE_COVER_FILE_SIZE = 2 * 1024 * 1024; //2MB
+  const MIN_TRAINING_NAME_LENGTH = 16;
+  const MIN_TRAINING_DESCRIPTION_LENGTH = 40;
+  const MAX_TRAINING_DESCRIPTION_LENGTH = 500;
+  const MAX_TRAINING_COVER_FILE_SIZE = 2 * 1024 * 1024; //2MB
 
   const [filePreview, setFilePreview] = useState<IFilePreview | null>(null);
   const [file, setFile] = useState<Blob | null>(null);
@@ -46,17 +46,17 @@ export function RegisterTraining() {
   const validationSchema = yup.object({
     name: yup
       .string()
-      .min(MIN_COURSE_NAME_LENGTH, DESCRIPTION_MIN_MESSAGE)
+      .min(MIN_TRAINING_NAME_LENGTH, DESCRIPTION_MIN_MESSAGE)
       .required(REQUIRED_FIELD_MESSAGE),
     description: yup
       .string()
       .required(REQUIRED_FIELD_MESSAGE)
-      .min(MIN_COURSE_DESCRIPTION_LENGTH, DESCRIPTION_MIN_MESSAGE),
+      .min(MIN_TRAINING_DESCRIPTION_LENGTH, DESCRIPTION_MIN_MESSAGE),
     file: yup
       .mixed()
       .required(REQUIRED_FIELD_MESSAGE)
       .test("fileSize", FILE_MAX_SIZE_MESSAGE + "2MB", (value: any) => {
-        return value && value[0] && value[0].size <= MAX_COURSE_COVER_FILE_SIZE;
+        return value && value[0] && value[0].size <= MAX_TRAINING_COVER_FILE_SIZE;
       })
       .test(
         "fileType",
@@ -164,6 +164,7 @@ export function RegisterTraining() {
               </div>
             )}
           </div>
+          
           <div className="w-full mb-4">
             <TextAreaInput
               label="Descrição"
@@ -171,7 +172,7 @@ export function RegisterTraining() {
               currentTextLength={
                 descriptionValue?.length ? descriptionValue.length : 0
               }
-              maxTextLength={MAX_COURSE_DESCRIPTION_LENGTH}
+              maxTextLength={MAX_TRAINING_DESCRIPTION_LENGTH}
               placeholder="Descrição do treinamento"
               {...register("description")}
             />

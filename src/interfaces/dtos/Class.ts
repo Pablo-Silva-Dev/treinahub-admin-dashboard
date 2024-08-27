@@ -1,4 +1,4 @@
-export interface IClass {
+export interface IVideoClassDTO {
   name: string;
   description: string;
   tutor_name: string;
@@ -8,19 +8,17 @@ export interface IClass {
   duration: string;
 }
 
-export interface ICreateClassDTO {
+export interface ICreateVideoClassDTO {
   name: string;
   description: string;
-  course_id: string;
-  tutor_id: string;
-  module_id: string;
-  video_url: string;
+  training_id: string;
+  img_file: Blob;
+  video_file: Blob;
 }
 
-export interface IUpdateClassDTO {
-  name?: string;
-  description?: string;
-  tutor_id?: string;
-  module_id?: string;
-  video_url?: string;
+export interface IUpdateVideoClassDTO {
+  id: string;
+  name: string;
+  description: string;
+  file: Blob;
 }

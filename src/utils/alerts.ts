@@ -5,6 +5,7 @@ const showAlertError = (msg: string) =>
     style: {
       fontSize: "13px",
     },
+     id: "error",
   });
 
 const showAlertSuccess = (msg: string) =>
@@ -12,6 +13,7 @@ const showAlertSuccess = (msg: string) =>
     style: {
       fontSize: "13px",
     },
+     id: "success",
   });
 
 const showAlertLoading = (msg: string) =>
@@ -19,6 +21,7 @@ const showAlertLoading = (msg: string) =>
     style: {
       fontSize: "13px",
     },
+    id: "loading",
   });
 
 export { showAlertError, showAlertLoading, showAlertSuccess };

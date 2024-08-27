@@ -60,10 +60,10 @@ export function EditTrainingModal({
   isLoading,
   selectedTrainingId,
 }: EditTrainingModalProps) {
-  const MIN_COURSE_NAME_LENGTH = 16;
-  const MIN_COURSE_DESCRIPTION_LENGTH = 40;
-  const MAX_COURSE_DESCRIPTION_LENGTH = 500;
-  const MAX_COURSE_COVER_FILE_SIZE = 2 * 1024 * 1024; //2MB
+  const MIN_TRAINING_NAME_LENGTH = 16;
+  const MIN_TRAINING_DESCRIPTION_LENGTH = 40;
+  const MAX_TRAINING_DESCRIPTION_LENGTH = 500;
+  const MAX_TRAINING_COVER_FILE_SIZE = 2 * 1024 * 1024; //2MB
 
   const [filePreview, setFilePreview] = useState<IFilePreview | null>(null);
   const [file, setFile] = useState<Blob | null>(null);
@@ -75,18 +75,18 @@ export function EditTrainingModal({
     id: yup.string().optional(),
     name: yup
       .string()
-      .min(MIN_COURSE_NAME_LENGTH, DESCRIPTION_MIN_MESSAGE)
+      .min(MIN_TRAINING_NAME_LENGTH, DESCRIPTION_MIN_MESSAGE)
       .required(),
     description: yup
       .string()
       .required()
-      .min(MIN_COURSE_DESCRIPTION_LENGTH, DESCRIPTION_MIN_MESSAGE)
-      .max(MAX_COURSE_DESCRIPTION_LENGTH),
+      .min(MIN_TRAINING_DESCRIPTION_LENGTH, DESCRIPTION_MIN_MESSAGE)
+      .max(MAX_TRAINING_DESCRIPTION_LENGTH),
     file: yup
       .mixed()
       .required(REQUIRED_FIELD_MESSAGE)
       .test("fileSize", FILE_MAX_SIZE_MESSAGE + "2MB", (value: any) => {
-        return value && value[0] && value[0].size <= MAX_COURSE_COVER_FILE_SIZE;
+        return value && value[0] && value[0].size <= MAX_TRAINING_COVER_FILE_SIZE;
       })
       .test(
         "fileType",
@@ -191,7 +191,7 @@ export function EditTrainingModal({
             label="Descrição"
             placeholder={description}
             showTextLength
-            maxTextLength={MAX_COURSE_DESCRIPTION_LENGTH}
+            maxTextLength={MAX_TRAINING_DESCRIPTION_LENGTH}
             currentTextLength={
               descriptionValue?.length ? descriptionValue.length : 0
             }
