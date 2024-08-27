@@ -24,9 +24,9 @@ export interface ICreateTrainingDTO {
 
 export interface IUpdateTrainingDTO {
   id: string;
-  name?: string;
-  description?: string;
-  cover_url?: string;
+  name: string;
+  description: string;
+  file: Blob;
 }
 
 export interface ITrainingsRepository {

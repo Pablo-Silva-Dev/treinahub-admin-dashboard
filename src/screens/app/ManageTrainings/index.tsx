@@ -5,10 +5,17 @@ import { PlusButton } from "@/components/buttons/PlusButton";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { ITrainingDTO } from "@/repositories/dtos/TrainingDTO";
+import { IUpdateTrainingDTO } from "@/repositories/interfaces/trainingsRepository";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
+import { useLoading } from "@/store/loading";
 import { useThemeStore } from "@/store/theme";
-import { useQuery } from "@tanstack/react-query";
-import { useCallback, useState } from "react";
+import { showAlertError, showAlertSuccess } from "@/utils/alerts";
+import {
+  InvalidateQueryFilters,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { EditTrainingModal } from "./components/EditTrainingModal";
@@ -16,11 +23,17 @@ import { TrainingInfoCard } from "./components/TrainingInfoCard";
 
 export function ManageTrainings() {
   const [trainings, setTrainings] = useState<ITrainingDTO[]>([]);
-  const [isDeleteModalOpen, setIsDeleteModalUserOpen] = useState(false);
-  const [isEditTrainingModalOpen, setIsEditModalUserOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalTrainingOpen] = useState(false);
+  const [isEditModalTrainingOpen, setIsEditModalTrainingOpen] = useState(false);
+  const [selectedTraining, setSelectedTraining] = useState<ITrainingDTO | null>(
+    null
+  );
 
   const navigate = useNavigate();
   const { theme } = useThemeStore();
+  const queryClient = useQueryClient();
+
+  const { setIsLoading } = useLoading();
 
   const trainingsRepository = new TrainingsRepositories();
 
@@ -44,12 +57,68 @@ export function ManageTrainings() {
     queryFn: getTrainings,
   });
 
-  const handleToggleEditTrainingModal = () => {
-    setIsEditModalUserOpen(!isEditTrainingModalOpen);
+  const handleDeleteUser = useCallback(
+    async (trainingId: string) => {
+      try {
+        setIsLoading(true);
+        await trainingsRepository.deleteTraining(trainingId);
+        showAlertSuccess("Treinamento deletado com sucesso!");
+        setIsDeleteModalTrainingOpen(false);
+        queryClient.invalidateQueries(["trainings"] as InvalidateQueryFilters);
+      } catch (error) {
+        showAlertError(
+          "Houve um erro ao deletar treinamento. Por favor, tente novamente mais tarde."
+        );
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [queryClient]
+  );
+
+  const handleToggleEditModalTraining = (training?: ITrainingDTO) => {
+    setIsEditModalTrainingOpen(!isEditModalTrainingOpen);
+    if (training) {
+      setSelectedTraining(training);
+    }
   };
-  const handleToggleDeleteModal = () => {
-    setIsDeleteModalUserOpen(!isDeleteModalOpen);
+
+  const handleToggleDeleteModal = (training?: ITrainingDTO) => {
+    setIsDeleteModalTrainingOpen(!isDeleteModalOpen);
+    if (training) {
+      setSelectedTraining(training);
+    }
   };
+
+  const handleUpdateUser = useCallback(
+    async (data: IUpdateTrainingDTO) => {
+      try {
+        await trainingsRepository.updateTraining({
+          ...data,
+          id: selectedTraining!.id,
+        });
+        handleToggleEditModalTraining();
+        showAlertSuccess("Treinamento atualizado com sucesso!");
+        queryClient.invalidateQueries(["trainings"] as InvalidateQueryFilters);
+      } catch (error) {
+        if (typeof error === "object" && error !== null && "STATUS" in error) {
+          if (error.STATUS === 409) {
+            showAlertError("Já existe um treinamento com o nome informado.");
+          } else {
+            showAlertError("Houve um erro ao tentar cadastrar treinamento.");
+          }
+        }
+        console.log(error);
+      }
+    },
+    [queryClient, selectedTraining]
+  );
+
+  useEffect(() => {
+    console.log(selectedTraining);
+  }, [selectedTraining]);
+
   return (
     <main className="flex flex-1 flex-col w-[90%] lg:w-full mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
       <div className="flex flex-col  w-full mx-auto xl:pr-8">
@@ -84,8 +153,8 @@ export function ManageTrainings() {
                 training={training.name}
                 description={training.description}
                 cover_url={training.cover_url!}
-                onEdit={handleToggleEditTrainingModal}
-                onDelete={handleToggleDeleteModal}
+                onEdit={() => handleToggleEditModalTraining(training)}
+                onDelete={() => handleToggleDeleteModal(training)}
                 onSeeTraining={handleSeeTraining}
               />
             ))}
@@ -96,14 +165,16 @@ export function ManageTrainings() {
         resource="treinamento"
         isOpen={isDeleteModalOpen}
         onClose={handleToggleDeleteModal}
-        onRequestClose={handleToggleDeleteModal}
-        onConfirmAction={() => console.log("Training deleted")}
+        onRequestClose={handleToggleDeleteModal as never}
+        onConfirmAction={() => handleDeleteUser(selectedTraining!.id)}
       />
       <EditTrainingModal
-        isOpen={isEditTrainingModalOpen}
-        onClose={handleToggleEditTrainingModal}
-        onRequestClose={handleToggleEditTrainingModal}
-        onConfirmAction={() => console.log("Training edited")}
+        isOpen={isEditModalTrainingOpen}
+        onClose={handleToggleEditModalTraining}
+        onRequestClose={handleToggleEditModalTraining as never}
+        onConfirmAction={handleUpdateUser}
+        isLoading={isLoading}
+        selectedTrainingId={selectedTraining && selectedTraining.id}
       />
     </main>
   );

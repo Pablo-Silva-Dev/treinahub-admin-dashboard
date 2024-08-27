@@ -77,7 +77,7 @@ export function ManageUsers() {
       try {
         setIsLoading(true);
         await usersRepository.updateUser(data);
-        showAlertSuccess("Dados atualizados com sucesso");
+        showAlertSuccess("Dados atualizados com sucesso!");
         setIsEditModalUserOpen(false);
         clearUpdateUserForm();
         queryClient.invalidateQueries(["users"] as InvalidateQueryFilters);

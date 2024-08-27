@@ -47,9 +47,18 @@ export class TrainingsRepositories implements ITrainingsRepository {
   }
   async updateTraining(data: IUpdateTrainingDTO): Promise<ITrainingDTO> {
     try {
+      const { id, name, description, file } = data;
+
+      const formData = new FormData();
+
+      formData.append("id", id);
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("file", file, file.name);
+
       const response = await api.put<IApiSuccessResponse<ITrainingDTO>>(
         "/trainings/update",
-        data
+        formData
       );
       return response.data.RES;
     } catch (error) {

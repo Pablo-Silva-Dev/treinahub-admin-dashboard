@@ -15,9 +15,3 @@ export interface ITrainingDTO {
   training_metrics?: ITrainingMetricsDTO[];
   formatted_duration?: string;
 }
-export interface IUpdateTrainingDTO {
-  id: string;
-  name?: string;
-  description?: string;
-  cover_url?: string;
-}
