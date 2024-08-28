@@ -94,7 +94,7 @@ export function RegisterClass() {
           );
         }
       )
-      .test("fileSize", FILE_MAX_SIZE_MESSAGE + "2MB", (value: any) => {
+      .test("fileSize", FILE_MAX_SIZE_MESSAGE + "50MB", (value: any) => {
         if (!value || value.length === 0) return true; // Allow empty file
         return value[0].size <= MAX_CLASS_VIDEO_FILE_SIZE;
       }),

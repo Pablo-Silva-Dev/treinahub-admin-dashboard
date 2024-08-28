@@ -5,19 +5,25 @@ import { PlusButton } from "@/components/buttons/PlusButton";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
+import { IUpdateVideoClassDTO } from "@/interfaces/dtos/Class";
 import { IVideoClassDTO } from "@/repositories/dtos/VideoClassDTO";
 import { ITrainingDTO } from "@/repositories/interfaces/trainingsRepository";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
 import { VideoClassesRepository } from "@/repositories/videoClassesRepository";
 import { useLoading } from "@/store/loading";
 import { useThemeStore } from "@/store/theme";
-import { showAlertError, showAlertSuccess } from "@/utils/alerts";
+import {
+  showAlertError,
+  showAlertLoading,
+  showAlertSuccess,
+} from "@/utils/alerts";
 import {
   InvalidateQueryFilters,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { VideoClassesTable } from "./components/ClassesTable";
@@ -41,8 +47,11 @@ export function ManageClasses() {
   const videoClassesRepositories = new VideoClassesRepository();
   const trainingsRepositories = new TrainingsRepositories();
 
-  const handleToggleEditClassModal = () => {
+  const handleToggleEditClassModal = (videoClass?: IVideoClassDTO) => {
     setIsEditModalClassOpen(!isEditClassModalOpen);
+    if (videoClass) {
+      setSelectedVideoClass(videoClass);
+    }
   };
   const handleToggleDeleteModal = () => {
     setIsDeleteModalClassOpen(!isDeleteModalOpen);
@@ -63,19 +72,31 @@ export function ManageClasses() {
 
   const getVideoClasses = useCallback(async () => {
     try {
-      const videoClasses = await videoClassesRepositories.listVideoClasses();
-      setVideoClasses(videoClasses);
+      let videoClassesList = [];
+      if (selectedTrainingId === "") {
+        videoClassesList = await videoClassesRepositories.listVideoClasses();
+      } else {
+        videoClassesList =
+          await videoClassesRepositories.listVideoClassesByTrainingId(
+            selectedTrainingId
+          );
+      }
+      setVideoClasses(videoClassesList);
       return videoClasses;
     } catch (error) {
       console.log(error);
     }
   }, [selectedTrainingId]);
 
+  useEffect(() => {
+    getVideoClasses();
+  }, [getVideoClasses]);
+
   const getVideoClassesByTraining = useCallback(async (trainingId: string) => {
     try {
-      const videoClasses =
+      const videoClassesList =
         await videoClassesRepositories.listVideoClassesByTrainingId(trainingId);
-      setVideoClasses(videoClasses);
+      setVideoClasses(videoClassesList);
       return videoClasses;
     } catch (error) {
       console.log(error);
@@ -83,12 +104,8 @@ export function ManageClasses() {
   }, []);
 
   useEffect(() => {
-    getVideoClasses();
-  }, [selectedTrainingId]);
-
-  useEffect(() => {
     getVideoClassesByTraining(selectedTrainingId);
-  }, [selectedTrainingId]);
+  }, [getVideoClassesByTraining, selectedTrainingId]);
 
   const videoClassesQuery = useQuery({
     queryKey: ["video-classes"],
@@ -115,6 +132,42 @@ export function ManageClasses() {
       setIsLoading(false);
     }
   }, []);
+
+  const handleUpdateVideoClass = useCallback(
+    async (data: IUpdateVideoClassDTO) => {
+      try {
+        setIsLoading(true);
+        showAlertLoading(
+          "Estamos processando os novos dados da usa videoaula. Por favor, aguarde..."
+        );
+        if (data.img_file && data.video_file) {
+          await videoClassesRepositories.updateVideoClass({
+            ...data,
+            id: selectedVideoClass!.id,
+          });
+        }
+        queryClient.invalidateQueries([
+          "video-classes",
+        ] as InvalidateQueryFilters);
+      } catch (error) {
+        if (typeof error === "object" && error !== null && "STATUS" in error) {
+          if (error.STATUS === 409) {
+            showAlertError(
+              "Já existe uma videoaula com o nome informado para este treinamento."
+            );
+          } else {
+            showAlertError("Houve um erro ao tentar atualizar videoaula.");
+          }
+        }
+        showAlertError("Houve um erro ao tentar atualizar videoaula.");
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+        toast.dismiss("loading");
+      }
+    },
+    [queryClient, selectedVideoClass]
+  );
 
   const getTrainings = useCallback(async () => {
     try {
@@ -187,9 +240,10 @@ export function ManageClasses() {
               <VideoClassesTable
                 classes={videoClasses}
                 onDeleteVideoClass={handleToggleDeleteModal}
-                onUpdateVideoClass={handleToggleEditClassModal}
+                onUpdateVideoClass={handleToggleEditClassModal as never}
                 onWatchVideoClass={handleToggleWatchClassModal}
                 onSelectVideoClass={getVideoClass}
+                videoClass={selectedVideoClass as never}
               />
             </div>
           )}
@@ -205,8 +259,10 @@ export function ManageClasses() {
       <EditClassModal
         isOpen={isEditClassModalOpen}
         onClose={handleToggleEditClassModal}
-        onRequestClose={handleToggleEditClassModal}
-        onConfirmAction={() => console.log("Class edited")}
+        onRequestClose={handleToggleEditClassModal as never}
+        onConfirmAction={handleUpdateVideoClass}
+        isLoading={isLoading}
+        selectedVideoClassId={selectedVideoClass && selectedVideoClass.id}
       />
       <WatchClassModal
         classToWatch="Iniciando com scrollview"

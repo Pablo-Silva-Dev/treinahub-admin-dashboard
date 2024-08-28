@@ -15,7 +15,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { EditTrainingModal } from "./components/EditTrainingModal";
@@ -94,6 +94,7 @@ export function ManageTrainings() {
   const handleUpdateUser = useCallback(
     async (data: IUpdateTrainingDTO) => {
       try {
+        setIsLoading(true);
         await trainingsRepository.updateTraining({
           ...data,
           id: selectedTraining!.id,
@@ -106,18 +107,16 @@ export function ManageTrainings() {
           if (error.STATUS === 409) {
             showAlertError("Já existe um treinamento com o nome informado.");
           } else {
-            showAlertError("Houve um erro ao tentar cadastrar treinamento.");
+            showAlertError("Houve um erro ao tentar atualizar treinamento.");
           }
         }
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     },
     [queryClient, selectedTraining]
   );
-
-  useEffect(() => {
-    console.log(selectedTraining);
-  }, [selectedTraining]);
 
   return (
     <main className="flex flex-1 flex-col w-[90%] lg:w-full mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">

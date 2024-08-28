@@ -1,4 +1,7 @@
-import { ICreateVideoClassDTO } from "@/interfaces/dtos/Class";
+import {
+  ICreateVideoClassDTO,
+  IUpdateVideoClassDTO,
+} from "@/interfaces/dtos/Class";
 import { api, IApiSuccessResponse } from "@/services/api";
 import { IVideoClassDTO } from "./dtos/VideoClassDTO";
 import { IVideoClassesRepository } from "./interfaces/videoClassesRepository";
@@ -60,6 +63,26 @@ export class VideoClassesRepository implements IVideoClassesRepository {
   async deleteVideoClass(videoClassId: string): Promise<void> {
     try {
       const response = await api.delete(`video-classes/delete/${videoClassId}`);
+      return response.data.RES;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateVideoClass(data: IUpdateVideoClassDTO): Promise<IVideoClassDTO> {
+    try {
+      const { id, training_id, description, name, img_file, video_file } = data;
+
+      const formData = new FormData();
+
+      formData.append("id", id);
+      formData.append("training_id", training_id);
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("img_file", img_file);
+      formData.append("video_file", video_file);
+
+      const response = await api.put("video-classes/update", formData);
       return response.data.RES;
     } catch (error) {
       throw error;

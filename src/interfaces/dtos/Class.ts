@@ -10,5 +10,7 @@ export interface IUpdateVideoClassDTO {
   id: string;
   name: string;
   description: string;
-  file: Blob;
+  training_id: string;
+  img_file: Blob;
+  video_file: Blob;
 }

@@ -4,6 +4,7 @@ import { Subtitle } from "@/components/typography/Subtitle";
 import { Text } from "@/components/typography/Text";
 import { Title } from "@/components/typography/Title";
 import { itemsPerPageOptions, videoClassImageUrl } from "@/data/placeholders";
+import { IUpdateVideoClassDTO } from "@/interfaces/dtos/Class";
 import { IVideoClassDTO } from "@/repositories/dtos/VideoClassDTO";
 import { secondsToFullTimeString } from "@/utils/convertTime";
 import { collapseLongString } from "@/utils/formats";
@@ -30,19 +31,22 @@ const TABLE_HEAD = [
   { label: "Descrição", propRef: "description" },
   { label: "Treinamento", propRef: "name" },
   { label: "Duração", propRef: "duration" },
+  { label: "Status", propRef: "status" },
   { label: "Ações", propRef: "" },
 ];
 
 interface VideoClassesTableProps {
   classes: IVideoClassDTO[];
-  onUpdateVideoClass: () => void;
+  onUpdateVideoClass: (data: IUpdateVideoClassDTO) => void;
   onDeleteVideoClass: (videoClassId: string) => void;
   onSelectVideoClass: (videoClassId: string) => void;
   onWatchVideoClass: () => void;
+  videoClass: IUpdateVideoClassDTO;
 }
 
 export function VideoClassesTable({
   classes,
+  videoClass,
   onDeleteVideoClass,
   onUpdateVideoClass,
   onSelectVideoClass,
@@ -99,6 +103,11 @@ export function VideoClassesTable({
     onDeleteVideoClass(videoClassId);
   };
 
+  const handleUpdateVideoClass = (videoClassId: string) => {
+    onSelectVideoClass(videoClassId);
+    onUpdateVideoClass(videoClass as IUpdateVideoClassDTO);
+  };
+
   return (
     <Card className="w-full lg:h-[560px] flex flex-col lg:justify-between mx-auto bg-white dark:bg-slate-900">
       <CardBody className="overflow-scroll p-0 rounded-lg w-full">
@@ -123,7 +132,7 @@ export function VideoClassesTable({
                   key={head.label + i}
                   className="bg-white dark:bg-slate-900 py-1 px-4"
                 >
-                  {head.propRef && (
+                  {head.propRef && head.propRef !== "status" && (
                     <div className="flex flex-row ml-[-8px]">
                       <SortButton
                         onClick={() => handleSort(head.propRef, "asc")}
@@ -143,7 +152,16 @@ export function VideoClassesTable({
             {tableData.length > 0 ? (
               tableData.map(
                 (
-                  { id, name, training, description, duration, thumbnail_url },
+                  {
+                    id,
+                    name,
+                    training,
+                    description,
+                    duration,
+                    thumbnail_url,
+                    hls_encoding_url,
+                    dash_encoding_url,
+                  },
                   index
                 ) => {
                   const isLast = index === tableData.length - 1;
@@ -176,7 +194,7 @@ export function VideoClassesTable({
                               name,
                               MAX_STRING_LENGTH
                             )}
-                            className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
+                            className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300 mr-4"
                           />
                         </div>
                       </td>
@@ -186,7 +204,7 @@ export function VideoClassesTable({
                             description,
                             MAX_STRING_LENGTH
                           )}
-                          className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
+                          className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300 mr-4"
                         />
                       </td>
                       <td className={classes}>
@@ -195,13 +213,29 @@ export function VideoClassesTable({
                             training!.name,
                             MAX_STRING_LENGTH
                           )}
-                          className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
+                          className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300 mr-4"
                         />
                       </td>
                       <td className={classes}>
                         <Text
                           content={secondsToFullTimeString(duration)}
-                          className="block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
+                          className="block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300 mr-4"
+                        />
+                      </td>
+                      <td className={classes}>
+                        <Text
+                          content={
+                            dash_encoding_url !== null &&
+                            hls_encoding_url !== null
+                              ? "Disponível"
+                              : "Processando..."
+                          }
+                          className={
+                            dash_encoding_url !== null &&
+                            hls_encoding_url !== null
+                              ? "block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-green-400 mr-1"
+                              : "block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-orange-400 mr-1"
+                          }
                         />
                       </td>
                       <td className={classes}>
@@ -211,7 +245,7 @@ export function VideoClassesTable({
                         >
                           <IconButton
                             variant="text"
-                            onClick={onUpdateVideoClass}
+                            onClick={() => handleUpdateVideoClass(id)}
                             className="p-0 bg-transparent hover:bg-transparent hover:p-0 mr-8 lg:mr-4"
                           >
                             <MdEdit className="lg:h-5 lg:w-5 h-3 w-3 p-0 text-gray-700 dark:text-gray-300" />

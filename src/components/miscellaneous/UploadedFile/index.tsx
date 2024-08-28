@@ -15,7 +15,7 @@ interface UploadedFileProps {
 export function UploadedFile({ file, onCancel }: UploadedFileProps) {
   const { name, uri, size, type } = file;
   return (
-    <div className="flex flex-col items-start w-full">
+    <div className="flex flex-col items-start w-full max-h-[200px]">
       <div className="flex flex-row">
         <span className="text-green-500 text-[12px]">Arquivo anexado</span>
         <button
@@ -36,16 +36,18 @@ export function UploadedFile({ file, onCancel }: UploadedFileProps) {
           {size}MB
         </span>
       </div>
-      {type && type.includes("image") ? (
-        <img src={uri} alt={name} width={160} />
-      ) : (
-        <video
-          src={uri}
-          width="100%"
-          style={{ aspectRatio: 16 / 9 }}
-          controls
-        />
-      )}
+      <div className="w-[30vw] md:w-[20vw] xl:w-[10vw]">
+        {type && type.includes("image") ? (
+          <img src={uri} alt={name} width={160} />
+        ) : (
+          <video
+            src={uri}
+            width="100%"
+            style={{ aspectRatio: 16 / 9 }}
+            controls
+          />
+        )}
+      </div>
     </div>
   );
 }
