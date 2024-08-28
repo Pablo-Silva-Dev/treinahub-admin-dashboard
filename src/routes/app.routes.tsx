@@ -7,13 +7,11 @@ import { Home } from "@/screens/app/Home";
 import { DashboardLayout } from "@/screens/app/layout";
 import { ManageClasses } from "@/screens/app/ManageClasses";
 import { ManageFaqQuestions } from "@/screens/app/ManageFaqQuestions";
-import { ManageModules } from "@/screens/app/ManageModules";
 import { ManageSupportContact } from "@/screens/app/ManageSupportContact";
 import { ManageTrainings } from "@/screens/app/ManageTrainings";
 import { ManageUsers } from "@/screens/app/ManageUsers";
 import { RegisterClass } from "@/screens/app/RegisterClass";
 import { RegisterFaqQuestion } from "@/screens/app/RegisterFaqQuestion";
-import { RegisterModule } from "@/screens/app/RegisterModule";
 import { RegisterTraining } from "@/screens/app/RegisterTraining";
 import { ErrorPage } from "@/screens/error";
 import { ReactNode } from "react";
@@ -47,14 +45,6 @@ const appRoutesBase: route[] = [
   {
     path: "/dashboard/gerenciar-treinamentos",
     element: <ManageTrainings />,
-  },
-  {
-    path: "/dashboard/cadastrar-modulo",
-    element: <RegisterModule />,
-  },
-  {
-    path: "/dashboard/gerenciar-modulos",
-    element: <ManageModules />,
   },
   {
     path: "/dashboard/cadastrar-videoaula",
