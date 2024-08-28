@@ -1,9 +1,10 @@
-import { ICreateVideoClassDTO, IVideoClassDTO } from "@/interfaces/dtos/Class";
+import { ICreateVideoClassDTO } from "@/interfaces/dtos/Class";
 import { api, IApiSuccessResponse } from "@/services/api";
+import { IVideoClassDTO } from "./dtos/VideoClassDTO";
 import { IVideoClassesRepository } from "./interfaces/videoClassesRepository";
 
 export class VideoClassesRepository implements IVideoClassesRepository {
-  async create(data: ICreateVideoClassDTO): Promise<IVideoClassDTO> {
+  async createVideoClass(data: ICreateVideoClassDTO): Promise<IVideoClassDTO> {
     try {
       const { name, training_id, description, img_file, video_file } = data;
 
@@ -24,7 +25,7 @@ export class VideoClassesRepository implements IVideoClassesRepository {
       throw error;
     }
   }
-  async list(): Promise<IVideoClassDTO[]> {
+  async listVideoClasses(): Promise<IVideoClassDTO[]> {
     try {
       const response = await api.get<IApiSuccessResponse<IVideoClassDTO[]>>(
         "/video-classes/list"
@@ -34,7 +35,29 @@ export class VideoClassesRepository implements IVideoClassesRepository {
       throw error;
     }
   }
-  async delete(videoClassId: string): Promise<void> {
+  async getVideoClassById(videoClassId: string): Promise<IVideoClassDTO> {
+    try {
+      const response = await api.get<IApiSuccessResponse<IVideoClassDTO>>(
+        `/video-classes/get-by-id/${videoClassId}`
+      );
+      return response.data.RES;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async listVideoClassesByTrainingId(
+    trainingId: string
+  ): Promise<IVideoClassDTO[]> {
+    try {
+      const response = await api.get<IApiSuccessResponse<IVideoClassDTO[]>>(
+        `/video-classes/list-by-training/${trainingId}`
+      );
+      return response.data.RES;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async deleteVideoClass(videoClassId: string): Promise<void> {
     try {
       const response = await api.delete(`video-classes/delete/${videoClassId}`);
       return response.data.RES;

@@ -208,7 +208,7 @@ export function RegisterClass() {
             "Por favor, aguarde enquanto processamos a videoaula..."
           );
           if (imageFile && videoFile) {
-            await videoClassesRepository.create({
+            await videoClassesRepository.createVideoClass({
               ...data,
               img_file: imageFile,
               video_file: videoFile,
@@ -309,6 +309,7 @@ export function RegisterClass() {
                 <FileInput
                   label="Videoaula"
                   onUpload={handleSelectVideoFile}
+                  buttonTitle="Selecione um arquivo de vídeo"
                   labelDescription="Selecione um arquivo de video .mp4 ou .mov de até 50MB"
                   {...register("video_file", {
                     onChange: handleSelectVideoFile as never,
@@ -344,6 +345,7 @@ export function RegisterClass() {
                 <FileInput
                   label="Capa da videoaula"
                   onUpload={handleSelectImageFile}
+                  buttonTitle="Selecione um arquivo de imagem"
                   labelDescription="Selecione um arquivo de imagem .jpeg ou .png de até 2MB"
                   {...register("img_file", {
                     onChange: handleSelectImageFile as never,

@@ -8,6 +8,7 @@ export interface IVideoClassDTO {
   video_url?: string;
   thumbnail_url?: string;
   training_id: string;
+  training_name: string;
   training?: ITrainingDTO;
   formatted_duration?: string;
   hls_encoding_id: string;
@@ -15,4 +16,3 @@ export interface IVideoClassDTO {
   hls_encoding_url: string;
   dash_encoding_url: string;
 }
-
