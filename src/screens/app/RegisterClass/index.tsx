@@ -15,7 +15,7 @@ import {
   IFilePreview,
   UploadedFile,
 } from "@/components/miscellaneous/UploadedFile";
-import { ICreateVideoClassDTO } from "@/interfaces/dtos/Class";
+import { ICreateVideoClassDTO } from "@/repositories/dtos/VideoClassDTO";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
 import { VideoClassesRepository } from "@/repositories/videoClassesRepository";
 import { useLoading } from "@/store/loading";

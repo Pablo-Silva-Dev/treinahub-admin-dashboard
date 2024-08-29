@@ -1,9 +1,9 @@
+import { api, IApiSuccessResponse } from "@/services/api";
 import {
   ICreateVideoClassDTO,
   IUpdateVideoClassDTO,
-} from "@/interfaces/dtos/Class";
-import { api, IApiSuccessResponse } from "@/services/api";
-import { IVideoClassDTO } from "./dtos/VideoClassDTO";
+  IVideoClassDTO,
+} from "./dtos/VideoClassDTO";
 import { IVideoClassesRepository } from "./interfaces/videoClassesRepository";
 
 export class VideoClassesRepository implements IVideoClassesRepository {

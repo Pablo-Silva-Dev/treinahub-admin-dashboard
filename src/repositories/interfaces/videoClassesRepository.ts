@@ -1,8 +1,5 @@
-import {
-  ICreateVideoClassDTO,
-  IUpdateVideoClassDTO,
-} from "@/interfaces/dtos/Class";
-import { IVideoClassDTO } from "../dtos/VideoClassDTO";
+
+import { ICreateVideoClassDTO, IUpdateVideoClassDTO, IVideoClassDTO } from "../dtos/VideoClassDTO";
 
 export interface IVideoClassesRepository {
   createVideoClass(data: ICreateVideoClassDTO): Promise<IVideoClassDTO>;
