@@ -38,7 +38,7 @@ const unformatPhoneNumber = (number: string): string => {
 };
 
 const formatDate = (date: string) => {
-  return moment.utc(date).format("MM/DD/YYYY");
+  return moment.utc(date).format("DD/MM/YYYY");
 };
 
 export {

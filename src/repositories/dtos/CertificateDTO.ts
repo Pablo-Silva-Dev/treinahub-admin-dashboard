@@ -10,15 +10,3 @@ export interface ICertificateDTO {
   user?: IUserDTO;
   training?: ITrainingDTO;
 }
-
-export interface ICreateCertificateDTO {
-  user_id: string;
-  training_id: string;
-  url: string;
-}
-
-export interface IGenerateCertificateDTO {
-  user: IUserDTO,
-  training: ITrainingDTO
-}
-

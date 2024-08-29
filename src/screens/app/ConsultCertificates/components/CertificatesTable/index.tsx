@@ -1,12 +1,10 @@
-import { SortButton } from "@/components/buttons/SortButton";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Text } from "@/components/typography/Text";
 import { Title } from "@/components/typography/Title";
 import { itemsPerPageOptions } from "@/data/placeholders";
-import { ICertificate } from "@/interfaces/dtos/Certificate";
+import { ICertificateDTO } from "@/repositories/dtos/CertificateDTO";
 import { collapseLongString } from "@/utils/formats";
-import { sortCertificates } from "@/utils/sorting";
 import {
   Button,
   Card,
@@ -24,26 +22,28 @@ import {
 } from "react-icons/md";
 
 const TABLE_HEAD = [
-  { label: "Treinamento", propRef: "name" },
-  { label: "Aluno", propRef: "user_name" },
+  { label: "Treinamento", propRef: "training_name" },
+  { label: "Usuário", propRef: "user_name" },
   { label: "Ações", propRef: "" },
 ];
 
 interface CertificatesTableProps {
-  certificates: ICertificate[];
-  onDownloadCertificate: () => void;
-  onSeeCertificate: () => void;
+  certificates: ICertificateDTO[];
+  onDownloadCertificate: (certificateId: string) => void;
+  onSeeCertificate: (certificateId: string) => void;
+  onSelectCertificate: (certificateId: string) => void;
 }
 
 export function CertificatesTable({
   certificates,
   onDownloadCertificate,
   onSeeCertificate,
+  onSelectCertificate,
 }: CertificatesTableProps) {
   const [page, setPage] = useState(1);
   const [pagesListIndex, setPagesListIndex] = useState(0);
-  const [sortedTrainings, setSortedTrainings] = useState<ICertificate[]>([]);
-  const [tableData, setTableData] = useState<ICertificate[]>([]);
+  const [sortedTrainings, setSortedTrainings] = useState<ICertificateDTO[]>([]);
+  const [tableData, setTableData] = useState<ICertificateDTO[]>([]);
   const [itemsPerPage, setItemsPerPage] = useState(
     itemsPerPageOptions[0].value
   );
@@ -78,10 +78,14 @@ export function CertificatesTable({
     setPage(1);
   }, [itemsPerPage]);
 
-  const handleSort = (propRef: string, sortType: "asc" | "desc") => {
-    const sortedData = sortCertificates([...certificates], propRef, sortType);
-    setSortedTrainings(sortedData);
-    setPage(1);
+  const handleSeeCertificate = (certificateId: string) => {
+    onSelectCertificate(certificateId);
+    onSeeCertificate(certificateId);
+  };
+
+  const handleDownloadCertificate = (certificateId: string) => {
+    onSelectCertificate(certificateId);
+    onDownloadCertificate(certificateId);
   };
 
   return (
@@ -106,80 +110,67 @@ export function CertificatesTable({
                 </th>
               ))}
             </tr>
-            <tr>
-              {TABLE_HEAD.map((head) => (
-                <th
-                  key={head.label}
-                  className="bg-white dark:bg-slate-900 py-1 px-4"
-                >
-                  {head.propRef && head.propRef === "name" && (
-                    <div className="flex flex-row ml-[-8px]">
-                      <SortButton
-                        onClick={() => handleSort(head.propRef, "asc")}
-                        sortType="asc"
-                      />
-                      <SortButton
-                        onClick={() => handleSort(head.propRef, "desc")}
-                        sortType="desc"
-                      />
-                    </div>
-                  )}
-                </th>
-              ))}
-            </tr>
           </thead>
           <tbody className="w-[90%] lg:w-full">
-            {tableData.map(({ course, user }, index) => {
-              const isLast = index === tableData.length - 1;
-              const classes = isLast
-                ? "md:py-1 py-0"
-                : "md:py-1 py-0 border-b border-gray-200 dark:border-gray-800";
-              return (
-                <tr
-                  key={course.name}
-                  className="even:bg-gray-50 dark:even:bg-slate-800"
-                >
-                  <td className={classes}>
-                    <div className="flex items-center gap-3">
-                      <Subtitle
-                        content={course.name}
+            {tableData.map(({ id, training, user }, index) => {
+              if (training) {
+                const isLast = index === tableData.length - 1;
+                const classes = isLast
+                  ? "md:py-1 py-0"
+                  : "md:py-1 py-0 border-b border-gray-200 dark:border-gray-800";
+                return (
+                  <tr
+                    key={user!.name + index}
+                    className="even:bg-gray-50 dark:even:bg-slate-800"
+                  >
+                    <td className={classes}>
+                      <div className="flex items-center gap-3">
+                        <Subtitle
+                          content={training.name}
+                          className="block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
+                        />
+                      </div>
+                    </td>
+                    <td className={classes}>
+                      <Text
+                        content={collapseLongString(
+                          user!.name,
+                          MAX_STRING_LENGTH
+                        )}
                         className="block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
                       />
-                    </div>
-                  </td>
-                  <td className={classes}>
-                    <Text
-                      content={collapseLongString(user.name, MAX_STRING_LENGTH)}
-                      className="block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300"
-                    />
-                  </td>
-                  <td className={classes}>
-                    <Tooltip
-                      content="Baixar certicado"
-                      className="hidden lg:flex"
-                    >
-                      <IconButton
-                        variant="text"
-                        onClick={onDownloadCertificate}
-                        className="p-0 bg-transparent hover:bg-transparent hover:p-0 text-end ml-[-12px]"
+                    </td>
+                    <td className={classes}>
+                      <Tooltip
+                        content="Baixar certicado"
+                        className="hidden lg:flex"
                       >
-                        <MdOutlineFileDownload className="sm:h-5 sm:w-5 h-3 w-3 p-0 text-gray-700 dark:text-gray-300" />
-                      </IconButton>
-                    </Tooltip>
-                  </td>
-                  <td className={classes}>
-                    <Tooltip content="Ver certicado" className="hidden lg:flex">
-                      <IconButton
-                        variant="text"
-                        onClick={onSeeCertificate}
-                        className="p-0 bg-transparent hover:bg-transparent hover:p-0 ml-[-48px]"
+                        <IconButton
+                          variant="text"
+                          onClick={() => handleDownloadCertificate(id)}
+                          className="p-0 bg-transparent hover:bg-transparent hover:p-0 text-end ml-[-12px]"
+                        >
+                          <MdOutlineFileDownload className="sm:h-5 sm:w-5 h-3 w-3 p-0 text-gray-700 dark:text-gray-300" />
+                        </IconButton>
+                      </Tooltip>
+                    </td>
+                    <td className={classes}>
+                      <Tooltip
+                        content="Ver certicado"
+                        className="hidden lg:flex"
                       >
-                        <MdZoomIn className="sm:h-5 sm:w-5 h-3 w-3 p-0 text-gray-700 dark:text-gray-300" />
-                      </IconButton>
-                    </Tooltip>
-                  </td>
-                </tr>
-              );
+                        <IconButton
+                          variant="text"
+                          onClick={() => handleSeeCertificate(id)}
+                          className="p-0 bg-transparent hover:bg-transparent hover:p-0 ml-[-48px]"
+                        >
+                          <MdZoomIn className="sm:h-5 sm:w-5 h-3 w-3 p-0 text-gray-700 dark:text-gray-300" />
+                        </IconButton>
+                      </Tooltip>
+                    </td>
+                  </tr>
+                );
+              }
             })}
           </tbody>
         </table>
