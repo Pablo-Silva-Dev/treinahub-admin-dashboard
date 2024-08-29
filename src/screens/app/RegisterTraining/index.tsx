@@ -19,7 +19,7 @@ import { TrainingsRepositories } from "@/repositories/trainingsRepository";
 import { useLoading } from "@/store/loading";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -41,7 +41,9 @@ export function RegisterTraining() {
 
   const { isLoading, setIsLoading } = useLoading();
 
-  const trainingsRepository = new TrainingsRepositories();
+  const trainingsRepository = useMemo(() => {
+    return new TrainingsRepositories();
+  }, []);
 
   const validationSchema = yup.object({
     name: yup
@@ -56,7 +58,9 @@ export function RegisterTraining() {
       .mixed()
       .required(REQUIRED_FIELD_MESSAGE)
       .test("fileSize", FILE_MAX_SIZE_MESSAGE + "2MB", (value: any) => {
-        return value && value[0] && value[0].size <= MAX_TRAINING_COVER_FILE_SIZE;
+        return (
+          value && value[0] && value[0].size <= MAX_TRAINING_COVER_FILE_SIZE
+        );
       })
       .test(
         "fileType",
@@ -129,7 +133,7 @@ export function RegisterTraining() {
           setIsLoading(false);
         }
       },
-      [file, filePreview]
+      [file, reset, setIsLoading, trainingsRepository]
     );
 
   const descriptionValue = watch("description");
@@ -164,7 +168,7 @@ export function RegisterTraining() {
               </div>
             )}
           </div>
-          
+
           <div className="w-full mb-4">
             <TextAreaInput
               label="Descrição"

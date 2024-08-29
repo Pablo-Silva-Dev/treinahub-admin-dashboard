@@ -15,7 +15,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { EditUserModal } from "./components/EditUserModal";
 import { UsersTable } from "./components/UsersTable";
@@ -29,7 +29,10 @@ export function ManageUsers() {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [phone, setPhone] = useState("");
 
-  const usersRepository = new UsersRepositories();
+  const usersRepository = useMemo(() => {
+    return new UsersRepositories();
+  }, []);
+
   const queryClient = useQueryClient();
   const { theme } = useThemeStore();
 
@@ -49,7 +52,7 @@ export function ManageUsers() {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [usersRepository]);
 
   const handleDeleteUser = useCallback(
     async (userId: string) => {
@@ -69,7 +72,7 @@ export function ManageUsers() {
         setIsLoading(false);
       }
     },
-    [queryClient]
+    [queryClient, setIsLoading, users, usersRepository]
   );
 
   const handleUpdateUser = useCallback(
@@ -97,18 +100,21 @@ export function ManageUsers() {
         setIsLoading(false);
       }
     },
-    [queryClient]
+    [queryClient, setIsLoading, users, usersRepository]
   );
 
-  const getUser = useCallback(async (userId: string) => {
-    try {
-      const user = await usersRepository.getUserById(userId);
-      setSelectedUser(user);
-      return user;
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const getUser = useCallback(
+    async (userId: string) => {
+      try {
+        const user = await usersRepository.getUserById(userId);
+        setSelectedUser(user);
+        return user;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [usersRepository]
+  );
 
   const handleToggleEditUserModal = () => {
     setIsEditModalUserOpen(!isEditUserModalOpen);

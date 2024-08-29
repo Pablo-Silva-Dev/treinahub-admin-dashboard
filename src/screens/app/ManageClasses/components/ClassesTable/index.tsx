@@ -4,8 +4,10 @@ import { Subtitle } from "@/components/typography/Subtitle";
 import { Text } from "@/components/typography/Text";
 import { Title } from "@/components/typography/Title";
 import { itemsPerPageOptions, videoClassImageUrl } from "@/data/placeholders";
-import { IUpdateVideoClassDTO } from "@/interfaces/dtos/Class";
-import { IVideoClassDTO } from "@/repositories/dtos/VideoClassDTO";
+import {
+  IUpdateVideoClassDTO,
+  IVideoClassDTO,
+} from "@/repositories/dtos/VideoClassDTO";
 import { secondsToFullTimeString } from "@/utils/convertTime";
 import { collapseLongString } from "@/utils/formats";
 import { sortItems } from "@/utils/sorting";

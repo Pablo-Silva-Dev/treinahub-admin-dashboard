@@ -21,6 +21,7 @@ import {
   SetStateAction,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -59,7 +60,9 @@ export function EditUserModal({
 }: EditUserModalProps) {
   const { theme } = useThemeStore();
 
-  const usersRepository = new UsersRepositories();
+  const usersRepository = useMemo(() => {
+    return new UsersRepositories();
+  }, []);
 
   const [phonePlaceholder, setPhonePlaceholder] = useState("");
 
@@ -74,7 +77,7 @@ export function EditUserModal({
     } catch (error) {
       console.log(error);
     }
-  }, [selectedUserId]);
+  }, [selectedUserId, usersRepository]);
 
   useEffect(() => {
     getCurrentUser();

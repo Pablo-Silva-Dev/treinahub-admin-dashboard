@@ -74,7 +74,7 @@ export default function RecoveryPasswordByEmailForm({
         </div>
         <div className="w-full mt-2">
           <Button
-            onClick={() => {}}
+            type="submit"
             title="Receber Código"
             disabled={!cpfValue || !emailValue || isLoading}
             isLoading={isLoading}

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { PRIMARY_COLOR } from "@/appConstants/index";
 import error_warning from "@/assets/error_warning.svg";
 import error_warning_dark from "@/assets/error_warning_dark.svg";
@@ -5,7 +6,10 @@ import { PlusButton } from "@/components/buttons/PlusButton";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
-import { IUpdateVideoClassDTO, IVideoClassDTO } from "@/repositories/dtos/VideoClassDTO";
+import {
+  IUpdateVideoClassDTO,
+  IVideoClassDTO,
+} from "@/repositories/dtos/VideoClassDTO";
 import { ITrainingDTO } from "@/repositories/interfaces/trainingsRepository";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
 import { VideoClassesRepository } from "@/repositories/videoClassesRepository";
@@ -21,7 +25,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
@@ -43,8 +47,13 @@ export function ManageClasses() {
   const { theme } = useThemeStore();
   const { isLoading: loading, setIsLoading } = useLoading();
 
-  const videoClassesRepositories = new VideoClassesRepository();
-  const trainingsRepositories = new TrainingsRepositories();
+  const videoClassesRepositories = useMemo(() => {
+    return new VideoClassesRepository();
+  }, []);
+
+  const trainingsRepositories = useMemo(() => {
+    return new TrainingsRepositories();
+  }, []);
 
   const handleToggleEditClassModal = (videoClass?: IVideoClassDTO) => {
     setIsEditModalClassOpen(!isEditClassModalOpen);
@@ -59,15 +68,18 @@ export function ManageClasses() {
     setIsWatchModalClassOpen(!isWatchClassModalOpen);
   };
 
-  const getVideoClass = useCallback(async (videoClassId: string) => {
-    try {
-      const videoClass =
-        await videoClassesRepositories.getVideoClassById(videoClassId);
-      setSelectedVideoClass(videoClass);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const getVideoClass = useCallback(
+    async (videoClassId: string) => {
+      try {
+        const videoClass =
+          await videoClassesRepositories.getVideoClassById(videoClassId);
+        setSelectedVideoClass(videoClass);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [videoClassesRepositories]
+  );
 
   const getVideoClasses = useCallback(async () => {
     try {
@@ -85,7 +97,7 @@ export function ManageClasses() {
     } catch (error) {
       console.log(error);
     }
-  }, [selectedTrainingId]);
+  }, [selectedTrainingId, videoClassesRepositories]);
 
   useEffect(() => {
     getVideoClasses();
@@ -113,24 +125,27 @@ export function ManageClasses() {
 
   const { isLoading, error } = videoClassesQuery;
 
-  const handleDeleteUser = useCallback(async (videoClassId: string) => {
-    try {
-      setIsLoading(true);
-      await videoClassesRepositories.deleteVideoClass(videoClassId);
-      queryClient.invalidateQueries([
-        "video-classes",
-      ] as InvalidateQueryFilters);
-      setIsDeleteModalClassOpen(false);
-      showAlertSuccess("Videoaula deletada com sucesso!");
-    } catch (error) {
-      showAlertError(
-        "Houve um erro ao deletar usuário. Por favor, tente novamente mais tarde."
-      );
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const handleDeleteUser = useCallback(
+    async (videoClassId: string) => {
+      try {
+        setIsLoading(true);
+        await videoClassesRepositories.deleteVideoClass(videoClassId);
+        queryClient.invalidateQueries([
+          "video-classes",
+        ] as InvalidateQueryFilters);
+        setIsDeleteModalClassOpen(false);
+        showAlertSuccess("Videoaula deletada com sucesso!");
+      } catch (error) {
+        showAlertError(
+          "Houve um erro ao deletar usuário. Por favor, tente novamente mais tarde."
+        );
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [queryClient, setIsLoading, videoClassesRepositories]
+  );
 
   const handleUpdateVideoClass = useCallback(
     async (data: IUpdateVideoClassDTO) => {
@@ -180,7 +195,7 @@ export function ManageClasses() {
 
   useEffect(() => {
     getTrainings();
-  }, []);
+  }, [getTrainings]);
 
   const trainingOptions = trainings
     .map((t) => ({

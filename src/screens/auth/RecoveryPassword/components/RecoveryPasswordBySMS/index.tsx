@@ -76,7 +76,7 @@ export default function RecoveryPasswordBySMSForm({
         </div>
         <div className="w-full mt-2">
           <Button
-            onClick={() => {}}
+            type="submit"
             title="Receber Código"
             disabled={!isValid || isLoading}
             isLoading={isLoading}

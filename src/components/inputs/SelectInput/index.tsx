@@ -36,7 +36,6 @@ export const SelectInput = forwardRef<HTMLInputElement, SelectInputProps>(
       onSelectOption,
       labelClassName,
       containerClassName,
-      singleValueClassName,
       ...rest
     },
     ref

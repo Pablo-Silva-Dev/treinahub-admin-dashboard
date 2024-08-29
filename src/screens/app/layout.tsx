@@ -139,6 +139,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       ref.current.staticStart();
       ref.current.complete();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.location.pathname]);
 
   return (

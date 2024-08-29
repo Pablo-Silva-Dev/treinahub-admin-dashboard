@@ -28,6 +28,7 @@ import {
   MouseEvent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -78,7 +79,9 @@ export function EditClassModal({
 
   const { theme } = useThemeStore();
 
-  const videoClassesRepository = new VideoClassesRepository();
+  const videoClassesRepository = useMemo(() => {
+    return new VideoClassesRepository();
+  }, []);
 
   const MIN_TRAINING_NAME_LENGTH = 16;
   const MIN_TRAINING_DESCRIPTION_LENGTH = 40;
@@ -204,7 +207,7 @@ export function EditClassModal({
     } catch (error) {
       console.log(error);
     }
-  }, [selectedVideoClassId]);
+  }, [selectedVideoClassId, videoClassesRepository]);
 
   const handleUpdateVideoClass: SubmitHandler<UpdateVideoClassInputs> = (
     data: UpdateVideoClassInputs

@@ -2,7 +2,7 @@ import { HeaderNavigation } from "@/components/miscellaneous/HeaderNavigation";
 import { UsersRepositories } from "@/repositories/usersRepositories";
 import { useLoading } from "@/store/loading";
 import { showAlertError } from "@/utils/alerts";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CodeInputCard from "./components/CodeInputCard";
 import RecoveryPasswordByEmailForm, {
@@ -30,7 +30,9 @@ export function RecoveryPassword() {
   const navigate = useNavigate();
 
   const { isLoading, setIsLoading } = useLoading();
-  const usersRepository = new UsersRepositories();
+  const usersRepository = useMemo(() => {
+    return new UsersRepositories();
+  }, []);
 
   const handleSendConfirmationCodeByEmail = useCallback(
     async (data: RecoveryPasswordByEmailInputs) => {
@@ -63,7 +65,7 @@ export function RecoveryPassword() {
         setIsLoading(false);
       }
     },
-    []
+    [setIsLoading, usersRepository]
   );
 
   const handleSendConfirmationCodeBySMS = useCallback(
@@ -78,9 +80,8 @@ export function RecoveryPassword() {
           setUserId(user.id as never);
         }
 
-        const recoveryCode = await usersRepository.getRecoveryPasswordCodeBySMS(
-          data
-        );
+        const recoveryCode =
+          await usersRepository.getRecoveryPasswordCodeBySMS(data);
         if (recoveryCode) {
           setWasCodeSent(true);
           setApiCode(recoveryCode);
@@ -97,7 +98,7 @@ export function RecoveryPassword() {
         setIsLoading(false);
       }
     },
-    []
+    [setIsLoading, usersRepository]
   );
 
   const handleResendCode = async (
@@ -125,7 +126,7 @@ export function RecoveryPassword() {
     } else {
       setIsCodeValid(false);
     }
-  }, [code]);
+  }, [apiCode, code, wasCodeSent]);
 
   const handleChangeFormType = (formType: "email" | "sms") => {
     if (formType !== "email") {
@@ -177,7 +178,7 @@ export function RecoveryPassword() {
         state: userId,
       });
     }
-  }, [isCodeValid, navigate]);
+  }, [isCodeValid, navigate, userId]);
 
   return (
     <div className="flex flex-col lg:mt-[8vh] mt-[4vh]">

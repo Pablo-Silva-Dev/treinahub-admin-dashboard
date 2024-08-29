@@ -15,7 +15,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { EditTrainingModal } from "./components/EditTrainingModal";
@@ -35,7 +35,9 @@ export function ManageTrainings() {
 
   const { setIsLoading } = useLoading();
 
-  const trainingsRepository = new TrainingsRepositories();
+  const trainingsRepository = useMemo(() => {
+    return new TrainingsRepositories();
+  }, []);
 
   const handleSeeTraining = () => {
     //TODO-PABLO: update navigation to navigate to specific training videoclasses
@@ -50,7 +52,7 @@ export function ManageTrainings() {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [trainingsRepository]);
 
   const { isLoading, error } = useQuery({
     queryKey: ["trainings"],
@@ -74,15 +76,18 @@ export function ManageTrainings() {
         setIsLoading(false);
       }
     },
-    [queryClient]
+    [queryClient, setIsLoading, trainingsRepository]
   );
 
-  const handleToggleEditModalTraining = (training?: ITrainingDTO) => {
-    setIsEditModalTrainingOpen(!isEditModalTrainingOpen);
-    if (training) {
-      setSelectedTraining(training);
-    }
-  };
+  const handleToggleEditModalTraining = useCallback(
+    (training?: ITrainingDTO) => {
+      setIsEditModalTrainingOpen(!isEditModalTrainingOpen);
+      if (training) {
+        setSelectedTraining(training);
+      }
+    },
+    [isEditModalTrainingOpen]
+  );
 
   const handleToggleDeleteModal = (training?: ITrainingDTO) => {
     setIsDeleteModalTrainingOpen(!isDeleteModalOpen);
@@ -115,7 +120,13 @@ export function ManageTrainings() {
         setIsLoading(false);
       }
     },
-    [queryClient, selectedTraining]
+    [
+      handleToggleEditModalTraining,
+      queryClient,
+      selectedTraining,
+      setIsLoading,
+      trainingsRepository,
+    ]
   );
 
   return (

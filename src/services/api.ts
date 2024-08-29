@@ -40,7 +40,13 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 
 api.interceptors.response.use(
   (response: AxiosResponse<IApiSuccessResponse<any>>) => {
-    console.log("[RESPONSE SUCCESS] -", response.data);
+    if (
+      response.config.url !== "/users/get-recovery-password-code-by-phone" &&
+      response.config.url !== "/users/get-recovery-password-code-by-email" &&
+      response.config.url !== "/users/auth"
+    ) {
+      console.log("[RESPONSE SUCCESS] -", response.data);
+    }
     return response;
   },
   (error: AxiosError<IApiErrorResponse>) => {
@@ -54,3 +60,4 @@ api.interceptors.response.use(
     }
   }
 );
+//

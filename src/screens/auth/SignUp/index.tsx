@@ -19,7 +19,7 @@ export function SignUp() {
   const handleSubmit = async (data: any) => {
     try {
       setIsLoading(true);
-      await usersRepositories.registerUser(data);
+      await usersRepositories.registerUser({ ...data, is_admin: true });
       showAlertSuccess("Cadastro realizado com sucesso!");
       setTimeout(() => {
         navigate("/");

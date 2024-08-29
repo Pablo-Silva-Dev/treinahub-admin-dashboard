@@ -3,7 +3,7 @@ import { HeaderNavigation } from "@/components/miscellaneous/HeaderNavigation";
 import { UsersRepositories } from "@/repositories/usersRepositories";
 import { useLoading } from "@/store/loading";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   UpdatePasswordForm,
@@ -14,7 +14,10 @@ export function UpdatePassword() {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
-  const usersRepositories = new UsersRepositories();
+  const usersRepositories = useMemo(() => {
+    return new UsersRepositories();
+  }, []);
+
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoading, setIsLoading } = useLoading();
@@ -43,7 +46,7 @@ export function UpdatePassword() {
         setIsLoading(false);
       }
     },
-    []
+    [navigate, setIsLoading, usersRepositories]
   );
 
   return (

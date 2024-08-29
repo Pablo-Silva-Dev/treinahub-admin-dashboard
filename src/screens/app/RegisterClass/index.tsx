@@ -196,7 +196,7 @@ export function RegisterClass() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [setIsLoading]);
 
   const handleRegisterVideoClass: SubmitHandler<RegisterClassInputs> =
     useCallback(
@@ -242,12 +242,12 @@ export function RegisterClass() {
           toast.dismiss("loading");
         }
       },
-      [videoFilePreview, imageFilePreview]
+      [setIsLoading, imageFile, videoFile, reset]
     );
 
   useEffect(() => {
     setTrainingsOptions();
-  }, []);
+  }, [setTrainingsOptions]);
 
   return (
     <main className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-800 w-full">
