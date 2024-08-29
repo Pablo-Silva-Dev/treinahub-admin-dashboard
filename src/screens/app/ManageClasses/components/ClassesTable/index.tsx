@@ -1,3 +1,4 @@
+import play_icon from "@/assets/play_icon.svg";
 import { SortButton } from "@/components/buttons/SortButton";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { Subtitle } from "@/components/typography/Subtitle";
@@ -42,7 +43,7 @@ interface VideoClassesTableProps {
   onUpdateVideoClass: (data: IUpdateVideoClassDTO) => void;
   onDeleteVideoClass: (videoClassId: string) => void;
   onSelectVideoClass: (videoClassId: string) => void;
-  onWatchVideoClass: () => void;
+  onWatchVideoClass: (videoClassId: string) => void;
   videoClass: IUpdateVideoClassDTO;
 }
 
@@ -108,6 +109,11 @@ export function VideoClassesTable({
   const handleUpdateVideoClass = (videoClassId: string) => {
     onSelectVideoClass(videoClassId);
     onUpdateVideoClass(videoClass as IUpdateVideoClassDTO);
+  };
+
+  const handleWatchVideoClass = (videoClassId: string) => {
+    onSelectVideoClass(videoClassId);
+    onWatchVideoClass(videoClassId);
   };
 
   return (
@@ -177,8 +183,8 @@ export function VideoClassesTable({
                     >
                       <td className={classes}>
                         <button
-                          onClick={onWatchVideoClass}
-                          className="flex items-center m-4 mr-0 md:mr-[-5%] xl:mr-[-12px] w-[80px]"
+                          onClick={() => handleWatchVideoClass(id)}
+                          className="flex items-center m-4 mr-0 md:mr-[-5%] xl:mr-[-12px] w-[80px] relative"
                         >
                           <img
                             src={
@@ -186,6 +192,16 @@ export function VideoClassesTable({
                             }
                             alt="videoaula"
                             width="80%"
+                          />
+                          <img
+                            src={play_icon}
+                            alt="videoaula"
+                            style={{
+                              position: "absolute",
+                              top: "25%",
+                              left: "25%",
+                              width: 24,
+                            }}
                           />
                         </button>
                       </td>

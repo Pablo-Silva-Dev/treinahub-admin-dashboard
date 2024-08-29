@@ -55,11 +55,8 @@ export function ManageClasses() {
     return new TrainingsRepositories();
   }, []);
 
-  const handleToggleEditClassModal = (videoClass?: IVideoClassDTO) => {
+  const handleToggleEditClassModal = () => {
     setIsEditModalClassOpen(!isEditClassModalOpen);
-    if (videoClass) {
-      setSelectedVideoClass(videoClass);
-    }
   };
   const handleToggleDeleteModal = () => {
     setIsDeleteModalClassOpen(!isDeleteModalOpen);
@@ -255,7 +252,7 @@ export function ManageClasses() {
                 classes={videoClasses}
                 onDeleteVideoClass={handleToggleDeleteModal}
                 onUpdateVideoClass={handleToggleEditClassModal as never}
-                onWatchVideoClass={handleToggleWatchClassModal}
+                onWatchVideoClass={handleToggleWatchClassModal as never}
                 onSelectVideoClass={getVideoClass}
                 videoClass={selectedVideoClass as never}
               />
@@ -273,16 +270,17 @@ export function ManageClasses() {
       <EditClassModal
         isOpen={isEditClassModalOpen}
         onClose={handleToggleEditClassModal}
-        onRequestClose={handleToggleEditClassModal as never}
+        onRequestClose={handleToggleEditClassModal}
         onConfirmAction={handleUpdateVideoClass}
         isLoading={isLoading}
         selectedVideoClassId={selectedVideoClass && selectedVideoClass.id}
       />
       <WatchClassModal
-        classToWatch="Iniciando com scrollview"
+        classToWatch={selectedVideoClass && selectedVideoClass.name}
         isOpen={isWatchClassModalOpen}
         onClose={handleToggleWatchClassModal}
         onRequestClose={handleToggleWatchClassModal}
+        videoUrl={selectedVideoClass && selectedVideoClass.hls_encoding_url}
       />
     </main>
   );
