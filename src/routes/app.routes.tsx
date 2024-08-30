@@ -11,6 +11,7 @@ import { ManageSupportContact } from "@/screens/app/ManageSupportContact";
 import { ManageTrainings } from "@/screens/app/ManageTrainings";
 import { ManageUsers } from "@/screens/app/ManageUsers";
 import { RegisterClass } from "@/screens/app/RegisterClass";
+import { RegisterContactSupport } from "@/screens/app/RegisterContactSupport";
 import { RegisterFaqQuestion } from "@/screens/app/RegisterFaqQuestion";
 import { RegisterTraining } from "@/screens/app/RegisterTraining";
 import { ErrorPage } from "@/screens/error";
@@ -59,7 +60,11 @@ const appRoutesBase: route[] = [
     element: <ManageFaqQuestions />,
   },
   {
-    path: "/dashboard/gerenciar-contato-de-suporte",
+    path: "/dashboard/cadastrar-contato-de-suporte",
+    element: <RegisterContactSupport />,
+  },
+  {
+    path: "/dashboard/gerenciar-contatos-de-suporte",
     element: <ManageSupportContact />,
   },
   {

@@ -53,8 +53,12 @@ const menuItems = [
     title: "Suporte",
     actions: [
       {
-        title: "Gerenciar contato",
-        link: "gerenciar-contato-de-suporte",
+        title: "Cadastrar contato de suporte",
+        link: "cadastrar-contato-de-suporte",
+      },
+      {
+        title: "Gerenciar contatos de suporte",
+        link: "gerenciar-contatos-de-suporte",
       },
     ],
     icon: "message-square",
@@ -1683,5 +1687,6 @@ export {
   trainings,
   tutors,
   userMetrics,
-  users,
+  users
 };
+

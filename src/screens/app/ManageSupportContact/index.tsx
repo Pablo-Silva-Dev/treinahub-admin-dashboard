@@ -1,115 +1,206 @@
-import {
-  PHONE_INVALID_MESSAGE,
-  REQUIRED_FIELD_MESSAGE,
-} from "@/appConstants/index";
-import { Button } from "@/components/buttons/Button";
-import { ErrorMessage } from "@/components/inputs/ErrorMessage";
-import { MaskedTextInput } from "@/components/inputs/MaskedTextInput";
+import { PRIMARY_COLOR } from "@/appConstants/index";
+import error_warning from "@/assets/error_warning.svg";
+import error_warning_dark from "@/assets/error_warning_dark.svg";
+import { PlusButton } from "@/components/buttons/PlusButton";
+import { DeleteModal } from "@/components/miscellaneous/DeleteModal";
+import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
-import { phoneMask } from "@/utils/masks";
-import { phoneValidationRegex } from "@/utils/regex";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { MdEdit } from "react-icons/md";
-import * as yup from "yup";
+import { ContactsSupportRepository } from "@/repositories/contactsSupportRepository";
+import { IContactSupportDTO } from "@/repositories/dtos/ContactSupportDTO";
+import { useLoading } from "@/store/loading";
+import { useThemeStore } from "@/store/theme";
+import { showAlertError, showAlertSuccess } from "@/utils/alerts";
+import { formatPhoneNumber } from "@/utils/formats";
+import {
+  InvalidateQueryFilters,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { EditSupportContactModal } from "./components/EditSupportContact";
-
-export interface ManageSupportContactInputs {
-  phone: string;
-}
+import { ContactSupportCard } from "./components/SupportContactCard";
 
 export function ManageSupportContact() {
-  const validationSchema = yup.object({
-    phone: yup
-      .string()
-      .matches(phoneValidationRegex, PHONE_INVALID_MESSAGE)
-      .required(REQUIRED_FIELD_MESSAGE),
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm({
-    resolver: yupResolver(validationSchema),
-    mode: "onChange",
-  });
-
-  const handleManageSupportContact: SubmitHandler<
-    ManageSupportContactInputs
-  > = (data) => {
-    console.log(data);
-  };
-
-  //TODO-Pablo: Check if there is a registered contact from back-end
-  const [supportContactPhone] = useState("(31)985187963");
-  const [isEditSupportContactModalOpen, setIsEditModalSupportContactOpen] =
+  const [editContactSupportModal, setEditModalSupportContact] = useState(false);
+  const [deleteContactSupportModal, setDeleteModalSupportContact] =
     useState(false);
+  const [contactsSupport, setContactsSupport] = useState<IContactSupportDTO[]>(
+    []
+  );
+  const [selectedContactSupport, setSelectedContactSupport] =
+    useState<IContactSupportDTO | null>(null);
 
-  const handleToggleEditSupportContactModal = () => {
-    setIsEditModalSupportContactOpen(!isEditSupportContactModalOpen);
-  };
+  const { isLoading, setIsLoading } = useLoading();
+  const { theme } = useThemeStore();
+  const queryClient = useQueryClient();
+
+  const handleToggleEditSupportContactModal = useCallback(
+    (contactSupport?: IContactSupportDTO) => {
+      setEditModalSupportContact(!editContactSupportModal);
+      if (contactSupport) {
+        setSelectedContactSupport(contactSupport);
+      }
+    },
+    [editContactSupportModal]
+  );
+
+  const handleToggleDeleteSupportContactModal = useCallback(
+    (contactSupport?: IContactSupportDTO) => {
+      setDeleteModalSupportContact(!deleteContactSupportModal);
+      if (contactSupport) {
+        setSelectedContactSupport(contactSupport);
+      }
+    },
+    [deleteContactSupportModal]
+  );
+
+  const contactsSupportRepository = useMemo(() => {
+    return new ContactsSupportRepository();
+  }, []);
+
+  const getContactsSupport = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const contactSupports = await contactsSupportRepository.listContacts();
+      setContactsSupport(contactSupports);
+      return contactSupports;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [contactsSupportRepository, setIsLoading]);
+
+  useEffect(() => {
+    getContactsSupport();
+  }, [getContactsSupport]);
+
+  const { error, isLoading: loading } = useQuery({
+    queryKey: ["contacts-support"],
+    queryFn: getContactsSupport,
+  });
+
+  const handleUpdateContactSupport = useCallback(
+    async (data: IContactSupportDTO) => {
+      try {
+        setIsLoading(true);
+        await contactsSupportRepository.updateContactSupport({
+          ...data,
+          contact_number: formatPhoneNumber(data.contact_number),
+        });
+        showAlertSuccess("Contato atualizado com sucesso!");
+        handleToggleEditSupportContactModal();
+        queryClient.invalidateQueries([
+          "contacts-support",
+        ] as InvalidateQueryFilters);
+      } catch (error) {
+        if (typeof error === "object" && error !== null && "STATUS" in error) {
+          if (error.STATUS === 409) {
+            showAlertError("Já existe um contato para o número cadastrado.");
+          }
+        } else {
+          showAlertError("Houve um erro ao atualizar contato.");
+        }
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [
+      contactsSupportRepository,
+      handleToggleEditSupportContactModal,
+      queryClient,
+      setIsLoading,
+    ]
+  );
+
+  const handleDeleteContactSupport = useCallback(
+    async (contact: IContactSupportDTO) => {
+      try {
+        setIsLoading(true);
+        await contactsSupportRepository.deleteContactSupport(contact.id);
+        handleToggleDeleteSupportContactModal();
+        showAlertSuccess("Contato deletado com sucesso!");
+        queryClient.invalidateQueries([
+          "contacts-support",
+        ] as InvalidateQueryFilters);
+      } catch (error) {
+        console.log("Houve um erro ao tentar deletar contato.");
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [
+      contactsSupportRepository,
+      handleToggleDeleteSupportContactModal,
+      queryClient,
+      setIsLoading,
+    ]
+  );
 
   return (
     <div className="w-full flex flex-col p-8 md:pl-[80px]">
-      <div className="mt-3 mb-4 w-full">
-        <ScreenTitleIcon
-          screenTitle="Gerenciar contato de suporte"
-          iconName="help-circle"
-        />
-      </div>
-      {supportContactPhone ? (
-        <>
-          <div className="w-[90%] mt-2 flex flex-col bg-white dark:bg-slate-700 shadow-md rounded-md p-4">
-            <span className="text-gray-700 dark:text-gray-100 text-[12px] md:text-[16px] mb-2">
-              Contato cadastrado:
-            </span>
-            <div className="flex flex-row items-center">
-              <span className="text-gray-600 dark:text-gray-300 text-[12px] md:text-[16px]">
-                {supportContactPhone}
-              </span>
-              <button
-                className="ml-3"
-                onClick={handleToggleEditSupportContactModal}
-              >
-                <MdEdit className="w-4 h-4 lg:w-5 lg:h-5 text-gray-700 dark:text-gray-50" />
-              </button>
-            </div>
-          </div>
-          <EditSupportContactModal
-            isOpen={isEditSupportContactModalOpen}
-            onClose={handleToggleEditSupportContactModal}
-            onRequestClose={handleToggleEditSupportContactModal}
+      <div className="mb-2 flex flex-row w-[full] justify-between items-center">
+        <div className="mt-3 w-full">
+          <ScreenTitleIcon
+            screenTitle="Gerenciar contato de suporte"
+            iconName="help-circle"
           />
-        </>
+        </div>
+        <div className="mr-4 md:w-[220px]">
+          <Link to="/dashboard/cadastrar-contato-de-suporte">
+            <PlusButton title="Cadastrar contato" />
+          </Link>
+        </div>
+      </div>
+
+      <span className="text-[12px] md:text-[15px] text-gray-900 dark:text-gray-100 ml-[48px] mt-2 mb-6">
+        Gerencie seus contatos de suporte
+      </span>
+      {isLoading || loading ? (
+        <Loading color={PRIMARY_COLOR} />
+      ) : error ? (
+        <img
+          src={theme === "light" ? error_warning : error_warning_dark}
+          alt="error"
+        />
       ) : (
-        <form
-          className="w-full mt-5"
-          onSubmit={handleSubmit(handleManageSupportContact)}
-        >
-          <div className="w-full">
-            <MaskedTextInput
-              inputLabel="Telefone"
-              placeholder="Telefone do contato"
-              mask={phoneMask}
-              style={{ width: "99%" }}
-              inputMode="numeric"
-              {...register("phone")}
+        <div className="w-full md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[40vw] flex flex-col mt-2">
+          {contactsSupport.map((contact: IContactSupportDTO) => (
+            <ContactSupportCard
+              key={contact.id}
+              name={contact.name}
+              contactNumber={contact.contact_number}
+              onDeleteContact={() =>
+                handleToggleDeleteSupportContactModal(contact)
+              }
+              onEditContact={() => handleToggleEditSupportContactModal(contact)}
+              onSelectContact={() => console.log("Contact selected")}
+              selectedContactId=""
             />
-            {errors && errors.phone && (
-              <ErrorMessage errorMessage={errors.phone?.message} />
-            )}
-          </div>
-          <div className="w-full mt-4">
-            <Button
-              title="Cadastrar contato"
-              type="submit"
-              disabled={!isValid}
-            />
-          </div>
-        </form>
+          ))}
+        </div>
       )}
+      <EditSupportContactModal
+        isOpen={editContactSupportModal}
+        onClose={handleToggleEditSupportContactModal}
+        onRequestClose={handleToggleEditSupportContactModal as never}
+        onConfirmAction={handleUpdateContactSupport as never}
+        selectedContactSupportId={
+          selectedContactSupport && selectedContactSupport.id
+        }
+      />
+      <DeleteModal
+        resource="contato"
+        isOpen={deleteContactSupportModal}
+        onRequestClose={handleToggleDeleteSupportContactModal as never}
+        onClose={handleToggleDeleteSupportContactModal}
+        onConfirmAction={() =>
+          handleDeleteContactSupport(selectedContactSupport!)
+        }
+      />
     </div>
   );
 }

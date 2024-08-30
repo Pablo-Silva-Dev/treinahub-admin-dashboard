@@ -1,24 +1,28 @@
-import {
-  PHONE_INVALID_MESSAGE,
-  REQUIRED_FIELD_MESSAGE,
-} from "@/appConstants/index";
+import { PHONE_INVALID_MESSAGE } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { MaskedTextInput } from "@/components/inputs/MaskedTextInput";
+import { TextInput } from "@/components/inputs/TextInput";
 import { Title } from "@/components/typography/Title";
+import { IUpdateContactSupportDTO } from "@/repositories/dtos/ContactSupportDTO";
 import { useThemeStore } from "@/store/theme";
 import {
   reactModalCustomStyles,
   reactModalCustomStylesDark,
 } from "@/styles/react-modal";
 import { phoneMask } from "@/utils/masks";
-import { phoneValidationRegex } from "@/utils/regex";
+import { maskedPhoneValidationRegex } from "@/utils/regex";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { KeyboardEvent, MouseEvent } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Modal from "react-modal";
 import * as yup from "yup";
-import { ManageSupportContactInputs } from "../..";
+
+interface UpdateSupportContactInputs {
+  id: string;
+  name?: string;
+  contact_number?: string;
+}
 
 interface EditSupportContactModalProps {
   isOpen: boolean;
@@ -26,20 +30,25 @@ interface EditSupportContactModalProps {
     event: MouseEvent<Element, MouseEvent> | KeyboardEvent<Element>
   ) => void;
   onClose: () => void;
+  onConfirmAction: (contact: IUpdateContactSupportDTO) => void;
+  selectedContactSupportId: string | null;
 }
 
 export function EditSupportContactModal({
   isOpen,
   onRequestClose,
   onClose,
+  onConfirmAction,
+  selectedContactSupportId,
 }: EditSupportContactModalProps) {
   const { theme } = useThemeStore();
 
   const validationSchema = yup.object({
-    phone: yup
+    id: yup.string(),
+    name: yup.string(),
+    contact_number: yup
       .string()
-      .matches(phoneValidationRegex, PHONE_INVALID_MESSAGE)
-      .required(REQUIRED_FIELD_MESSAGE),
+      .matches(maskedPhoneValidationRegex, PHONE_INVALID_MESSAGE),
   });
 
   const {
@@ -52,9 +61,9 @@ export function EditSupportContactModal({
   });
 
   const handleUpdateSupportContact: SubmitHandler<
-    ManageSupportContactInputs
-  > = (data) => {
-    console.log(data);
+    UpdateSupportContactInputs
+  > = (data: UpdateSupportContactInputs) => {
+    onConfirmAction({ ...data, id: selectedContactSupportId! });
   };
 
   return (
@@ -66,22 +75,32 @@ export function EditSupportContactModal({
       }
     >
       <Title
-        content="Atualização de contato de suporte"
+        content="Atualizar contato de suporte"
         className="text-center text-black dark:text-white mb-4 font-bold text-[14px] md:text-lg"
       />
       <form
         className="w-full"
-        onSubmit={handleSubmit(handleUpdateSupportContact)}
+        onSubmit={handleSubmit(handleUpdateSupportContact as never)}
       >
+        <div className="w-full mb-4">
+          <TextInput
+            inputLabel="Nome"
+            placeholder="Nome do contato"
+            {...register("name")}
+          />
+          {errors && errors.name && (
+            <ErrorMessage errorMessage={errors.name?.message} />
+          )}
+        </div>
         <MaskedTextInput
           inputLabel="Telefone"
           placeholder="Telefone do contato"
           mask={phoneMask}
           inputMode="numeric"
-          {...register("phone")}
+          {...register("contact_number")}
         />
-        {errors && errors.phone && (
-          <ErrorMessage errorMessage={errors.phone?.message} />
+        {errors && errors.contact_number && (
+          <ErrorMessage errorMessage={errors.contact_number?.message} />
         )}
 
         <div className="w-full mt-4">
