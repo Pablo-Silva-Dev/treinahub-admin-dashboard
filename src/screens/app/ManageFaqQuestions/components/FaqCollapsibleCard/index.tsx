@@ -1,24 +1,26 @@
-import { Button } from "@material-tailwind/react";
 import { useState } from "react";
 import { Collapse } from "react-collapse";
 import { FiChevronDown, FiChevronLeft } from "react-icons/fi";
 import { MdDelete, MdEdit } from "react-icons/md";
 
 interface IQuestion {
+  id: string;
   question: string;
   answer: string;
 }
 
 interface FaqCollapsibleCardProps {
   questions: IQuestion[];
-  onDeleteQuestion?: () => void;
-  onEditQuestion?: () => void;
+  onDeleteQuestion: (questionId: string) => void;
+  onEditQuestion: (questionId: string) => void;
+  onSelectQuestion: (questionId: string) => void;
 }
 
 export function FaqCollapsibleCard({
   questions,
   onDeleteQuestion,
   onEditQuestion,
+  onSelectQuestion,
 }: FaqCollapsibleCardProps) {
   const [openedQuestions, setOpenedQuestions] = useState<number[]>([]);
 
@@ -31,8 +33,19 @@ export function FaqCollapsibleCard({
       setOpenedQuestions([...openedQuestions, questionIndex]);
     }
   };
+
+  const handleDeleteFaqQuestion = (faqQuestionId: string) => {
+    onSelectQuestion(faqQuestionId);
+    onDeleteQuestion(faqQuestionId);
+  };
+
+  const handleEditFaqQuestion = (faqQuestionId: string) => {
+    onSelectQuestion(faqQuestionId);
+    onEditQuestion(faqQuestionId);
+  };
+
   return (
-    <div className="w-full md:w-[90%] flex flex-col bg-white p-4 dark:bg-slate-900 rounded-md shadow-md">
+    <div className="w-full md:w-[90%] overflow-y-auto flex flex-col bg-white p-4 dark:bg-slate-900 rounded-md shadow-md">
       {questions.map((question, i) => (
         <>
           <div key={question.question} className="mb-4">
@@ -43,44 +56,40 @@ export function FaqCollapsibleCard({
                     {question.question}
                   </h3>
                 </button>
-                <div className="flex flex-row mr-5">
-                  <button onClick={onEditQuestion}>
-                    <MdEdit
-                      size={16}
-                      className="text-gray-800 dark:text-gray-50 "
-                    />
-                  </button>
-                  <button onClick={onDeleteQuestion}>
-                    <MdDelete size={16} className="text-red-400 ml-2" />
-                  </button>
-                </div>
+               
               </div>
               {!openedQuestions.includes(i) ? (
-                <Button
-                  className="p-1 bg-gray-200 dark:bg-slate-600"
-                  onClick={() => toggleQuestion(i)}
-                >
+                <button onClick={() => toggleQuestion(i)}>
                   <FiChevronDown
                     size={16}
                     className="text-gray-800 dark:text-gray-50 "
                   />
-                </Button>
+                </button>
               ) : (
-                <Button
-                  className="p-1 bg-gray-200 dark:bg-slate-600"
-                  onClick={() => toggleQuestion(i)}
-                >
+                <button onClick={() => toggleQuestion(i)}>
                   <FiChevronLeft
                     size={16}
                     className="text-gray-800 dark:text-gray-50 "
                   />
-                </Button>
+                </button>
               )}
+               <div className="flex flex-row ml-7">
+                  <button onClick={() => handleEditFaqQuestion(question.id)}>
+                    <MdEdit
+                      size={16}
+                      className="text-gray-800 dark:text-gray-50 mr-1"
+                    />
+                  </button>
+                  <button onClick={() => handleDeleteFaqQuestion(question.id)}>
+                    <MdDelete size={16} className="text-red-400 ml-2" />
+                  </button>
+                </div>
             </div>
+            
           </div>
           <Collapse isOpened={openedQuestions.includes(i)}>
             <div className="w-full flex flex-col">
-              <p className="text-gray-800 dark:text-gray-300 text-[12px] md:text-[13px] font-primary text-pretty mt-[-16px] mb-2">
+              <p className="text-gray-800 dark:text-gray-300 text-[12px] md:text-[13px] font-primary text-pretty mt-[-16px] mb-4">
                 {question.answer}
               </p>
             </div>

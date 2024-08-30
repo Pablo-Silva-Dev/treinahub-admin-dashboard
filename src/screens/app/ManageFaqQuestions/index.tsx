@@ -1,21 +1,151 @@
+import { PRIMARY_COLOR } from "@/appConstants/index";
+import error_warning from "@/assets/error_warning.svg";
+import error_warning_dark from "@/assets/error_warning_dark.svg";
 import { DeleteModal } from "@/components/miscellaneous/DeleteModal";
+import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { Subtitle } from "@/components/typography/Subtitle";
-import { faqQuestions } from "@/data/mocked";
-import { useState } from "react";
+import {
+  IFaqQuestionDTO,
+  IUpdateFaqQuestionDTO,
+} from "@/repositories/dtos/FaqQuestionDTO";
+import { FaqQuestionsRepository } from "@/repositories/faqQuestionsRepository";
+import { useLoading } from "@/store/loading";
+import { useThemeStore } from "@/store/theme";
+import { showAlertError, showAlertSuccess } from "@/utils/alerts";
+import {
+  InvalidateQueryFilters,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { EditFaqQuestionModal } from "./components/EditFaqQuestionModal";
 import { FaqCollapsibleCard } from "./components/FaqCollapsibleCard";
 
 export function ManageFaqQuestions() {
-  const [isDeleteModalOpen, setIsDeleteModalUserOpen] = useState(false);
-  const [isEditUserModalOpen, setIsEditModalUserOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [faqQuestions, setFaqQuestions] = useState<IFaqQuestionDTO[]>([]);
+  const [selectedFaqQuestion, setSelectedFaqQuestion] =
+    useState<IFaqQuestionDTO | null>(null);
 
-  const handleToggleEditUserModal = () => {
-    setIsEditModalUserOpen(!isEditUserModalOpen);
-  };
-  const handleToggleDeleteModal = () => {
-    setIsDeleteModalUserOpen(!isDeleteModalOpen);
-  };
+  const { isLoading: loading, setIsLoading } = useLoading();
+  const { theme } = useThemeStore();
+  const queryClient = useQueryClient();
+
+  const handleToggleEditFaqQuestionModal = useCallback(() => {
+    setIsEditModalOpen(!isEditModalOpen);
+  }, [isEditModalOpen]);
+
+  const handleToggleDeleteFaqQuestionModal = useCallback(() => {
+    setIsDeleteModalOpen(!isDeleteModalOpen);
+  }, [isDeleteModalOpen]);
+
+  const faqQuestionsRepository = useMemo(() => {
+    return new FaqQuestionsRepository();
+  }, []);
+
+  const getFaqQuestions = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const faqQuestions = await faqQuestionsRepository.listFaqQuestions();
+      setFaqQuestions(faqQuestions);
+      return faqQuestions;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [faqQuestionsRepository, setIsLoading]);
+
+  useEffect(() => {
+    getFaqQuestions();
+  }, [getFaqQuestions]);
+
+  const getFaqQuestion = useCallback(
+    async (faqQuestionId: string) => {
+      try {
+        const faqQuestion =
+          await faqQuestionsRepository.getFaqQuestionById(faqQuestionId);
+        setSelectedFaqQuestion(faqQuestion);
+        return faqQuestion;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [faqQuestionsRepository]
+  );
+
+  useEffect(() => {
+    getFaqQuestions();
+  }, [getFaqQuestions]);
+
+  const handleDeleteContactSupport = useCallback(
+    async (faqQuestionId: string) => {
+      try {
+        setIsLoading(true);
+        await faqQuestionsRepository.deleteFaqQuestion(faqQuestionId);
+        handleToggleDeleteFaqQuestionModal();
+        showAlertSuccess("Contato deletado com sucesso!");
+        queryClient.invalidateQueries([
+          "contacts-support",
+        ] as InvalidateQueryFilters);
+      } catch (error) {
+        console.log("Houve um erro ao tentar deletar contato.");
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [
+      faqQuestionsRepository,
+      handleToggleDeleteFaqQuestionModal,
+      queryClient,
+      setIsLoading,
+    ]
+  );
+
+  const handleUpdateFaqQuestion = useCallback(
+    async (data: IUpdateFaqQuestionDTO) => {
+      try {
+        setIsLoading(true);
+        await faqQuestionsRepository.updateFaqQuestion({
+          ...data,
+          id: selectedFaqQuestion!.id,
+        });
+        showAlertSuccess("FAQ atualizado com sucesso!");
+        queryClient.invalidateQueries([
+          "faq-questions",
+        ] as InvalidateQueryFilters);
+        handleToggleEditFaqQuestionModal();
+      } catch (error) {
+        if (typeof error === "object" && error !== null && "STATUS" in error) {
+          if (error.STATUS === 409) {
+            showAlertError("Já existe uma pergunta com os dados fornecidos.");
+          }
+        } else {
+          showAlertError(
+            "Houve um erro ao tentar atualizar pergunta. Por favor, tente novamente mais tarde."
+          );
+        }
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [
+      faqQuestionsRepository,
+      handleToggleEditFaqQuestionModal,
+      queryClient,
+      selectedFaqQuestion,
+      setIsLoading,
+    ]
+  );
+
+  const { error, isLoading } = useQuery({
+    queryKey: ["faq-questions"],
+    queryFn: getFaqQuestions,
+  });
 
   return (
     <div className="w-full flex flex-col p-8 md:pl-[80px]">
@@ -27,22 +157,37 @@ export function ManageFaqQuestions() {
         content="Veja a baixo as dúvidas mais comuns. Por favor, certifique-se de que sua dúvida não esteja esclarecida antes de acessar o suporte."
         className="mt-6 mb-4 text-gray-800 dark:text-gray-50 text-sm md:text-[15px] text-pretty w-[90%]"
       />
-      <FaqCollapsibleCard
-        questions={faqQuestions}
-        onDeleteQuestion={handleToggleDeleteModal}
-        onEditQuestion={handleToggleEditUserModal}
-      />
+      {isLoading || loading ? (
+        <Loading color={PRIMARY_COLOR} />
+      ) : error ? (
+        <img
+          src={theme === "light" ? error_warning : error_warning_dark}
+          alt="error_loading_faq_questions"
+        />
+      ) : (
+        <FaqCollapsibleCard
+          questions={faqQuestions}
+          onDeleteQuestion={handleToggleDeleteFaqQuestionModal}
+          onEditQuestion={handleToggleEditFaqQuestionModal}
+          onSelectQuestion={getFaqQuestion}
+        />
+      )}
       <DeleteModal
         isOpen={isDeleteModalOpen}
-        onClose={handleToggleDeleteModal}
-        onRequestClose={handleToggleDeleteModal}
-        onConfirmAction={() => console.log("Question deleted")}
+        onClose={handleToggleDeleteFaqQuestionModal}
+        onRequestClose={handleToggleDeleteFaqQuestionModal as never}
+        onConfirmAction={() =>
+          handleDeleteContactSupport(selectedFaqQuestion!.id)
+        }
         resource="pergunta"
       />
       <EditFaqQuestionModal
-        isOpen={isEditUserModalOpen}
-        onClose={handleToggleEditUserModal}
-        onRequestClose={handleToggleEditUserModal}
+        isOpen={isEditModalOpen}
+        onClose={handleToggleEditFaqQuestionModal as never}
+        onRequestClose={handleToggleEditFaqQuestionModal as never}
+        onConfirmAction={handleUpdateFaqQuestion}
+        selectedFaqQuestionId={selectedFaqQuestion && selectedFaqQuestion.id}
+        isLoading={loading}
       />
     </div>
   );

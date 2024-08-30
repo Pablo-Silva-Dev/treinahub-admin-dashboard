@@ -177,8 +177,6 @@ export function ManageSupportContact() {
                 handleToggleDeleteSupportContactModal(contact)
               }
               onEditContact={() => handleToggleEditSupportContactModal(contact)}
-              onSelectContact={() => console.log("Contact selected")}
-              selectedContactId=""
             />
           ))}
         </div>

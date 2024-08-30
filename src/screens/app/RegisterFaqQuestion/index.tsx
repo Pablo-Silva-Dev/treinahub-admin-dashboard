@@ -7,7 +7,11 @@ import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { TextAreaInput } from "@/components/inputs/TextAreaInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
+import { FaqQuestionsRepository } from "@/repositories/faqQuestionsRepository";
+import { useLoading } from "@/store/loading";
+import { showAlertError, showAlertSuccess } from "@/utils/alerts";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMemo } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -33,6 +37,7 @@ export function RegisterFaqQuestion() {
     handleSubmit,
     formState: { errors, isValid },
     watch,
+    reset,
   } = useForm({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
@@ -40,10 +45,34 @@ export function RegisterFaqQuestion() {
 
   const answerValue = watch("answer");
 
-  const handleRegisterFaqQuestion: SubmitHandler<RegisterFaqQuestionInputs> = (
-    data
-  ) => {
-    console.log(data);
+  const { isLoading, setIsLoading } = useLoading();
+
+  const faqQuestionsRepository = useMemo(() => {
+    return new FaqQuestionsRepository();
+  }, []);
+
+  const handleRegisterFaqQuestion: SubmitHandler<
+    RegisterFaqQuestionInputs
+  > = async (data) => {
+    try {
+      setIsLoading(true);
+      await faqQuestionsRepository.createFaqQuestion(data);
+      showAlertSuccess("Pergunta cadastrada com sucesso!");
+      reset();
+    } catch (error) {
+      if (typeof error === "object" && error !== null && "STATUS" in error) {
+        if (error.STATUS === 409) {
+          showAlertError("Já existe uma pergunta com os dados fornecidos.");
+        }
+      } else {
+        showAlertError(
+          "Houve um erro ao tentar atualizar pergunta. Por favor, tente novamente mais tarde."
+        );
+      }
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -86,7 +115,8 @@ export function RegisterFaqQuestion() {
             <Button
               title="Cadastrar pergunta"
               type="submit"
-              disabled={!isValid}
+              disabled={!isValid || isLoading}
+              isLoading={isLoading}
             />
           </div>
         </form>

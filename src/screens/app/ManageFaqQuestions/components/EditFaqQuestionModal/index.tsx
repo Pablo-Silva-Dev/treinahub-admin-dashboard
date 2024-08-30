@@ -8,13 +8,22 @@ import { TextAreaInput } from "@/components/inputs/TextAreaInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Title } from "@/components/typography/Title";
+import { IFaqQuestionDTO } from "@/repositories/dtos/FaqQuestionDTO";
+import { FaqQuestionsRepository } from "@/repositories/faqQuestionsRepository";
 import { useThemeStore } from "@/store/theme";
 import {
   reactModalCustomStyles,
   reactModalCustomStylesDark,
 } from "@/styles/react-modal";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { KeyboardEvent, MouseEvent } from "react";
+import {
+  KeyboardEvent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Modal from "react-modal";
 import * as yup from "yup";
@@ -25,9 +34,13 @@ interface EditFaqQuestionModalProps {
     event: MouseEvent<Element, MouseEvent> | KeyboardEvent<Element>
   ) => void;
   onClose: () => void;
+  onConfirmAction: (faqQuestion: IFaqQuestionDTO) => void;
+  isLoading: boolean;
+  selectedFaqQuestionId: string | null;
 }
 
 export interface UpdateFaqQuestionInputs {
+  id: string;
   question: string;
   answer: string;
 }
@@ -36,12 +49,19 @@ export function EditFaqQuestionModal({
   isOpen,
   onRequestClose,
   onClose,
+  onConfirmAction,
+  isLoading,
+  selectedFaqQuestionId,
 }: EditFaqQuestionModalProps) {
   const { theme } = useThemeStore();
+
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
 
   const MIN_QUESTION_SIZE = 24;
 
   const validationSchema = yup.object({
+    id: yup.string(),
     question: yup.string().required(REQUIRED_FIELD_MESSAGE),
     answer: yup
       .string()
@@ -62,7 +82,7 @@ export function EditFaqQuestionModal({
   const handleUpdateFaqQuestion: SubmitHandler<UpdateFaqQuestionInputs> = (
     data
   ) => {
-    console.log(data);
+    onConfirmAction(data);
     reset();
     onClose();
   };
@@ -71,6 +91,28 @@ export function EditFaqQuestionModal({
     reset();
     onClose();
   };
+
+  const faqQuestionsRepository = useMemo(() => {
+    return new FaqQuestionsRepository();
+  }, []);
+
+  const getFaqQuestionDetails = useCallback(async () => {
+    try {
+      const faqQuestion = await faqQuestionsRepository.getFaqQuestionById(
+        selectedFaqQuestionId!
+      );
+      if (faqQuestion) {
+        setQuestion(faqQuestion.question);
+        setAnswer(faqQuestion.answer);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [faqQuestionsRepository, selectedFaqQuestionId]);
+
+  useEffect(() => {
+    getFaqQuestionDetails();
+  }, [getFaqQuestionDetails]);
 
   return (
     <Modal
@@ -88,11 +130,11 @@ export function EditFaqQuestionModal({
         content="Você pode alterar o conteúdo da pergunta e/ou resposta"
         className="text-center text-gray-700 dark:text-gray-100  text-[13px] md:text-[14px]"
       />
-      <form onSubmit={handleSubmit(handleUpdateFaqQuestion)}>
+      <form onSubmit={handleSubmit(handleUpdateFaqQuestion as never)}>
         <div className="my-4">
           <TextInput
             inputLabel="Pergunta"
-            placeholder="Conteúdo da pergunta"
+            placeholder={question}
             {...register("question")}
           />
           {errors && errors.question && (
@@ -102,7 +144,7 @@ export function EditFaqQuestionModal({
         <div className="my-4">
           <TextAreaInput
             label="Resposta"
-            placeholder="Conteúdo da resposta"
+            placeholder={answer}
             {...register("answer")}
           />
           {errors && errors.answer && (
@@ -110,7 +152,12 @@ export function EditFaqQuestionModal({
           )}
         </div>
         <div className="w-full mt-6">
-          <Button title="Salvar dados" type="submit" disabled={!isValid} />
+          <Button
+            title="Salvar dados"
+            type="submit"
+            disabled={!isValid || isLoading}
+            isLoading={isLoading}
+          />
         </div>
       </form>
       <button
