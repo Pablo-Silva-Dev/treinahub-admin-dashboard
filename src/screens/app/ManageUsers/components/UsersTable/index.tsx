@@ -1,9 +1,9 @@
+import { ITEMS_PER_PAGE_OPTIONS } from "@/appConstants/index";
 import { SortButton } from "@/components/buttons/SortButton";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Text } from "@/components/typography/Text";
 import { Title } from "@/components/typography/Title";
-import { itemsPerPageOptions } from "@/data/placeholders";
 import { IUpdateUserDTO, IUserDTO } from "@/repositories/dtos/UserDTO";
 import {
   collapseLongString,
@@ -57,7 +57,7 @@ export function UsersTable({
   const [sortedUsers, setSortedUsers] = useState<IUserDTO[]>([]);
   const [tableData, setTableData] = useState<IUserDTO[]>([]);
   const [itemsPerPage, setItemsPerPage] = useState(
-    itemsPerPageOptions[0].value
+    ITEMS_PER_PAGE_OPTIONS[0].value
   );
 
   const pages = Array.from(
@@ -238,7 +238,7 @@ export function UsersTable({
         <div className="flex md:flex-row flex-col md:w-full w-[90%] mx-auto items-center justify-center">
           <SelectInput
             label="Items por página"
-            options={itemsPerPageOptions}
+            options={ITEMS_PER_PAGE_OPTIONS}
             isSearchable={false}
             className="mx-auto w-[96px]"
             containerClassName="md:mr-5 my-4 lg:my-0"

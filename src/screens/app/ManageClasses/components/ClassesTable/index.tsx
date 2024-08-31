@@ -1,10 +1,11 @@
+import { ITEMS_PER_PAGE_OPTIONS } from "@/appConstants/index";
 import play_icon from "@/assets/play_icon.svg";
+import video_thumbnail_placeholder from "@/assets/video_thumbnail_placeholder.svg";
 import { SortButton } from "@/components/buttons/SortButton";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Text } from "@/components/typography/Text";
 import { Title } from "@/components/typography/Title";
-import { itemsPerPageOptions, videoClassImageUrl } from "@/data/placeholders";
 import {
   IUpdateVideoClassDTO,
   IVideoClassDTO,
@@ -62,7 +63,7 @@ export function VideoClassesTable({
   >([]);
   const [tableData, setTableData] = useState<IVideoClassDTO[]>([]);
   const [itemsPerPage, setItemsPerPage] = useState(
-    itemsPerPageOptions[0].value
+    ITEMS_PER_PAGE_OPTIONS[0].value
   );
 
   const pages = Array.from(
@@ -186,23 +187,31 @@ export function VideoClassesTable({
                           onClick={() => handleWatchVideoClass(id)}
                           className="flex items-center m-4 mr-0 md:mr-[-5%] xl:mr-[-12px] w-[80px] relative"
                         >
-                          <img
-                            src={
-                              thumbnail_url ? thumbnail_url : videoClassImageUrl
-                            }
-                            alt="videoaula"
-                            width="80%"
-                          />
-                          <img
-                            src={play_icon}
-                            alt="videoaula"
-                            style={{
-                              position: "absolute",
-                              top: "25%",
-                              left: "25%",
-                              width: 24,
-                            }}
-                          />
+                          {thumbnail_url ? (
+                            <>
+                              <img
+                                src={play_icon}
+                                alt="videoaula"
+                                style={{
+                                  position: "absolute",
+                                  top: "25%",
+                                  left: "25%",
+                                  width: 24,
+                                }}
+                              />
+                              <img
+                                src={thumbnail_url}
+                                alt="videoaula"
+                                width="80%"
+                              />
+                            </>
+                          ) : (
+                            <img
+                              src={video_thumbnail_placeholder}
+                              alt="videoaula"
+                              width="80%"
+                            />
+                          )}
                         </button>
                       </td>
                       <td className={classes}>
@@ -311,7 +320,7 @@ export function VideoClassesTable({
         <div className="flex md:flex-row flex-col md:w-full w-[90%] mx-auto items-center justify-center">
           <SelectInput
             label="Items por página"
-            options={itemsPerPageOptions}
+            options={ITEMS_PER_PAGE_OPTIONS}
             className="mx-auto w-[96px]"
             containerClassName="md:mr-5 my-4 lg:my-0"
             labelClassName="text-[10px] lg:text-sm text-gray-700 dark:text-gray-100"

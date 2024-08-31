@@ -2,7 +2,7 @@ import logo_text from "@/assets/logo_text.svg";
 import { CompanyFooterLink } from "@/components/miscellaneous/CompanyFooterLink";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Title } from "@/components/typography/Title";
-import { menuItems } from "@/data/mocked";
+import { menuItems } from "@/data/dashboardMenu";
 import { useAuthenticationStore } from "@/store/auth";
 import { useThemeStore } from "@/store/theme";
 import {
@@ -139,7 +139,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       ref.current.staticStart();
       ref.current.complete();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.location.pathname]);
 
   return (

@@ -1,8 +1,8 @@
+import { ITEMS_PER_PAGE_OPTIONS } from "@/appConstants/index";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Text } from "@/components/typography/Text";
 import { Title } from "@/components/typography/Title";
-import { itemsPerPageOptions } from "@/data/placeholders";
 import { ICertificateDTO } from "@/repositories/dtos/CertificateDTO";
 import { collapseLongString } from "@/utils/formats";
 import {
@@ -45,7 +45,7 @@ export function CertificatesTable({
   const [sortedTrainings, setSortedTrainings] = useState<ICertificateDTO[]>([]);
   const [tableData, setTableData] = useState<ICertificateDTO[]>([]);
   const [itemsPerPage, setItemsPerPage] = useState(
-    itemsPerPageOptions[0].value
+    ITEMS_PER_PAGE_OPTIONS[0].value
   );
 
   const pages = Array.from(
@@ -188,7 +188,7 @@ export function CertificatesTable({
         <div className="flex md:flex-row flex-col md:w-full w-[90%] mx-auto items-center justify-center">
           <SelectInput
             label="Items por página"
-            options={itemsPerPageOptions}
+            options={ITEMS_PER_PAGE_OPTIONS}
             className="mx-auto w-[96px]"
             containerClassName="md:mr-5 my-4 lg:my-0"
             labelClassName="text-[10px] lg:text-sm text-gray-700 dark:text-gray-100"
