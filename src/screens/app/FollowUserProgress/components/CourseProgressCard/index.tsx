@@ -11,9 +11,14 @@ export function CourseProgressCard({
   totalCourseClasses,
   totalWatchedClasses,
 }: CourseProgressCardProps) {
-  const totalWatchedClassesPercentage = Math.floor(
-    Number((totalWatchedClasses / totalCourseClasses) * 100)
-  ).toFixed(0);
+  const watchedClassesPercentage = Number(
+    (totalWatchedClasses / totalCourseClasses) * 100
+  );
+
+  const totalWatchedClassesPercentage =
+    watchedClassesPercentage === 0 || isNaN(watchedClassesPercentage)
+      ? 0
+      : Math.floor(watchedClassesPercentage).toFixed(0);
 
   return (
     <div className="w-full flex flex-col md:flex-row p-3 md:p-4 bg-white dark:bg-slate-900  rounded-lg items-center mb-2">

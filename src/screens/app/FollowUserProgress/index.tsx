@@ -1,23 +1,100 @@
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { Subtitle } from "@/components/typography/Subtitle";
-import { userMetrics } from "@/data/mocked";
-import { useState } from "react";
+import { IUserDTO } from "@/repositories/dtos/UserDTO";
+import { UsersRepositories } from "@/repositories/usersRepositories";
+import { useLoading } from "@/store/loading";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CourseProgressCard } from "./components/CourseProgressCard";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { PRIMARY_COLOR } from "@/appConstants/index";
+import error_warning from "@/assets/error_warning.svg";
+import error_warning_dark from "@/assets/error_warning_dark.svg";
+import { Loading } from "@/components/miscellaneous/Loading";
+import { ITrainingMetricsDTO } from "@/repositories/dtos/TrainingMetricDTO";
+import { TrainingMetricsRepository } from "@/repositories/trainingMetricsRepository";
+import { useThemeStore } from "@/store/theme";
+import { useQuery } from "@tanstack/react-query";
+
+type SelectUserOption = {
+  name: string;
+  id: string;
+};
 
 export function FollowUserProgress() {
-  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedUser, setSelectedUser] = useState<SelectUserOption | null>(
+    null
+  );
+  const [users, setUsers] = useState<IUserDTO[]>([]);
+  const [userMetrics, setUserMetrics] = useState<ITrainingMetricsDTO[]>([]);
 
-  const usersOptions = userMetrics.map((metric) => ({
-    value: metric.user.name,
-    label: metric.user.name,
+  const { isLoading, setIsLoading } = useLoading();
+  const { theme } = useThemeStore();
+
+  const usersRepository = useMemo(() => {
+    return new UsersRepositories();
+  }, []);
+
+  const trainingMetricsRepository = useMemo(() => {
+    return new TrainingMetricsRepository();
+  }, []);
+
+  const getUsers = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const users = await usersRepository.listUsers();
+      setUsers(users);
+      return users;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [setIsLoading, usersRepository]);
+
+  useEffect(() => {
+    getUsers();
+  }, [getUsers]);
+
+  const usersOptionsList = users.map((user) => ({
+    label: user.name,
+    value: user.id,
   }));
 
-  const selectedUserMetrics = userMetrics.filter(
-    (metric) => metric.user.name === selectedUser
+  const { isLoading: loading, error } = useQuery({
+    queryKey: ["users"],
+    queryFn: getUsers,
+  });
+
+  const getUserMetrics = useCallback(
+    async (userId: string) => {
+      try {
+        setIsLoading(true);
+        setUserMetrics([]);
+        const userMetrics =
+          await trainingMetricsRepository.listTrainingMetricsByUser(userId);
+        setUserMetrics(userMetrics);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [selectedUser, trainingMetricsRepository]
   );
 
-  const MAX_TRAININGS_HIDDEN_SCROLL = 5;
+  useEffect(() => {
+    if (selectedUser) {
+      getUserMetrics(selectedUser.id);
+    }
+  }, [getUserMetrics, selectedUser]);
+
+  const selectedUserOption = selectedUser
+    ? {
+        value: selectedUser.id,
+        label: selectedUser.name,
+      }
+    : null;
 
   return (
     <main className="flex flex-1 flex-col w-[90%] lg:w-full lg:p-4 mx-auto">
@@ -28,40 +105,48 @@ export function FollowUserProgress() {
             iconName="activity"
           />
         </div>
-        <div className="w-full flex flex-row mb-4 items-center">
-          <SelectInput
-            label="Selecione um usuário para visualizar o progresso"
-            options={usersOptions}
-            onSelectOption={(val) => setSelectedUser(val.label)}
-            placeholder="Selecione um usuário"
-            defaultValue="Selecione um usuário"
+        {isLoading || loading ? (
+          <Loading color={PRIMARY_COLOR} />
+        ) : error ? (
+          <img
+            src={theme === "light" ? error_warning : error_warning_dark}
+            alt="ps-trainings"
           />
-        </div>
-        <div className="mb-4 w-full">
-          {selectedUser && (
-            <Subtitle content={`Listando progresso de ${selectedUser}`} />
-          )}
-        </div>
-        <div
-          className={
-            selectedUserMetrics.map((course) =>
-              course.user.courses.length > MAX_TRAININGS_HIDDEN_SCROLL
-                ? "w-full flex flex-col max-h-[480px] overflow-y-scroll"
-                : "w-full flex flex-col max-h-[480px]"
-            ) as never
-          }
-        >
-          {selectedUserMetrics.map((metric) =>
-            metric.user.courses.map((course) => (
-              <CourseProgressCard
-                totalCourseClasses={course.totalCourseClasses}
-                totalWatchedClasses={course.totalWatchedClasses}
-                key={course.name}
-                course={course.name}
+        ) : (
+          <>
+            <div className="w-full flex flex-row mb-4 items-center">
+              <SelectInput
+                label="Selecione um usuário para visualizar o progresso"
+                options={usersOptionsList}
+                value={selectedUserOption as never}
+                onSelectOption={(val) => {
+                  console.log("Selected option:", val);
+                  setSelectedUser({
+                    id: val.value.toString(),
+                    name: val.label,
+                  });
+                }}
+                placeholder="Selecione um usuário"
+                defaultValue="Selecione um usuário"
               />
-            ))
-          )}
-        </div>
+            </div>
+            <div className="mb-4 w-full">
+              <Subtitle
+                content={`${selectedUser && userMetrics.length > 0 ? `Listando progresso de ${selectedUser.name}` : "Não há dados para o usuário"}`}
+              />
+            </div>
+            <div className="w-full flex flex-col max-h-[400px] overflow-y-auto">
+              {userMetrics.map((metrics) => (
+                <CourseProgressCard
+                  totalCourseClasses={metrics.total_training_classes}
+                  totalWatchedClasses={metrics.total_watched_classes}
+                  key={metrics.id}
+                  course={metrics.training!.name}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </main>
   );
