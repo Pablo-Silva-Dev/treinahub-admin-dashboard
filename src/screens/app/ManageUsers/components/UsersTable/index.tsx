@@ -107,7 +107,7 @@ export function UsersTable({
   };
 
   return (
-    <Card className="w-full lg:h-[640px] flex flex-col lg:justify-between mx-auto bg-white dark:bg-slate-900">
+    <Card className="w-full lg:h-[560px] flex flex-col lg:justify-between mx-auto bg-white dark:bg-slate-900">
       <CardBody className="overflow-scroll p-0 rounded-lg w-full ">
         <table className="w-full table-auto text-left">
           <thead>

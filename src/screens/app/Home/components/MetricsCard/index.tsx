@@ -20,7 +20,7 @@ export default function MetricsCard({
 
   return (
     <Link to={link}>
-      <div className="flex flex-col w-[240px] lg:w-[25vw] mr-3 mb-3 border-1 border-gray-300 dark:border-gray-800 shadow-sm bg-white dark:bg-slate-900  rounded-lg items-center p-4">
+      <div className="flex flex-col w-full mr-3  border-1 border-gray-300 dark:border-gray-800 shadow-sm bg-white dark:bg-slate-700  rounded-lg items-center p-4">
         <CountUp
           start={metricsInitialValue}
           end={metric}

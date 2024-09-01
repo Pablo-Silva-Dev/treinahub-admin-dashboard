@@ -97,12 +97,16 @@ export function FollowUserProgress() {
     : null;
 
   return (
-    <main className="flex flex-1 flex-col w-[90%] lg:w-full lg:p-4 mx-auto">
-      <div className="flex flex-col items-center w-full md:w-[75vw] xl:w-[45vw] mx-auto">
+    <main className="flex flex-1 flex-col w-[85%] md:w-[90%] lg:w-[95%] mt-2 ml-[40px] mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
+      <div className="flex flex-col  w-full mx-auto xl:pr-8">
         <div className="mb-4 w-full">
           <ScreenTitleIcon
             screenTitle="Acompanhar progresso do usuário"
             iconName="activity"
+          />
+          <Subtitle
+            content="Consulte o progresso de seus usuários."
+            className="mt-4 mb-6 text-gray-800 dark:text-gray-50 text-sm md:text-[15px]"
           />
         </div>
         {isLoading || loading ? (
@@ -128,9 +132,10 @@ export function FollowUserProgress() {
                 }}
                 placeholder="Selecione um usuário"
                 defaultValue="Selecione um usuário"
+                className="w-[30vw] min-w-[280px]"
               />
             </div>
-            <div className="mb-4 w-full">
+            <div className="mt-2 mb-4 w-full">
               <Subtitle
                 content={`${selectedUser && userMetrics.length > 0 ? `Listando progresso de ${selectedUser.name}` : "Não há dados para o usuário"}`}
               />

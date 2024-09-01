@@ -118,7 +118,7 @@ export function VideoClassesTable({
   };
 
   return (
-    <Card className="w-full lg:h-[560px] flex flex-col lg:justify-between mx-auto bg-white dark:bg-slate-900">
+    <Card className="w-full lg:h-[480px] flex flex-col lg:justify-between mx-auto bg-white dark:bg-slate-900">
       <CardBody className="overflow-scroll p-0 rounded-lg w-full">
         <table className="w-full table-auto text-left">
           <thead>
@@ -175,8 +175,8 @@ export function VideoClassesTable({
                 ) => {
                   const isLast = index === tableData.length - 1;
                   const classes = isLast
-                    ? "md:py-1 py-0"
-                    : "md:py-1 py-0 border-b border-gray-200 dark:border-gray-800";
+                    ? "py-0"
+                    : "py-0 border-b border-gray-200 dark:border-gray-800";
                   return (
                     <tr
                       key={name + index}

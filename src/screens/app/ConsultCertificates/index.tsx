@@ -3,6 +3,7 @@ import error_warning_dark from "@/assets/error_warning_dark.svg";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
+import { Subtitle } from "@/components/typography/Subtitle";
 import { CertificatesRepository } from "@/repositories/certificatesRepository";
 import { ICertificateDTO } from "@/repositories/dtos/CertificateDTO";
 import { useLoading } from "@/store/loading";
@@ -166,11 +167,15 @@ export function ConsultCertificates() {
   });
 
   return (
-    <main className="flex flex-1 flex-col w-[90%] lg:w-[95%] mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
-      <div className="flex flex-col items-center  w-full mx-auto">
-        <div className="mb-2 flex lg:flex-row flex-col w-[80%] justify-start lg:justify-between items-center">
-          <div className="mr-3 mb-4">
+    <main className="flex flex-1 flex-col w-[85%] md:w-[90%] lg:w-[95%] mt-2 ml-[40px] mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
+      <div className="flex flex-col  w-full mx-auto xl:pr-8">
+        <div className="mb-2 flex flex-row w-[full] justify-between items-center">
+          <div className="mr-3">
             <ScreenTitleIcon screenTitle="Certificados" iconName="star" />
+            <Subtitle
+              content="Consulte certificados emitidos."
+              className="mt-4 mb-6 text-gray-800 dark:text-gray-50 text-sm md:text-[15px]"
+            />
           </div>
         </div>
         {isLoading || loading ? (

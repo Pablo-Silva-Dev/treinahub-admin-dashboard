@@ -89,7 +89,7 @@ export function CertificatesTable({
   };
 
   return (
-    <Card className="w-[80vw] sm:w-[75vw] md:w-[80vw] xl:w-[65vw] lg:h-[640px] flex flex-col lg:justify-between mx-auto mt-4 bg-white dark:bg-slate-900">
+    <Card className="w-full lg:h-[480px] flex flex-col lg:justify-between mx-auto bg-white dark:bg-slate-900">
       <CardBody className="overflow-scroll p-0 rounded-lg w-full">
         <table className="w-full table-auto text-left">
           <thead>
@@ -116,8 +116,8 @@ export function CertificatesTable({
               if (training) {
                 const isLast = index === tableData.length - 1;
                 const classes = isLast
-                  ? "md:py-1 py-0"
-                  : "md:py-1 py-0 border-b border-gray-200 dark:border-gray-800";
+                  ? "py-0"
+                  : "py-0 border-b border-gray-200 dark:border-gray-800";
                 return (
                   <tr
                     key={user!.name + index}
@@ -148,7 +148,7 @@ export function CertificatesTable({
                         <IconButton
                           variant="text"
                           onClick={() => handleDownloadCertificate(id)}
-                          className="p-0 bg-transparent hover:bg-transparent hover:p-0 text-end ml-[-12px]"
+                          className="p-0 bg-transparent hover:bg-transparent hover:p-0 text-end"
                         >
                           <MdOutlineFileDownload className="sm:h-5 sm:w-5 h-3 w-3 p-0 text-gray-700 dark:text-gray-300" />
                         </IconButton>

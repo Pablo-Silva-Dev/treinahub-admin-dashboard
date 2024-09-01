@@ -25,7 +25,7 @@ export function TrainingInfoCard({
   const descriptionCollapsedLength = description.length / 2;
 
   return (
-    <div className="w-full sm:w-[320px] lg:w-[400px] flex flex-col shadow-sm bg-white dark:bg-slate-900 rounded-md mr-0 md:mr-8 mb-5">
+    <div className="w-full sm:w-[320px] lg:w-[400px] flex flex-col shadow-sm bg-white dark:bg-slate-700 rounded-md mr-0 md:mr-8 mb-5">
       <img
         src={cover_url}
         alt="info_card_placeholder"

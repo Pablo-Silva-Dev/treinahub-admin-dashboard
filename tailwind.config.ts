@@ -10,10 +10,10 @@ module.exports = withMT({
   theme: {
     colors: {
       primary: "#0267FF",
-      "primary-dark": "#160065",
+      "primary-dark": "#2b02b3",
       "primary-light": "#069bff",
       secondary: "#0267FF",
-      "secondary-dark": "#160065",
+      "secondary-dark": "#2b02b3",
       "secondary-light": "#069bff",
       slate: {
         50: "#f8fafc",

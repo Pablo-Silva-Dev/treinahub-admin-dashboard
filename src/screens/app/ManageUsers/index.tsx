@@ -4,6 +4,7 @@ import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { PRIMARY_COLOR } from "@/appConstants/index";
 import error_warning from "@/assets/error_warning.svg";
 import error_warning_dark from "@/assets/error_warning_dark.svg";
+import { Subtitle } from "@/components/typography/Subtitle";
 import { IUpdateUserDTO, IUserDTO } from "@/repositories/dtos/UserDTO";
 import { UsersRepositories } from "@/repositories/usersRepositories";
 import { useLoading } from "@/store/loading";
@@ -130,11 +131,15 @@ export function ManageUsers() {
   const PHONE_NUMBER_LENGTH = 11;
 
   return (
-    <main className="flex flex-1 flex-col w-[90%] lg:w-full mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
+    <main className="flex flex-1 flex-col w-[85%] md:w-[90%] lg:w-[95%] mt-2 ml-[40px] mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
       <div className="flex flex-col  w-full mx-auto xl:pr-8">
         <div className="mb-2 flex flex-row w-[full] justify-between items-center">
           <div className="mr-4 ml-4">
             <ScreenTitleIcon screenTitle="Usuários" iconName="users" />
+            <Subtitle
+              content="Consulte, atualize e se ncessário, remova usuários."
+              className="mt-4 mb-6 text-gray-800 dark:text-gray-50 text-sm md:text-[15px]"
+            />
           </div>
         </div>
         <div className="lg:w-full flex-col flex md:items-center px-4">

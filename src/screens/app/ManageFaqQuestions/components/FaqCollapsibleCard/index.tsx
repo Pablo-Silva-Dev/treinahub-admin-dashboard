@@ -45,7 +45,7 @@ export function FaqCollapsibleCard({
   };
 
   return (
-    <div className="w-full md:w-[90%] overflow-y-auto flex flex-col bg-white p-4 dark:bg-slate-900 rounded-md shadow-md">
+    <div className="w-full md:w-[90%] overflow-y-auto flex flex-col bg-white p-4 dark:bg-slate-700 rounded-md shadow-md">
       {questions.map((question, i) => (
         <>
           <div key={question.question} className="mb-4">
@@ -56,7 +56,6 @@ export function FaqCollapsibleCard({
                     {question.question}
                   </h3>
                 </button>
-               
               </div>
               {!openedQuestions.includes(i) ? (
                 <button onClick={() => toggleQuestion(i)}>
@@ -73,19 +72,18 @@ export function FaqCollapsibleCard({
                   />
                 </button>
               )}
-               <div className="flex flex-row ml-7">
-                  <button onClick={() => handleEditFaqQuestion(question.id)}>
-                    <MdEdit
-                      size={16}
-                      className="text-gray-800 dark:text-gray-50 mr-1"
-                    />
-                  </button>
-                  <button onClick={() => handleDeleteFaqQuestion(question.id)}>
-                    <MdDelete size={16} className="text-red-400 ml-2" />
-                  </button>
-                </div>
+              <div className="flex flex-row ml-7">
+                <button onClick={() => handleEditFaqQuestion(question.id)}>
+                  <MdEdit
+                    size={16}
+                    className="text-gray-800 dark:text-gray-50 mr-1"
+                  />
+                </button>
+                <button onClick={() => handleDeleteFaqQuestion(question.id)}>
+                  <MdDelete size={16} className="text-red-400 ml-2" />
+                </button>
+              </div>
             </div>
-            
           </div>
           <Collapse isOpened={openedQuestions.includes(i)}>
             <div className="w-full flex flex-col">

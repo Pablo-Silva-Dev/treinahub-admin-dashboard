@@ -21,14 +21,14 @@ export function CourseProgressCard({
       : Math.floor(watchedClassesPercentage).toFixed(0);
 
   return (
-    <div className="w-full flex flex-col md:flex-row p-3 md:p-4 bg-white dark:bg-slate-900  rounded-lg items-center mb-2">
+    <div className="w-full max-w-[1200px] flex flex-col md:flex-row p-3 md:p-4 bg-white dark:bg-slate-700  rounded-lg items-center mb-2">
       <div className="flex flex-row w-full items-center justify-start">
         <span className="text-gray-700 dark:text-gray-100 text-xs font-bold mr-2 md:min-w-[160px] ">
           {collapseLongString(course, 80)}
         </span>
-        <div className="w-full md:h-[6px] h-[4px] bg-gray-300 mr-2">
+        <div className="w-full md:h-[6px] h-[4px] bg-gray-300 mr-2 rounded-md">
           <div
-            className="md:h-[6px] h-[4px] bg-secondary"
+            className="md:h-[6px] h-[4px] bg-secondary rounded-md"
             style={{ width: `${totalWatchedClassesPercentage}%` }}
           />
         </div>

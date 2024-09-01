@@ -148,47 +148,49 @@ export function ManageFaqQuestions() {
   });
 
   return (
-    <div className="w-full flex flex-col p-8 md:pl-[80px]">
-      <ScreenTitleIcon
-        screenTitle="Perguntas frequentes"
-        iconName="help-circle"
-      />
-      <Subtitle
-        content="Veja a baixo as dúvidas mais comuns. Por favor, certifique-se de que sua dúvida não esteja esclarecida antes de acessar o suporte."
-        className="mt-6 mb-4 text-gray-800 dark:text-gray-50 text-sm md:text-[15px] text-pretty w-[90%]"
-      />
-      {isLoading || loading ? (
-        <Loading color={PRIMARY_COLOR} />
-      ) : error ? (
-        <img
-          src={theme === "light" ? error_warning : error_warning_dark}
-          alt="error_loading_faq_questions"
+    <main className="flex flex-1 flex-col w-[85%] md:w-[90%] lg:w-[95%] mt-2 ml-[40px] mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
+      <div className="flex flex-col  w-full mx-auto xl:pr-8">
+        <ScreenTitleIcon
+          screenTitle="Perguntas frequentes"
+          iconName="help-circle"
         />
-      ) : (
-        <FaqCollapsibleCard
-          questions={faqQuestions}
-          onDeleteQuestion={handleToggleDeleteFaqQuestionModal}
-          onEditQuestion={handleToggleEditFaqQuestionModal}
-          onSelectQuestion={getFaqQuestion}
+        <Subtitle
+          content="Defina e gerencie as perguntas mais frequentes que seus usuários possam ter."
+          className="mt-4 mb-8 text-gray-800 dark:text-gray-50 text-sm md:text-[15px] text-pretty w-[90%]"
         />
-      )}
-      <DeleteModal
-        isOpen={isDeleteModalOpen}
-        onClose={handleToggleDeleteFaqQuestionModal}
-        onRequestClose={handleToggleDeleteFaqQuestionModal as never}
-        onConfirmAction={() =>
-          handleDeleteContactSupport(selectedFaqQuestion!.id)
-        }
-        resource="pergunta"
-      />
-      <EditFaqQuestionModal
-        isOpen={isEditModalOpen}
-        onClose={handleToggleEditFaqQuestionModal as never}
-        onRequestClose={handleToggleEditFaqQuestionModal as never}
-        onConfirmAction={handleUpdateFaqQuestion}
-        selectedFaqQuestionId={selectedFaqQuestion && selectedFaqQuestion.id}
-        isLoading={loading}
-      />
-    </div>
+        {isLoading || loading ? (
+          <Loading color={PRIMARY_COLOR} />
+        ) : error ? (
+          <img
+            src={theme === "light" ? error_warning : error_warning_dark}
+            alt="error_loading_faq_questions"
+          />
+        ) : (
+          <FaqCollapsibleCard
+            questions={faqQuestions}
+            onDeleteQuestion={handleToggleDeleteFaqQuestionModal}
+            onEditQuestion={handleToggleEditFaqQuestionModal}
+            onSelectQuestion={getFaqQuestion}
+          />
+        )}
+        <DeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={handleToggleDeleteFaqQuestionModal}
+          onRequestClose={handleToggleDeleteFaqQuestionModal as never}
+          onConfirmAction={() =>
+            handleDeleteContactSupport(selectedFaqQuestion!.id)
+          }
+          resource="pergunta"
+        />
+        <EditFaqQuestionModal
+          isOpen={isEditModalOpen}
+          onClose={handleToggleEditFaqQuestionModal as never}
+          onRequestClose={handleToggleEditFaqQuestionModal as never}
+          onConfirmAction={handleUpdateFaqQuestion}
+          selectedFaqQuestionId={selectedFaqQuestion && selectedFaqQuestion.id}
+          isLoading={loading}
+        />
+      </div>
+    </main>
   );
 }

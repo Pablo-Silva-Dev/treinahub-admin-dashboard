@@ -136,7 +136,9 @@ export function Home() {
           </div>
         </div>
         {isLoading ? (
-          <Loading color={PRIMARY_COLOR} />
+          <div className="w-full mt-10">
+            <Loading color={PRIMARY_COLOR} />
+          </div>
         ) : hasError ? (
           <div className="w-full flex flex-row justify-center">
             <img
@@ -145,7 +147,7 @@ export function Home() {
             />
           </div>
         ) : (
-          <div className="flex flex-row  w-full justify-center flex-wrap">
+          <div className="w-[60vw] grid grid-cols-1 md:grid-cols-2 gap-4 ml-[15%] md:ml-[120px]">
             {dashboardMetrics.map((metric) => (
               <MetricsCard
                 key={metric.title}

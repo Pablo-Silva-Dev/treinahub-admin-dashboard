@@ -5,6 +5,7 @@ import { PlusButton } from "@/components/buttons/PlusButton";
 import { DeleteModal } from "@/components/miscellaneous/DeleteModal";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
+import { Subtitle } from "@/components/typography/Subtitle";
 import { ContactsSupportRepository } from "@/repositories/contactsSupportRepository";
 import { IContactSupportDTO } from "@/repositories/dtos/ContactSupportDTO";
 import { useLoading } from "@/store/loading";
@@ -141,12 +142,16 @@ export function ManageSupportContact() {
   );
 
   return (
-    <div className="w-full flex flex-col p-8 md:pl-[80px]">
+    <main className="flex flex-1 flex-col w-[85%] md:w-[90%] lg:w-[95%] mt-2 ml-[40px] mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
       <div className="mb-2 flex flex-row w-[full] justify-between items-center">
         <div className="mt-3 w-full">
           <ScreenTitleIcon
-            screenTitle="Gerenciar contato de suporte"
+            screenTitle="Gerenciar contato de suporte."
             iconName="help-circle"
+          />
+          <Subtitle
+            content="Consulte e gerencie seus contatos de suporte."
+            className="mt-4 mb-6 text-gray-800 dark:text-gray-50 text-sm md:text-[15px]"
           />
         </div>
         <div className="mr-4 md:w-[220px]">
@@ -155,10 +160,6 @@ export function ManageSupportContact() {
           </Link>
         </div>
       </div>
-
-      <span className="text-[12px] md:text-[15px] text-gray-900 dark:text-gray-100 ml-[48px] mt-2 mb-6">
-        Gerencie seus contatos de suporte
-      </span>
       {isLoading || loading ? (
         <Loading color={PRIMARY_COLOR} />
       ) : error ? (
@@ -199,6 +200,6 @@ export function ManageSupportContact() {
           handleDeleteContactSupport(selectedContactSupport!)
         }
       />
-    </div>
+    </main>
   );
 }

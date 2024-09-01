@@ -6,6 +6,7 @@ import { PlusButton } from "@/components/buttons/PlusButton";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
+import { Subtitle } from "@/components/typography/Subtitle";
 import {
   IUpdateVideoClassDTO,
   IVideoClassDTO,
@@ -208,11 +209,15 @@ export function ManageClasses() {
   }, [selectedTrainingId]);
 
   return (
-    <main className="flex flex-1 flex-col w-[90%] lg:w-full mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
+    <main className="flex flex-1 flex-col w-[85%] md:w-[90%] lg:w-[95%] mt-2 ml-[40px] mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
       <div className="flex flex-col  w-full mx-auto xl:pr-8">
         <div className="mb-2 flex flex-row w-[full] justify-between items-center">
           <div className="mr-3 ml-4">
             <ScreenTitleIcon screenTitle="Videoaulas" iconName="play-circle" />
+            <Subtitle
+              content="Consulte, visualize e gerencie suas videoaulas."
+              className="mt-4 mb-6 text-gray-800 dark:text-gray-50 text-sm md:text-[15px]"
+            />
           </div>
           <div className="mr-4">
             <Link to="/dashboard/cadastrar-videoaula">
@@ -237,7 +242,7 @@ export function ManageClasses() {
             </div>
           ) : (
             <div className="w-full flex flex-col">
-              <div className="mb-4 mt-2  w-full max-w-[400px]">
+              <div className="mb-4 w-full max-w-[400px]">
                 <SelectInput
                   label="Filtrar videoaulas por treinamento"
                   options={trainingOptions}
