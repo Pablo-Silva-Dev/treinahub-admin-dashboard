@@ -1,3 +1,4 @@
+import logo from "@/assets/logo.svg";
 import logo_text from "@/assets/logo_text.svg";
 import { CompanyFooterLink } from "@/components/miscellaneous/CompanyFooterLink";
 import { Subtitle } from "@/components/typography/Subtitle";
@@ -16,7 +17,6 @@ import {
   AccordionHeader,
   Avatar,
   Breadcrumbs,
-  Button,
   ListItem,
 } from "@material-tailwind/react";
 import FeatherIcon from "feather-icons-react";
@@ -149,13 +149,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       <div className="flex flex-row w-full min-h-screen">
         <nav className="hidden xl:flex flex-col w-[320px] min-h-screen overflow-auto p-8 bg-white dark:bg-slate-900 items-start">
           <Link to="/dashboard">
-            <img
-              src={logo_text}
-              alt="logo-text"
-              width={240}
-              height={120}
-              className="mb-8"
-            />
+            <img src={logo_text} alt="logo-text" width={200} className="mb-2" />
           </Link>
           {menuItems.map((item, idx) => (
             <Accordion
@@ -205,16 +199,19 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 : "w-full flex flex-row justify-between items-center border-bottom-2 mb-[400px] lg:p-4 p-3 fixed bg-gray-50 dark:bg-slate-700 border-b-gray-200 dark:border-b-slate-600 border-b-2"
             }
           >
-            <div className="flex flex-row">
-              <div className="hidden sm:flex">
-                <Breadcrumbs className="mr-3 bg-gray-100 dark:bg-slate-800">
+            <div className="flex flex-row items-center">
+              <Link to="/dashboard">
+                <img src={logo} alt="logo-text" width={40} />
+              </Link>
+              <div className="hidden lg:flex mr-4">
+                <Breadcrumbs className="ml-4 bg-gray-200 dark:bg-slate-800">
                   <Link to="/dashboard">
-                    <span className="text-[11px] lx:text-sm hidden sm:flex dark:text-gray-100 text-slate-800">
+                    <span className="text-[12px] lx:text-sm hidden sm:flex dark:text-gray-100 text-slate-800">
                       {breadCrumbBase}
                     </span>
                   </Link>
                   <Link to={`/dashboard/${breadCrumbAction}`}>
-                    <span className="opacity-60 text-[11px] lx:text-sm dark:text-gray-100 text-slate-800">
+                    <span className="opacity-60 text-[12px] lx:text-sm dark:text-gray-100 text-slate-800">
                       {breadCrumbAction}
                     </span>
                   </Link>
@@ -298,21 +295,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       >
         <nav className="flex flex-col w-full h-screen overflow-auto p-4 bg-white dark:bg-slate-900 items-start overflow-x-hidden ">
           <div className="w-full flex flew-row justify-end mr-4 mb-[-16px] mt-1">
-            <Button
+            <button
               className="p-1 bg-transparent"
               onClick={handleToggleMobileMenuModal}
             >
               <MdClose className="w-5 h-5 text-black dark:text-white" />
-            </Button>
+            </button>
           </div>
           <Link to="/dashboard">
-            <img
-              src={logo_text}
-              alt="logo-text"
-              width={240}
-              height={120}
-              className="mb-4 mt-8"
-            />
+            <img src={logo_text} alt="logo-text" width={200} className="mb-2" />
           </Link>
           {menuItems.map((item, idx) => (
             <Accordion
@@ -325,7 +316,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 onClick={() => handleOpenedAccordionIndexes(idx)}
               >
                 <ListItem
-                  className={`text-[12px] lg:text-[14px] text-black dark:text-white hover:text-slate-800 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-800 focus:text-slate-800 dark:focus:text-gray-200 focus:bg-gray-200 dark:focus:bg-slate-800`}
+                  className={`text-[12px] lg:text-[14px] text-black dark:text-white hover:text-slate-800 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-800 focus:text-slate-800 dark:focus:text-gray-200 focus:bg-gray-200 dark:focus:bg-slate-800 font-secondary`}
                 >
                   <FeatherIcon
                     icon={item.icon}
@@ -344,7 +335,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                     className={` mb-1 p-0 text-[12px] font-bold`}
                   >
                     <ListItem
-                      className={`  text-primary dark:text-primary-light font-regular font-poppinshover:text-blue-700 hover:text-slate-800 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-800 focus:text-slate-800 dark:focus:text-gray-200 focus:bg-gray-200 dark:focus:bg-slate-800`}
+                      className={`text-primary dark:text-primary-light font-light font-poppinshover:text-blue-700 hover:text-slate-800 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-800 focus:text-slate-800 dark:focus:text-gray-200 focus:bg-gray-200 dark:focus:bg-slate-800 font-secondary`}
                     >
                       {action.title}
                     </ListItem>
