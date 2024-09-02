@@ -40,9 +40,8 @@ export function ManageTrainings() {
     return new TrainingsRepositories();
   }, []);
 
-  const handleSeeTraining = () => {
-    //TODO-PABLO: update navigation to navigate to specific training videoclasses
-    navigate("/dashboard/gerenciar-videoaulas");
+  const handleSeeTraining = (trainingId: string) => {
+    navigate(`/dashboard/gerenciar-videoaulas?trainingId=${trainingId}`)
   };
 
   const getTrainings = useCallback(async () => {
@@ -170,7 +169,15 @@ export function ManageTrainings() {
                 cover_url={training.cover_url!}
                 onEdit={() => handleToggleEditModalTraining(training)}
                 onDelete={() => handleToggleDeleteModal(training)}
-                onSeeTraining={handleSeeTraining}
+                onSeeTraining={() => handleSeeTraining(training.id)}
+                showsSeeClassesButton={
+                  training &&
+                  training.video_classes &&
+                  training.video_classes.length > 0
+                    ? true
+                    : false
+                }
+                selectedTrainingId={selectedTraining && selectedTraining.id as string}
               />
             ))}
           </div>

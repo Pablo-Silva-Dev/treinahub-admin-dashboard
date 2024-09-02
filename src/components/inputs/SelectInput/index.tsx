@@ -20,8 +20,6 @@ interface SelectInputProps extends InputHTMLAttributes<HTMLInputElement> {
   }) => void;
 }
 
-// //TODO-PABLO: Grant all select input is filled with an object that contains the label and the value whose must be the id for the selected option that represents the record on database
-
 export const SelectInput = forwardRef<HTMLInputElement, SelectInputProps>(
   (
     {

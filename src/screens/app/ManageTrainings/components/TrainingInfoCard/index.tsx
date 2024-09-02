@@ -9,7 +9,9 @@ interface TrainingInfoCardProps {
   cover_url: string;
   onEdit: () => void;
   onDelete: () => void;
-  onSeeTraining: () => void;
+  onSeeTraining: (trainingId: string) => void;
+  showsSeeClassesButton: boolean;
+  selectedTrainingId: string | null
 }
 
 export function TrainingInfoCard({
@@ -19,6 +21,8 @@ export function TrainingInfoCard({
   onDelete,
   onEdit,
   onSeeTraining,
+  showsSeeClassesButton,
+  selectedTrainingId
 }: TrainingInfoCardProps) {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
@@ -63,12 +67,14 @@ export function TrainingInfoCard({
         </div>
         <div className="w-full h-[1px] bg-gray-200 dark:bg-slate-600 mt-2 mb-4" />
         <div className="flex flex-row justify-between items-center">
-          <button
-            className="border-[1px] border-gray-400 dark:border-gray-50 text-[12px] lg:text-sm text-gray-800 dark:text-gray-50 p-2 rounded-md"
-            onClick={onSeeTraining}
-          >
-            Ver videoaulas
-          </button>
+          {showsSeeClassesButton && (
+            <button
+              className="border-[1px] border-gray-400 dark:border-gray-50 text-[12px] lg:text-sm text-gray-800 dark:text-gray-50 p-2 rounded-md"
+              onClick={() => onSeeTraining(selectedTrainingId!)}
+            >
+              Ver videoaulas
+            </button>
+          )}
           <div className="flex flex-row items-center">
             <button onClick={onEdit}>
               <MdEdit className="w-4 h-4 lg:w-5 lg:h-5 text-gray-700 dark:text-gray-50" />

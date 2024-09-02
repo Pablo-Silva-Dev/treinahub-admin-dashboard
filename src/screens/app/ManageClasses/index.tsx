@@ -28,7 +28,7 @@ import {
 } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { VideoClassesTable } from "./components/ClassesTable";
 import { EditClassModal } from "./components/EditClassModal";
@@ -43,6 +43,12 @@ export function ManageClasses() {
   const [selectedVideoClass, setSelectedVideoClass] =
     useState<IVideoClassDTO | null>(null);
   const [selectedTrainingId, setSelectedTrainingId] = useState("");
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const queryParams = new URLSearchParams(location.search);
+  const trainingIdQueryParam = queryParams.get("trainingId");
 
   const queryClient = useQueryClient();
   const { theme } = useThemeStore();
@@ -69,11 +75,14 @@ export function ManageClasses() {
   const getVideoClass = useCallback(
     async (videoClassId: string) => {
       try {
+        setIsLoading(true);
         const videoClass =
           await videoClassesRepositories.getVideoClassById(videoClassId);
         setSelectedVideoClass(videoClass);
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     },
     [videoClassesRepositories]
@@ -81,49 +90,40 @@ export function ManageClasses() {
 
   const getVideoClasses = useCallback(async () => {
     try {
-      let videoClassesList = [];
-      if (selectedTrainingId === "") {
-        videoClassesList = await videoClassesRepositories.listVideoClasses();
-      } else {
-        videoClassesList =
+      setIsLoading(true);
+      if (selectedTrainingId || trainingIdQueryParam) {
+        const trainingId = selectedTrainingId || trainingIdQueryParam;
+        const videoClassesList =
           await videoClassesRepositories.listVideoClassesByTrainingId(
-            selectedTrainingId
+            trainingId!
           );
+        setVideoClasses(videoClassesList);
+        return videoClassesList;
+      } else {
+        const videoClassesList =
+          await videoClassesRepositories.listVideoClasses();
+        setVideoClasses(videoClassesList);
+        return videoClassesList;
       }
-      setVideoClasses(videoClassesList);
-      return videoClasses;
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [selectedTrainingId, videoClassesRepositories]);
+  }, [selectedTrainingId, trainingIdQueryParam, videoClassesRepositories]);
 
   useEffect(() => {
     getVideoClasses();
   }, [getVideoClasses]);
 
-  const getVideoClassesByTraining = useCallback(async (trainingId: string) => {
-    try {
-      const videoClassesList =
-        await videoClassesRepositories.listVideoClassesByTrainingId(trainingId);
-      setVideoClasses(videoClassesList);
-      return videoClasses;
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    getVideoClassesByTraining(selectedTrainingId);
-  }, [getVideoClassesByTraining, selectedTrainingId]);
-
   const videoClassesQuery = useQuery({
-    queryKey: ["video-classes"],
+    queryKey: ["video-classes", trainingIdQueryParam || selectedTrainingId],
     queryFn: getVideoClasses,
   });
 
   const { isLoading, error } = videoClassesQuery;
 
-  const handleDeleteUser = useCallback(
+  const handleDeleteVideoClass = useCallback(
     async (videoClassId: string) => {
       try {
         setIsLoading(true);
@@ -202,12 +202,6 @@ export function ManageClasses() {
     }))
     .concat({ label: "Todos os treinamentos", value: "" });
 
-  useEffect(() => {
-    if (selectedTrainingId === "") {
-      setVideoClasses(videoClasses);
-    }
-  }, [selectedTrainingId]);
-
   return (
     <main className="flex flex-1 flex-col w-[85%] md:w-[90%] lg:w-[95%] mt-2 ml-[40px] mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
       <div className="flex flex-col  w-full mx-auto xl:pr-8">
@@ -226,8 +220,7 @@ export function ManageClasses() {
           </div>
         </div>
         <div className="lg:w-full flex-col flex md:items-center px-4">
-          {/* TODO-Pablo: update navigation params to receive classes from specific trainings */}
-          {isLoading || loading ? (
+          {loading || isLoading ? (
             <div className="w-full mt-[10vh]">
               <Loading color={PRIMARY_COLOR} />
             </div>
@@ -246,9 +239,10 @@ export function ManageClasses() {
                 <SelectInput
                   label="Filtrar videoaulas por treinamento"
                   options={trainingOptions}
-                  onSelectOption={(val) =>
-                    setSelectedTrainingId(val.value.toString())
-                  }
+                  onSelectOption={(val) => {
+                    setSelectedTrainingId(val.value.toString());
+                    navigate(location.pathname, { replace: true });
+                  }}
                   defaultValue="Selecione um treinamento"
                   placeholder="Selecione um treinamento"
                 />
@@ -270,14 +264,14 @@ export function ManageClasses() {
         isOpen={isDeleteModalOpen}
         onClose={handleToggleDeleteModal}
         onRequestClose={handleToggleDeleteModal}
-        onConfirmAction={() => handleDeleteUser(selectedVideoClass!.id)}
+        onConfirmAction={() => handleDeleteVideoClass(selectedVideoClass!.id)}
       />
       <EditClassModal
         isOpen={isEditClassModalOpen}
         onClose={handleToggleEditClassModal}
         onRequestClose={handleToggleEditClassModal}
         onConfirmAction={handleUpdateVideoClass}
-        isLoading={isLoading}
+        isLoading={loading}
         selectedVideoClassId={selectedVideoClass && selectedVideoClass.id}
       />
       <WatchClassModal
