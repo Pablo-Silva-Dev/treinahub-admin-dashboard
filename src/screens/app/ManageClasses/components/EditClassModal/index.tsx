@@ -252,14 +252,20 @@ export function EditClassModal({
       />
 
       <form onSubmit={handleSubmit(handleUpdateVideoClass)} className="my-4">
-        <TextInput inputLabel="Nome" placeholder={name} {...register("name")} />
+        <TextInput
+          inputLabel="Nome"
+          placeholder="Nome da videoaula"
+          {...register("name")}
+          defaultValue={name}
+        />
         {errors && errors.name && (
           <ErrorMessage errorMessage={errors.name?.message} />
         )}
         <div className="my-4">
           <TextAreaInput
             label="Descrição"
-            placeholder={description}
+            placeholder="Descrição da videoaula"
+            defaultValue={description}
             {...register("description")}
           />
           {errors && errors.description && (

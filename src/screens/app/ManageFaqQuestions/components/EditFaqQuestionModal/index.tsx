@@ -134,7 +134,8 @@ export function EditFaqQuestionModal({
         <div className="my-4">
           <TextInput
             inputLabel="Pergunta"
-            placeholder={question}
+            defaultValue={question}
+            placeholder="Conteúdo da pergunta"
             {...register("question")}
           />
           {errors && errors.question && (
@@ -144,7 +145,8 @@ export function EditFaqQuestionModal({
         <div className="my-4">
           <TextAreaInput
             label="Resposta"
-            placeholder={answer}
+            defaultValue={answer}
+            placeholder="Conteúdo da resposta"
             {...register("answer")}
           />
           {errors && errors.answer && (

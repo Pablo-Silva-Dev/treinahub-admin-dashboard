@@ -1,4 +1,5 @@
 import {
+  EMAIL_INVALID_MESSAGE,
   PHONE_INVALID_MESSAGE,
   REQUIRED_FIELD_MESSAGE,
 } from "@/appConstants/index";
@@ -21,11 +22,16 @@ import * as yup from "yup";
 interface RegisterContactSupportInputs {
   name: string;
   contact_number: string;
+  email: string;
 }
 
 export function RegisterContactSupport() {
   const validationSchema = yup.object({
     name: yup.string().required(REQUIRED_FIELD_MESSAGE),
+    email: yup
+      .string()
+      .email(EMAIL_INVALID_MESSAGE)
+      .required(REQUIRED_FIELD_MESSAGE),
     contact_number: yup
       .string()
       .matches(maskedPhoneValidationRegex, PHONE_INVALID_MESSAGE)
@@ -107,6 +113,16 @@ export function RegisterContactSupport() {
 
             {errors && errors.contact_number && (
               <ErrorMessage errorMessage={errors.contact_number?.message} />
+            )}
+          </div>
+          <div className="w-full mb-4">
+            <TextInput
+              inputLabel="Email"
+              placeholder="Email do contato"
+              {...register("email")}
+            />
+            {errors && errors.email && (
+              <ErrorMessage errorMessage={errors.email?.message} />
             )}
           </div>
           <div className="w-full mt-2">

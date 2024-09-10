@@ -86,7 +86,9 @@ export function EditTrainingModal({
       .mixed()
       .required(REQUIRED_FIELD_MESSAGE)
       .test("fileSize", FILE_MAX_SIZE_MESSAGE + "2MB", (value: any) => {
-        return value && value[0] && value[0].size <= MAX_TRAINING_COVER_FILE_SIZE;
+        return (
+          value && value[0] && value[0].size <= MAX_TRAINING_COVER_FILE_SIZE
+        );
       })
       .test(
         "fileType",
@@ -180,7 +182,12 @@ export function EditTrainingModal({
       />
 
       <form onSubmit={handleSubmit(handleUpdateTraining)} className="my-4">
-        <TextInput inputLabel="Nome" placeholder={name} {...register("name")} />
+        <TextInput
+          inputLabel="Nome"
+          placeholder="Nome do treinamento"
+          {...register("name")}
+          defaultValue={name}
+        />
         {errors.name && (
           <div>
             <ErrorMessage errorMessage={errors.name?.message} />
@@ -189,7 +196,8 @@ export function EditTrainingModal({
         <div className="my-4">
           <TextAreaInput
             label="Descrição"
-            placeholder={description}
+            defaultValue={description}
+            placeholder="Descrição do treinamento"
             showTextLength
             maxTextLength={MAX_TRAINING_DESCRIPTION_LENGTH}
             currentTextLength={

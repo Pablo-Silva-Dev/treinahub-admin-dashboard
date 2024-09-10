@@ -173,7 +173,9 @@ export function ManageSupportContact() {
             <ContactSupportCard
               key={contact.id}
               name={contact.name}
+              email={contact.email}
               contactNumber={contact.contact_number}
+              hideContactNumber={contact.hide_contact_number}
               onDeleteContact={() =>
                 handleToggleDeleteSupportContactModal(contact)
               }
@@ -183,6 +185,7 @@ export function ManageSupportContact() {
         </div>
       )}
       <EditSupportContactModal
+        contactData={selectedContactSupport!}
         isOpen={editContactSupportModal}
         onClose={handleToggleEditSupportContactModal}
         onRequestClose={handleToggleEditSupportContactModal as never}

@@ -1,4 +1,7 @@
-import { PHONE_INVALID_MESSAGE } from "@/appConstants/index";
+import {
+  EMAIL_INVALID_MESSAGE,
+  PHONE_INVALID_MESSAGE,
+} from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { MaskedTextInput } from "@/components/inputs/MaskedTextInput";
@@ -13,15 +16,24 @@ import {
 import { phoneMask } from "@/utils/masks";
 import { maskedPhoneValidationRegex } from "@/utils/regex";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { KeyboardEvent, MouseEvent } from "react";
+import { Checkbox } from "@material-tailwind/react";
+import { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Modal from "react-modal";
 import * as yup from "yup";
-
 interface UpdateSupportContactInputs {
   id: string;
   name?: string;
   contact_number?: string;
+  email?: string;
+  hide_contact_number?: boolean;
+}
+
+interface IContactData {
+  name?: string;
+  contact_number?: string;
+  email?: string;
+  hide_contact_number?: boolean;
 }
 
 interface EditSupportContactModalProps {
@@ -32,6 +44,7 @@ interface EditSupportContactModalProps {
   onClose: () => void;
   onConfirmAction: (contact: IUpdateContactSupportDTO) => void;
   selectedContactSupportId: string | null;
+  contactData: IContactData;
 }
 
 export function EditSupportContactModal({
@@ -40,31 +53,53 @@ export function EditSupportContactModal({
   onClose,
   onConfirmAction,
   selectedContactSupportId,
+  contactData,
 }: EditSupportContactModalProps) {
   const { theme } = useThemeStore();
 
   const validationSchema = yup.object({
     id: yup.string(),
     name: yup.string(),
+    email: yup.string().email(EMAIL_INVALID_MESSAGE),
     contact_number: yup
       .string()
       .matches(maskedPhoneValidationRegex, PHONE_INVALID_MESSAGE),
+    hide_contact_number: yup.boolean(),
   });
 
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
+    reset,
   } = useForm({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
   });
 
+  const [hideContactNumber, setHideContactNumber] = useState(false);
+
   const handleUpdateSupportContact: SubmitHandler<
     UpdateSupportContactInputs
   > = (data: UpdateSupportContactInputs) => {
-    onConfirmAction({ ...data, id: selectedContactSupportId! });
+    onConfirmAction({
+      ...data,
+      id: selectedContactSupportId!,
+      hide_contact_number: hideContactNumber,
+    });
   };
+
+  useEffect(() => {
+    if (contactData) {
+      reset({
+        name: contactData.name,
+        contact_number: contactData.contact_number,
+        email: contactData.email,
+        hide_contact_number: contactData.hide_contact_number,
+      });
+      setHideContactNumber(contactData.hide_contact_number!);
+    }
+  }, [contactData, reset]);
 
   return (
     <Modal
@@ -102,7 +137,24 @@ export function EditSupportContactModal({
         {errors && errors.contact_number && (
           <ErrorMessage errorMessage={errors.contact_number?.message} />
         )}
+        <div className="w-full mb-4">
+          <TextInput
+            inputLabel="Email"
+            placeholder="Email do contato"
+            {...register("email")}
+          />
+          {errors && errors.email && (
+            <ErrorMessage errorMessage={errors.email?.message} />
+          )}
+        </div>
 
+        <div className="w-full mt-4">
+          <Checkbox
+            onClick={() => setHideContactNumber(!hideContactNumber)}
+            defaultChecked={hideContactNumber}
+            color="blue"
+          />
+        </div>
         <div className="w-full mt-4">
           <Button type="submit" title="Salvar dados" disabled={!isValid} />
         </div>
