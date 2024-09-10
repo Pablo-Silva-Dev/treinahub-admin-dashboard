@@ -148,12 +148,15 @@ export function EditSupportContactModal({
           )}
         </div>
 
-        <div className="w-full mt-4">
+        <div className="w-full mt-4 flex flex-row items-center">
           <Checkbox
             onClick={() => setHideContactNumber(!hideContactNumber)}
             defaultChecked={hideContactNumber}
             color="blue"
           />
+          <span className="text-black dark:text-white text-[13px] md:text-[14px] w-full my-2 ml-[-4px]">
+            Ocultar telefone
+          </span>
         </div>
         <div className="w-full mt-4">
           <Button type="submit" title="Salvar dados" disabled={!isValid} />

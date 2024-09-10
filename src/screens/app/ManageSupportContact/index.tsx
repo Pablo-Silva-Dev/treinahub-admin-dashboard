@@ -168,7 +168,7 @@ export function ManageSupportContact() {
           alt="error"
         />
       ) : (
-        <div className="w-full md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[40vw] flex flex-col mt-2">
+        <div className="w-full  flex flex-col mt-2">
           {contactsSupport.map((contact: IContactSupportDTO) => (
             <ContactSupportCard
               key={contact.id}
