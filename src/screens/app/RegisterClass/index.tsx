@@ -47,7 +47,7 @@ export function RegisterClass() {
   const MIN_CLASS_DESCRIPTION_LENGTH = 24;
   const MAX_CLASS_DESCRIPTION_LENGTH = 250;
   const MAX_CLASS_COVER_FILE_SIZE = 2 * 1024 * 1024; //2MB
-  const MAX_CLASS_VIDEO_FILE_SIZE = 50 * 1024 * 1024; //100MB
+  const MAX_CLASS_VIDEO_FILE_SIZE = 500 * 1024 * 1024; //500MB
 
   const [wasVideoFileUploaded, setWasVideoFileUploaded] = useState(false);
   const [wasImageFileUploaded, setWasImageFileUploaded] = useState(false);
@@ -94,7 +94,7 @@ export function RegisterClass() {
           );
         }
       )
-      .test("fileSize", FILE_MAX_SIZE_MESSAGE + "50MB", (value: any) => {
+      .test("fileSize", FILE_MAX_SIZE_MESSAGE + "500MB", (value: any) => {
         if (!value || value.length === 0) return true; // Allow empty file
         return value[0].size <= MAX_CLASS_VIDEO_FILE_SIZE;
       }),

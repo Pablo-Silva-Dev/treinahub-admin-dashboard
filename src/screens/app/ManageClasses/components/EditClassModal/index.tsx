@@ -87,7 +87,7 @@ export function EditClassModal({
   const MIN_TRAINING_DESCRIPTION_LENGTH = 40;
   const MAX_TRAINING_DESCRIPTION_LENGTH = 500;
   const MAX_CLASS_COVER_FILE_SIZE = 2 * 1024 * 1024; //2MB
-  const MAX_VIDEO_FILE_SIZE = 50 * 1024 * 1024; //50MB
+  const MAX_VIDEO_FILE_SIZE = 500 * 1024 * 1024; //500MB
 
   const validationSchema = yup.object({
     id: yup.string().optional(),
@@ -123,7 +123,7 @@ export function EditClassModal({
           );
         }
       )
-      .test("fileSize", FILE_MAX_SIZE_MESSAGE + "50MB", (value: any) => {
+      .test("fileSize", FILE_MAX_SIZE_MESSAGE + "500MB", (value: any) => {
         if (!value || value.length === 0) return true; // Allow empty file
         return value[0].size <= MAX_VIDEO_FILE_SIZE;
       }),
