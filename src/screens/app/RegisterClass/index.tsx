@@ -228,12 +228,19 @@ export function RegisterClass() {
             error !== null &&
             "STATUS" in error
           ) {
-            if (error.STATUS === 409) {
-              showAlertError(
-                "Já existe uma videoaula com estes dados para este treinamento."
-              );
-            } else {
-              showAlertError("Houve um erro ao tentar cadastrar videoaula.");
+            switch (error.STATUS) {
+              case 409:
+                showAlertError(
+                  "Já existe uma videoaula com estes dados para este treinamento."
+                );
+                break;
+              case 406:
+                showAlertError(
+                  "A video aula não pode conter mais que 15 minutos de duração."
+                );
+                break;
+              default:
+                showAlertError("Houve um erro ao tentar cadastrar videoaula.");
             }
           }
           console.log(error);

@@ -1,6 +1,7 @@
 import { PRIMARY_COLOR } from "@/appConstants/index";
 import error_warning from "@/assets/error_warning.svg";
 import error_warning_dark from "@/assets/error_warning_dark.svg";
+import video_thumbnail_placeholder from "@/assets/video_thumbnail_placeholder.svg";
 import { PlusButton } from "@/components/buttons/PlusButton";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
@@ -41,7 +42,7 @@ export function ManageTrainings() {
   }, []);
 
   const handleSeeTraining = (trainingId: string) => {
-    navigate(`/dashboard/gerenciar-videoaulas?trainingId=${trainingId}`)
+    navigate(`/dashboard/gerenciar-videoaulas?trainingId=${trainingId}`);
   };
 
   const getTrainings = useCallback(async () => {
@@ -166,7 +167,11 @@ export function ManageTrainings() {
                 key={training.id}
                 training={training.name}
                 description={training.description}
-                cover_url={training.cover_url!}
+                cover_url={
+                  training.cover_url
+                    ? training.cover_url
+                    : video_thumbnail_placeholder
+                }
                 onEdit={() => handleToggleEditModalTraining(training)}
                 onDelete={() => handleToggleDeleteModal(training)}
                 onSeeTraining={() => handleSeeTraining(training.id)}
@@ -177,7 +182,9 @@ export function ManageTrainings() {
                     ? true
                     : false
                 }
-                selectedTrainingId={selectedTraining && selectedTraining.id as string}
+                selectedTrainingId={
+                  selectedTraining && (selectedTraining.id as string)
+                }
               />
             ))}
           </div>
