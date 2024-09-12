@@ -121,7 +121,7 @@ export function Home() {
 
   return (
     <main className="w-full flex flex-1  flex-col p-4">
-      <div className=" w-full flex flex-col md:ml-4 ">
+      <div className=" w-full flex flex-col">
         <div className="flex flex-col justify-between mb-6 mx-auto md:mx-[120px] w-[80%]">
           <GreetUser userName={user.name} />
           <div className="flex w-full">
@@ -147,7 +147,7 @@ export function Home() {
             />
           </div>
         ) : (
-          <div className="w-[60vw] grid grid-cols-1 md:grid-cols-2 gap-4 ml-[15%] md:ml-[120px]">
+          <div className="w-[75%] lg:w-[80%] grid grid-cols-1 md:grid-cols-2 gap-4 ml-[15%] md:ml-[120px]">
             {dashboardMetrics.map((metric) => (
               <MetricsCard
                 key={metric.title}

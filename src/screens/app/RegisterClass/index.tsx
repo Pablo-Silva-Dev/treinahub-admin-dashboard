@@ -214,7 +214,7 @@ export function RegisterClass() {
               video_file: videoFile,
             });
             showAlertSuccess(
-              "Videoaula cadastrado com sucesso. Avisaremos assim que a videoaula estiver disponível."
+              "Videoaula cadastrado com sucesso!"
             );
           }
           reset();
