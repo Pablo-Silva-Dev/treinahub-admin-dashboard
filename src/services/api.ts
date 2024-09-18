@@ -1,12 +1,12 @@
 import { useAuthenticationStore } from "@/store/auth";
 import axios, {
-  AxiosError,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
+    AxiosError,
+    AxiosResponse,
+    InternalAxiosRequestConfig,
 } from "axios";
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_STAGE_BASEURL,
+  baseURL: import.meta.env.VITE_API_BASEURL,
 });
 
 export interface IApiSuccessResponse<T> {
@@ -34,30 +34,29 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  console.log(`[${config.method?.toUpperCase()}] - ${config.url}`);
+  if (import.meta.env.DEV) {
+    console.log(`[${config.method?.toUpperCase()}] - ${config.url}`);
+  }
+
   return config;
 });
 
 api.interceptors.response.use(
   (response: AxiosResponse<IApiSuccessResponse<any>>) => {
-    if (
-      response.config.url !== "/users/get-recovery-password-code-by-phone" &&
-      response.config.url !== "/users/get-recovery-password-code-by-email" &&
-      response.config.url !== "/users/auth"
-    ) {
-      console.log("[RESPONSE SUCCESS] -", response.data);
+    if (import.meta.env.DEV) {
+      console.log("[RESPONSE SUCCESS] - ", response.data);
     }
     return response;
   },
   (error: AxiosError<IApiErrorResponse>) => {
-    if (error.response) {
+    if (error.response && import.meta.env.DEV) {
       console.log("[RESPONSE ERROR] - ", error.response.data);
       return Promise.reject(error.response.data);
     }
-    if (error.request) {
+    if (error.request && import.meta.env.DEV) {
       console.log("[RESPONSE ERROR] - ", error.request.data);
       return Promise.reject(error.request.data);
     }
   }
 );
-//
+
