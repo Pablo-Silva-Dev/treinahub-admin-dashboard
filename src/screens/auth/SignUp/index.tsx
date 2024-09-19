@@ -19,7 +19,14 @@ export function SignUp() {
   const handleSubmit = async (data: any) => {
     try {
       setIsLoading(true);
-      await usersRepositories.registerUser({ ...data, is_admin: true });
+      const { phone } = data;
+      const brazilianPhoneCode = "+55";
+      const completePhone = brazilianPhoneCode + phone;
+      await usersRepositories.registerUser({
+        ...data,
+        is_admin: true,
+        phone: completePhone,
+      });
       showAlertSuccess("Cadastro realizado com sucesso!");
       setTimeout(() => {
         navigate("/");

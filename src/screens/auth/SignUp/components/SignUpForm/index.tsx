@@ -4,6 +4,7 @@ import {
   EMAIL_INVALID_MESSAGE,
   MIN_PASSWORD_LENGTH,
   PASSWORD_MIN_LENGTH_MESSAGE,
+  PHONE_INVALID_MESSAGE,
   REQUIRED_FIELD_MESSAGE,
 } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
@@ -12,12 +13,11 @@ import { MaskedTextInput } from "@/components/inputs/MaskedTextInput";
 import { PasswordTextInput } from "@/components/inputs/PasswordInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { PasswordRequirements } from "@/components/miscellaneous/PasswordRequirements";
-import { formatPhoneNumber } from "@/utils/formats";
-import { birthDateMask, cpfMask, phoneMask } from "@/utils/masks";
+import { birthDateMask, cpfMask } from "@/utils/masks";
 import {
   birthDateValidationRegex,
   cpfValidationRegex,
-  phoneValidationRegex,
+  phoneWithoutCountryCodeValidationRegex,
 } from "@/utils/regex";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Checkbox } from "@material-tailwind/react/";
@@ -67,15 +67,7 @@ export default function SignUpForm({
       .required(REQUIRED_FIELD_MESSAGE),
     phone: yup
       .string()
-      .transform((value) => {
-        try {
-          return formatPhoneNumber(value);
-        } catch (error) {
-          console.log("Error at trying to format phone number.", error);
-          return value;
-        }
-      })
-      .matches(phoneValidationRegex)
+      .matches(phoneWithoutCountryCodeValidationRegex, PHONE_INVALID_MESSAGE)
       .required(REQUIRED_FIELD_MESSAGE),
     password: yup
       .string()
@@ -169,10 +161,9 @@ export default function SignUpForm({
               </div>
             </div>
             <div>
-              <MaskedTextInput
-                mask={phoneMask}
+              <TextInput
                 inputLabel="Telefone"
-                placeholder="Seu telefone"
+                placeholder="DDD + telefone, sem espaços"
                 autoComplete="tel"
                 style={{ width: "99%" }}
                 inputMode="numeric"
@@ -261,6 +252,7 @@ export default function SignUpForm({
             disabled={
               !isValid ||
               !passwordValidated.current ||
+              passwordValue !== passwordConfirmation ||
               !wasTermsAccepted ||
               isLoading
             }
