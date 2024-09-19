@@ -1,7 +1,6 @@
-import dashboard_background from "@/assets/dashboard_background.png";
+import dashboard_background from "@/assets/dashboard_background.webp";
 import logo_text from "@/assets/logo_text.svg";
 import { CompanyFooterLink } from "@/components/miscellaneous/CompanyFooterLink";
-import { Title } from "@/components/typography/Title";
 import { ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 
@@ -13,8 +12,7 @@ export const AuthenticationLayout: React.FC<AuthenticationLayoutProps> = ({
   children,
 }: AuthenticationLayoutProps) => {
   return (
-    <div className="flex flex-col lg:flex-row w-full min-h-screen">
-      {/* TODO-PABLO: Add a similar to NextProgress bar page loading for indicating page loading */}
+    <div className="flex flex-col-reverse lg:flex-row w-full min-h-screen">
       <Toaster />
       <section className="flex flex-col lg w-full lg:w-1/2 bg-white dark:bg-slate-900  p-10 lg:p-20">
         <div className="flex flex-col justify-between h-full">
@@ -30,14 +28,23 @@ export const AuthenticationLayout: React.FC<AuthenticationLayoutProps> = ({
           </div>
         </div>
       </section>
-      <section className="flex flex-col w-full lg:w-1/2 bg-gradient-to-t from-secondary-light to-secondary-dark p-10 md:p-20">
-        <div className="flex flex-col m-auto">
-          <Title
-            content="Gerencie seus treinamentos de maneira simples e otimizada"
-            className="text-white mb-6 text-xl lg:text-3xl max-w-xs lg:max-w-lg font-bold"
-          />
-          <img src={dashboard_background} alt="logo_text" width={800} />
+      <section className="flex flex-col w-full lg:w-1/2 ">
+        <div className="bg-gradient-to-r from-secondary-light to-secondary-dark p-2 md:p-4 pl-8">
+          <div className="w-[80%]">
+            <span className="text-white text-lg md:text-3xl max-w-xs md:max-w-lg font-thin">
+              Gerencie seus treinamentos de maneira{" "}
+            </span>
+            <span className="text-white text-lg md:text-3xl max-w-xs md:max-w-lg font-bold">
+              {" "}
+              simples e otimizada
+            </span>
+          </div>
         </div>
+        <img
+          src={dashboard_background}
+          alt="logo_text"
+          className="w-full h-full object-cover"
+        />
       </section>
     </div>
   );
