@@ -5,6 +5,7 @@ const EMAIL_INVALID_MESSAGE = "Email inválido";
 const CPF_INVALID_MESSAGE = "CPF inválido";
 const PHONE_INVALID_MESSAGE = "Telefone inválido";
 const BIRTH_DATE_INVALID_MESSAGE = "Data inválida";
+const NAME_MIN_MESSAGE = "O nome está muito curto";
 const DESCRIPTION_MIN_MESSAGE = "A descrição está muito curta";
 const ANSWER_MIN_MESSAGE = "A resposta está muito curta";
 const MIN_PASSWORD_LENGTH = 8;
@@ -32,6 +33,7 @@ export {
   FILE_TYPE_UNSUPPORTED_MESSAGE,
   ITEMS_PER_PAGE_OPTIONS,
   MIN_PASSWORD_LENGTH,
+  NAME_MIN_MESSAGE,
   NAVIGATION_TIMER,
   PASSWORD_MESSAGES_NOT_MATCH,
   PASSWORD_MIN_LENGTH_MESSAGE,

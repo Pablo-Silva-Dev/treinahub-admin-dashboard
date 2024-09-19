@@ -2,7 +2,7 @@ import {
   DESCRIPTION_MIN_MESSAGE,
   FILE_MAX_SIZE_MESSAGE,
   FILE_TYPE_UNSUPPORTED_MESSAGE,
-  REQUIRED_FIELD_MESSAGE,
+  NAME_MIN_MESSAGE,
 } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
@@ -36,8 +36,8 @@ import * as yup from "yup";
 
 interface UpdateTrainingInputs {
   id?: string;
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
   file?: any;
 }
 
@@ -60,7 +60,7 @@ export function EditTrainingModal({
   isLoading,
   selectedTrainingId,
 }: EditTrainingModalProps) {
-  const MIN_TRAINING_NAME_LENGTH = 16;
+  const MIN_TRAINING_NAME_LENGTH = 8;
   const MIN_TRAINING_DESCRIPTION_LENGTH = 40;
   const MAX_TRAINING_DESCRIPTION_LENGTH = 500;
   const MAX_TRAINING_COVER_FILE_SIZE = 2 * 1024 * 1024; //2MB
@@ -75,32 +75,39 @@ export function EditTrainingModal({
     id: yup.string().optional(),
     name: yup
       .string()
-      .min(MIN_TRAINING_NAME_LENGTH, DESCRIPTION_MIN_MESSAGE)
-      .required(),
+      .min(MIN_TRAINING_NAME_LENGTH, NAME_MIN_MESSAGE)
+      .optional(),
     description: yup
       .string()
-      .required()
       .min(MIN_TRAINING_DESCRIPTION_LENGTH, DESCRIPTION_MIN_MESSAGE)
-      .max(MAX_TRAINING_DESCRIPTION_LENGTH),
+      .max(MAX_TRAINING_DESCRIPTION_LENGTH)
+      .optional(),
     file: yup
       .mixed()
-      .required(REQUIRED_FIELD_MESSAGE)
-      .test("fileSize", FILE_MAX_SIZE_MESSAGE + "2MB", (value: any) => {
-        return (
-          value && value[0] && value[0].size <= MAX_TRAINING_COVER_FILE_SIZE
-        );
-      })
       .test(
-        "fileType",
-        FILE_TYPE_UNSUPPORTED_MESSAGE + ".jpeg ou .png",
-        (value: any) => {
-          return (
+        "fileSize",
+        FILE_MAX_SIZE_MESSAGE + "2MB",
+        (value: any) =>
+          value !== null ||
+          (filePreview &&
+            file &&
             value &&
             value[0] &&
-            ["image/jpeg", "image/png"].includes(value[0].type)
-          );
-        }
-      ),
+            value[0].size <= MAX_TRAINING_COVER_FILE_SIZE)
+      )
+      .optional()
+      .test(
+        "fileType",
+        FILE_TYPE_UNSUPPORTED_MESSAGE + ".jpeg, .png ou .webp",
+        (value: any) =>
+          value !== null ||
+          (filePreview &&
+            file &&
+            value &&
+            value[0] &&
+            ["image/jpeg", "image/png", "image/webp"].includes(value[0].type))
+      )
+      .optional(),
   });
 
   const { theme } = useThemeStore();
@@ -108,7 +115,7 @@ export function EditTrainingModal({
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     watch,
     reset,
   } = useForm({
@@ -141,7 +148,14 @@ export function EditTrainingModal({
   const handleUpdateTraining: SubmitHandler<UpdateTrainingInputs> = (
     data: UpdateTrainingInputs
   ) => {
-    onConfirmAction({ ...data, id: selectedTrainingId, file });
+    const updatedData = file
+      ? { ...data, id: selectedTrainingId, file }
+      : {
+          name: data.name,
+          description: data.description,
+          id: selectedTrainingId,
+        };
+    onConfirmAction(updatedData);
     reset();
     setFilePreview(null);
     setFile(null);
@@ -155,14 +169,23 @@ export function EditTrainingModal({
       );
       setName(trainingDetails.name);
       setDescription(trainingDetails.description);
+      reset({
+        name: trainingDetails.name,
+        description: trainingDetails.description,
+      });
     } catch (error) {
       console.log(error);
     }
-  }, [selectedTrainingId]);
+  }, [reset, selectedTrainingId]);
 
   useEffect(() => {
     getTrainingDetails();
   }, [getTrainingDetails]);
+
+  const closeModal = () => {
+    onClose();
+    setFilePreview(null);
+  };
 
   return (
     <Modal
@@ -248,10 +271,10 @@ export function EditTrainingModal({
           title="Salvar dados"
           onClick={onConfirmAction}
           type="submit"
-          disabled={!isValid || isLoading}
+          disabled={!errors || isLoading}
         />
         <button
-          onClick={onClose}
+          onClick={closeModal}
           className="text-black dark:text-white bg-gray-200 dark:bg-slate-700  p-4 rounded-lg text-[13px] md:text-[14px] w-full my-2"
         >
           Cancelar

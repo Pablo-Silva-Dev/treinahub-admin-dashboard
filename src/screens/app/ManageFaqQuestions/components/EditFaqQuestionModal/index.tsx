@@ -62,11 +62,8 @@ export function EditFaqQuestionModal({
 
   const validationSchema = yup.object({
     id: yup.string(),
-    question: yup.string().required(REQUIRED_FIELD_MESSAGE),
-    answer: yup
-      .string()
-      .required(REQUIRED_FIELD_MESSAGE)
-      .min(MIN_QUESTION_SIZE, ANSWER_MIN_MESSAGE),
+    question: yup.string().required(REQUIRED_FIELD_MESSAGE).optional(),
+    answer: yup.string().min(MIN_QUESTION_SIZE, ANSWER_MIN_MESSAGE).optional(),
   });
 
   const {

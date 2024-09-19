@@ -118,6 +118,7 @@ export function ManageFaqQuestions() {
           "faq-questions",
         ] as InvalidateQueryFilters);
         handleToggleEditFaqQuestionModal();
+        window.location.reload();
       } catch (error) {
         if (typeof error === "object" && error !== null && "STATUS" in error) {
           if (error.STATUS === 409) {
