@@ -147,17 +147,16 @@ export function ManageClasses() {
 
   const handleUpdateVideoClass = useCallback(
     async (data: IUpdateVideoClassDTO) => {
+      JSON.stringify(data); //do not remove this line, its being used to hold the operation until data be recognized
       try {
         setIsLoading(true);
         showAlertLoading(
           "Estamos processando os novos dados da usa videoaula. Por favor, aguarde..."
         );
-        if (data.img_file && data.video_file) {
-          await videoClassesRepositories.updateVideoClass({
-            ...data,
-            id: selectedVideoClass!.id,
-          });
-        }
+        await videoClassesRepositories.updateVideoClass({
+          ...data,
+          id: selectedVideoClass!.id,
+        });
         queryClient.invalidateQueries([
           "video-classes",
         ] as InvalidateQueryFilters);

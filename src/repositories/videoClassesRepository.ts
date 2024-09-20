@@ -78,7 +78,9 @@ export class VideoClassesRepository implements IVideoClassesRepository {
       formData.append("training_id", training_id);
       formData.append("name", name);
       formData.append("description", description);
-      formData.append("video_file", video_file);
+      if (video_file) {
+        formData.append("video_file", video_file);
+      }
 
       const response = await api.put("video-classes/update", formData);
       return response.data.RES;

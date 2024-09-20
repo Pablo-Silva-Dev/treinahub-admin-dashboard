@@ -2,6 +2,7 @@ import {
   DESCRIPTION_MIN_MESSAGE,
   FILE_MAX_SIZE_MESSAGE,
   FILE_TYPE_UNSUPPORTED_MESSAGE,
+  NAME_MIN_MESSAGE,
   REQUIRED_FIELD_MESSAGE,
 } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
@@ -48,7 +49,7 @@ export function RegisterTraining() {
   const validationSchema = yup.object({
     name: yup
       .string()
-      .min(MIN_TRAINING_NAME_LENGTH, DESCRIPTION_MIN_MESSAGE)
+      .min(MIN_TRAINING_NAME_LENGTH, NAME_MIN_MESSAGE)
       .required(REQUIRED_FIELD_MESSAGE),
     description: yup
       .string()

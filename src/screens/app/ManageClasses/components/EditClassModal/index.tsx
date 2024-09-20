@@ -2,7 +2,6 @@ import {
   DESCRIPTION_MIN_MESSAGE,
   FILE_MAX_SIZE_MESSAGE,
   FILE_TYPE_UNSUPPORTED_MESSAGE,
-  REQUIRED_FIELD_MESSAGE,
 } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
@@ -38,9 +37,9 @@ import * as yup from "yup";
 interface UpdateVideoClassInputs {
   id?: string;
   training_id?: string;
-  name: string;
-  description: string;
-  video_file: any;
+  name?: string;
+  description?: string;
+  video_file?: any;
 }
 
 interface EditClassModalProps {
@@ -89,15 +88,15 @@ export function EditClassModal({
     name: yup
       .string()
       .min(MIN_TRAINING_NAME_LENGTH, DESCRIPTION_MIN_MESSAGE)
-      .required(),
+      .optional(),
     description: yup
       .string()
-      .required()
+      .optional()
       .min(MIN_TRAINING_DESCRIPTION_LENGTH, DESCRIPTION_MIN_MESSAGE)
       .max(MAX_TRAINING_DESCRIPTION_LENGTH),
     video_file: yup
       .mixed()
-      .required(REQUIRED_FIELD_MESSAGE)
+      .optional()
       .test(
         "fileType",
         FILE_TYPE_UNSUPPORTED_MESSAGE + ".mp4, .mov, .avi, .mkv, .webm, .flv",
@@ -166,16 +165,27 @@ export function EditClassModal({
     }
   }, [selectedVideoClassId, videoClassesRepository]);
 
+  console.log(trainingId);
+
   const handleUpdateVideoClass: SubmitHandler<UpdateVideoClassInputs> = (
     data: UpdateVideoClassInputs
   ) => {
-    onConfirmAction({
-      ...data,
-      training_id: trainingId,
-      id: selectedVideoClassId,
-      video_file: videoFile,
-    });
-    reset(), setVideoFilePreview(null);
+    const updatedData = videoFile
+      ? {
+          ...data,
+          id: selectedVideoClassId,
+          video_file: videoFile,
+          training_id: trainingId,
+        }
+      : {
+          id: selectedVideoClassId,
+          name: data.name,
+          description: data.description,
+          training_id: trainingId,
+        };
+    onConfirmAction(updatedData);
+    reset();
+    setVideoFilePreview(null);
     setVideoFile(null);
     onClose();
   };
@@ -197,11 +207,11 @@ export function EditClassModal({
         className="text-center text-black dark:text-white mb-4 font-bold text-[14px] md:text-lg"
       />
       <Subtitle
-        content="Você pode alterar o nome, descrição, tutor,"
+        content="Você pode alterar o nome, descrição,"
         className="text-center text-gray-700 dark:text-gray-100  text-[13px] md:text-[14px]"
       />
       <Subtitle
-        content=" módulo e/ou reenviar um novo arquivo de vídeo"
+        content=" e/ou reenviar um novo arquivo de vídeo"
         className="text-center text-gray-700 dark:text-gray-100  text-[13px] md:text-[14px]"
       />
 
@@ -263,6 +273,7 @@ export function EditClassModal({
           title="Salvar dados"
           onClick={onConfirmAction}
           isLoading={isLoading}
+          type="submit"
           disabled={isLoading || !isValid}
         />
         <button

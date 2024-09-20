@@ -271,6 +271,7 @@ export function EditTrainingModal({
           title="Salvar dados"
           onClick={onConfirmAction}
           type="submit"
+          isLoading={isLoading}
           disabled={!errors || isLoading}
         />
         <button
