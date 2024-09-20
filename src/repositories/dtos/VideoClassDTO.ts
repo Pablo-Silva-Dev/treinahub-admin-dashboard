@@ -6,7 +6,6 @@ export interface IVideoClassDTO {
   description: string;
   duration: number;
   video_url?: string;
-  thumbnail_url?: string;
   training_id: string;
   training_name: string;
   training?: ITrainingDTO;
@@ -21,7 +20,6 @@ export interface ICreateVideoClassDTO {
   name: string;
   description: string;
   training_id: string;
-  img_file: Blob;
   video_file: Blob;
 }
 
@@ -30,6 +28,5 @@ export interface IUpdateVideoClassDTO {
   name: string;
   description: string;
   training_id: string;
-  img_file: Blob;
   video_file: Blob;
 }

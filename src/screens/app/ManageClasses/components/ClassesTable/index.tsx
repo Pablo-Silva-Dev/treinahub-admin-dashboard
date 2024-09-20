@@ -1,5 +1,4 @@
 import { ITEMS_PER_PAGE_OPTIONS } from "@/appConstants/index";
-import play_icon from "@/assets/play_icon.svg";
 import video_thumbnail_placeholder from "@/assets/video_thumbnail_placeholder.svg";
 import { SortButton } from "@/components/buttons/SortButton";
 import { SelectInput } from "@/components/inputs/SelectInput";
@@ -167,7 +166,6 @@ export function VideoClassesTable({
                     training,
                     description,
                     duration,
-                    thumbnail_url,
                     hls_encoding_url,
                     dash_encoding_url,
                   },
@@ -187,31 +185,11 @@ export function VideoClassesTable({
                           onClick={() => handleWatchVideoClass(id)}
                           className="flex items-center m-4 mr-0 md:mr-[-5%] xl:mr-[-12px] w-[80px] relative"
                         >
-                          {thumbnail_url ? (
-                            <>
-                              <img
-                                src={play_icon}
-                                alt="videoaula"
-                                style={{
-                                  position: "absolute",
-                                  top: "25%",
-                                  left: "25%",
-                                  width: 24,
-                                }}
-                              />
-                              <img
-                                src={thumbnail_url}
-                                alt="videoaula"
-                                width="80%"
-                              />
-                            </>
-                          ) : (
-                            <img
-                              src={video_thumbnail_placeholder}
-                              alt="videoaula"
-                              width="80%"
-                            />
-                          )}
+                          <img
+                            src={video_thumbnail_placeholder}
+                            alt="videoaula"
+                            width="80%"
+                          />
                         </button>
                       </td>
                       <td className={classes}>

@@ -9,14 +9,13 @@ import { IVideoClassesRepository } from "./interfaces/videoClassesRepository";
 export class VideoClassesRepository implements IVideoClassesRepository {
   async createVideoClass(data: ICreateVideoClassDTO): Promise<IVideoClassDTO> {
     try {
-      const { name, training_id, description, img_file, video_file } = data;
+      const { name, training_id, description, video_file } = data;
 
       const formData = new FormData();
 
       formData.append("name", name);
       formData.append("training_id", training_id);
       formData.append("description", description);
-      formData.append("img_file", img_file);
       formData.append("video_file", video_file);
 
       const response = await api.post<IApiSuccessResponse<IVideoClassDTO>>(
@@ -71,7 +70,7 @@ export class VideoClassesRepository implements IVideoClassesRepository {
 
   async updateVideoClass(data: IUpdateVideoClassDTO): Promise<IVideoClassDTO> {
     try {
-      const { id, training_id, description, name, img_file, video_file } = data;
+      const { id, training_id, description, name, video_file } = data;
 
       const formData = new FormData();
 
@@ -79,7 +78,6 @@ export class VideoClassesRepository implements IVideoClassesRepository {
       formData.append("training_id", training_id);
       formData.append("name", name);
       formData.append("description", description);
-      formData.append("img_file", img_file);
       formData.append("video_file", video_file);
 
       const response = await api.put("video-classes/update", formData);

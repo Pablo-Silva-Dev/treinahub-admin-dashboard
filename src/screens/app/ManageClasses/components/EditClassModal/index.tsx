@@ -40,7 +40,6 @@ interface UpdateVideoClassInputs {
   training_id?: string;
   name: string;
   description: string;
-  img_file: any;
   video_file: any;
 }
 
@@ -67,12 +66,8 @@ export function EditClassModal({
   const [description, setDescription] = useState("");
   const [trainingId, setTrainingId] = useState("");
   const [wasVideoFileUploaded, setWasVideoFileUploaded] = useState(false);
-  const [wasImageFileUploaded, setWasImageFileUploaded] = useState(false);
-  const [imageFile, setImageFile] = useState<Blob | null>(null);
   const [videoFile, setVideoFile] = useState<Blob | null>(null);
-  const [imageFilePreview, setImageFilePreview] = useState<IFilePreview | null>(
-    null
-  );
+
   const [videoFilePreview, setVideoFilePreview] = useState<IFilePreview | null>(
     null
   );
@@ -86,7 +81,6 @@ export function EditClassModal({
   const MIN_TRAINING_NAME_LENGTH = 16;
   const MIN_TRAINING_DESCRIPTION_LENGTH = 40;
   const MAX_TRAINING_DESCRIPTION_LENGTH = 500;
-  const MAX_CLASS_COVER_FILE_SIZE = 2 * 1024 * 1024; //2MB
   const MAX_VIDEO_FILE_SIZE = 500 * 1024 * 1024; //500MB
 
   const validationSchema = yup.object({
@@ -127,23 +121,6 @@ export function EditClassModal({
         if (!value || value.length === 0) return true; // Allow empty file
         return value[0].size <= MAX_VIDEO_FILE_SIZE;
       }),
-    img_file: yup
-      .mixed()
-      .required(REQUIRED_FIELD_MESSAGE)
-      .test("fileSize", FILE_MAX_SIZE_MESSAGE + "2MB", (value: any) => {
-        return value && value[0] && value[0].size <= MAX_CLASS_COVER_FILE_SIZE;
-      })
-      .test(
-        "fileType",
-        FILE_TYPE_UNSUPPORTED_MESSAGE + ".jpeg ou .png",
-        (value: any) => {
-          return (
-            value &&
-            value[0] &&
-            ["image/jpeg", "image/png"].includes(value[0].type)
-          );
-        }
-      ),
   });
 
   const {
@@ -155,21 +132,6 @@ export function EditClassModal({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
   });
-
-  const handleUploadImageFile = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      setImageFilePreview({
-        name: file.name,
-        size: file.size,
-        uri: previewUrl,
-        type: file.type,
-      });
-      setImageFile(file);
-      setWasImageFileUploaded(true);
-    }
-  };
 
   const handleUploadVideoFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -186,14 +148,9 @@ export function EditClassModal({
     }
   };
 
-  const handleRemoveUploadedFile = (fileType: "image" | "video") => {
-    if (fileType === "image") {
-      setWasImageFileUploaded(false);
-      setImageFilePreview(null);
-    } else {
-      setWasVideoFileUploaded(false);
-      setVideoFilePreview(null);
-    }
+  const handleRemoveUploadedFile = () => {
+    setWasVideoFileUploaded(false);
+    setVideoFilePreview(null);
   };
 
   const getVideoClassDetails = useCallback(async () => {
@@ -216,12 +173,9 @@ export function EditClassModal({
       ...data,
       training_id: trainingId,
       id: selectedVideoClassId,
-      img_file: imageFile,
       video_file: videoFile,
     });
-    reset(), setImageFilePreview(null);
-    setImageFile(null);
-    setVideoFilePreview(null);
+    reset(), setVideoFilePreview(null);
     setVideoFile(null);
     onClose();
   };
@@ -284,7 +238,7 @@ export function EditClassModal({
                   uri: videoFilePreview.uri,
                   type: videoFilePreview.type,
                 }}
-                onCancel={() => handleRemoveUploadedFile("video")}
+                onCancel={handleRemoveUploadedFile}
               />
               {errors && errors.video_file && (
                 <ErrorMessage errorMessage={errors.video_file?.message} />
@@ -305,40 +259,6 @@ export function EditClassModal({
             </>
           )}
         </div>
-        <div className="my-4">
-          {wasImageFileUploaded && imageFilePreview ? (
-            <>
-              <UploadedFile
-                file={{
-                  name: imageFilePreview.name,
-                  size: Number(
-                    (imageFilePreview.size / 1024 / 1024).toFixed(2)
-                  ),
-                  uri: imageFilePreview.uri,
-                  type: imageFilePreview.type,
-                }}
-                onCancel={() => handleRemoveUploadedFile("image")}
-              />
-              {errors && errors.img_file && (
-                <ErrorMessage errorMessage={errors.img_file?.message} />
-              )}
-            </>
-          ) : (
-            <>
-              <FileInput
-                label="Capa da videoaula"
-                placeholder="Selecione uma nova videoaula"
-                buttonTitle="Slecione um arquivo de imagem"
-                labelDescription="Selecione um arquivo de imagem de até 2MB"
-                {...register("img_file", { onChange: handleUploadImageFile })}
-              />
-              {errors && errors.img_file && (
-                <ErrorMessage errorMessage={errors.img_file?.message} />
-              )}
-            </>
-          )}
-        </div>
-
         <Button
           title="Salvar dados"
           onClick={onConfirmAction}

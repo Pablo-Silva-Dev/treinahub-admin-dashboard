@@ -34,7 +34,6 @@ interface RegisterClassInputs {
   name: string;
   description: string;
   training_id: string;
-  img_file: File;
   video_file: File;
 }
 
@@ -46,19 +45,14 @@ type IOption = {
 export function RegisterClass() {
   const MIN_CLASS_DESCRIPTION_LENGTH = 24;
   const MAX_CLASS_DESCRIPTION_LENGTH = 250;
-  const MAX_CLASS_COVER_FILE_SIZE = 2 * 1024 * 1024; //2MB
   const MAX_CLASS_VIDEO_FILE_SIZE = 500 * 1024 * 1024; //500MB
 
   const [wasVideoFileUploaded, setWasVideoFileUploaded] = useState(false);
-  const [wasImageFileUploaded, setWasImageFileUploaded] = useState(false);
   const [videoFilePreview, setVideoFilePreview] = useState<IFilePreview | null>(
     null
   );
-  const [imageFilePreview, setImageFilePreview] = useState<IFilePreview | null>(
-    null
-  );
+
   const [videoFile, setVideoFile] = useState<Blob | null>(null);
-  const [imageFile, setImageFile] = useState<Blob | null>(null);
   const [trainingsOptionsList, setTrainingsOptionsList] = useState<IOption[]>(
     []
   );
@@ -98,23 +92,6 @@ export function RegisterClass() {
         if (!value || value.length === 0) return true; // Allow empty file
         return value[0].size <= MAX_CLASS_VIDEO_FILE_SIZE;
       }),
-    img_file: yup
-      .mixed()
-      .required(REQUIRED_FIELD_MESSAGE)
-      .test("fileSize", FILE_MAX_SIZE_MESSAGE + "2MB", (value: any) => {
-        return value && value[0] && value[0].size <= MAX_CLASS_COVER_FILE_SIZE;
-      })
-      .test(
-        "fileType",
-        FILE_TYPE_UNSUPPORTED_MESSAGE + ".jpeg ou .png",
-        (value: any) => {
-          return (
-            value &&
-            value[0] &&
-            ["image/jpeg", "image/png"].includes(value[0].type)
-          );
-        }
-      ),
   });
 
   const {
@@ -135,23 +112,6 @@ export function RegisterClass() {
     setValue("training_id", selectedOption.value, { shouldValidate: true });
   };
 
-  const handleSelectImageFile = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const imageFile = event.target.files?.[0];
-    if (imageFile) {
-      const previewImageUrl = URL.createObjectURL(imageFile);
-      setImageFilePreview({
-        name: imageFile.name,
-        size: imageFile.size,
-        uri: previewImageUrl,
-        type: imageFile.type,
-      });
-      setImageFile(imageFile);
-      setWasImageFileUploaded(true);
-    }
-  };
-
   const handleSelectVideoFile = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -169,14 +129,9 @@ export function RegisterClass() {
     }
   };
 
-  const handleRemoveUploadedFile = (fileType: "video" | "image") => {
-    if (fileType === "image") {
-      setImageFile(null);
-      setWasImageFileUploaded(false);
-    } else {
-      setVideoFile(null);
-      setWasVideoFileUploaded(false);
-    }
+  const handleRemoveUploadedFile = () => {
+    setVideoFile(null);
+    setWasVideoFileUploaded(false);
   };
 
   const setTrainingsOptions = useCallback(async () => {
@@ -207,19 +162,14 @@ export function RegisterClass() {
           showAlertLoading(
             "Por favor, aguarde enquanto processamos a videoaula..."
           );
-          if (imageFile && videoFile) {
+          if (videoFile) {
             await videoClassesRepository.createVideoClass({
               ...data,
-              img_file: imageFile,
               video_file: videoFile,
             });
-            showAlertSuccess(
-              "Videoaula cadastrado com sucesso!"
-            );
+            showAlertSuccess("Videoaula cadastrado com sucesso!");
           }
           reset();
-          setImageFile(null);
-          setImageFilePreview(null);
           setVideoFile(null);
           setVideoFilePreview(null);
         } catch (error) {
@@ -249,7 +199,7 @@ export function RegisterClass() {
           toast.dismiss("loading");
         }
       },
-      [setIsLoading, imageFile, videoFile, reset]
+      [setIsLoading, videoFile, reset]
     );
 
   useEffect(() => {
@@ -305,7 +255,7 @@ export function RegisterClass() {
                     uri: videoFilePreview.uri,
                     type: videoFilePreview.type,
                   }}
-                  onCancel={() => handleRemoveUploadedFile("video")}
+                  onCancel={handleRemoveUploadedFile}
                 />
                 {errors && errors.video_file && (
                   <ErrorMessage errorMessage={errors.video_file?.message} />
@@ -329,41 +279,6 @@ export function RegisterClass() {
             )}
           </div>
 
-          <div className="w-full mb-6 mt-4">
-            {wasImageFileUploaded && imageFilePreview ? (
-              <>
-                <UploadedFile
-                  file={{
-                    name: imageFilePreview.name,
-                    size: Number(
-                      (imageFilePreview.size / 1024 / 1024).toFixed(2)
-                    ),
-                    uri: imageFilePreview.uri,
-                    type: imageFilePreview.type,
-                  }}
-                  onCancel={() => handleRemoveUploadedFile("image")}
-                />
-                {errors && errors.img_file && (
-                  <ErrorMessage errorMessage={errors.img_file?.message} />
-                )}
-              </>
-            ) : (
-              <>
-                <FileInput
-                  label="Capa da videoaula"
-                  onUpload={handleSelectImageFile}
-                  buttonTitle="Selecione um arquivo de imagem"
-                  labelDescription="Selecione um arquivo de imagem .jpeg ou .png de até 2MB"
-                  {...register("img_file", {
-                    onChange: handleSelectImageFile as never,
-                  })}
-                />
-                {errors && errors.img_file && (
-                  <ErrorMessage errorMessage={errors.img_file?.message} />
-                )}
-              </>
-            )}
-          </div>
           <div className="w-full flex flex-col md:flex-row mb-6">
             <div className="w-full">
               <SelectInput
@@ -382,7 +297,7 @@ export function RegisterClass() {
               title="Cadastrar Aula"
               type="submit"
               isLoading={isLoading}
-              disabled={isLoading || !isValid || !imageFile || !videoFile}
+              disabled={isLoading || !isValid || !videoFile}
             />
           </div>
         </form>
