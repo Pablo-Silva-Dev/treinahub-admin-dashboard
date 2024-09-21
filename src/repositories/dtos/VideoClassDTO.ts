@@ -25,8 +25,7 @@ export interface ICreateVideoClassDTO {
 
 export interface IUpdateVideoClassDTO {
   id: string;
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
   training_id: string;
-  video_file?: Blob;
 }

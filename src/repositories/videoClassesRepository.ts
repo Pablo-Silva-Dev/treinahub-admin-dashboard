@@ -70,19 +70,7 @@ export class VideoClassesRepository implements IVideoClassesRepository {
 
   async updateVideoClass(data: IUpdateVideoClassDTO): Promise<IVideoClassDTO> {
     try {
-      const { id, training_id, description, name, video_file } = data;
-
-      const formData = new FormData();
-
-      formData.append("id", id);
-      formData.append("training_id", training_id);
-      formData.append("name", name);
-      formData.append("description", description);
-      if (video_file) {
-        formData.append("video_file", video_file);
-      }
-
-      const response = await api.put("video-classes/update", formData);
+      const response = await api.put("video-classes/update", data);
       return response.data.RES;
     } catch (error) {
       throw error;
