@@ -167,8 +167,9 @@ export function RegisterClass() {
               ...data,
               video_file: videoFile,
             });
-            showAlertSuccess("Videoaula cadastrado com sucesso!");
+            showAlertSuccess("Videoaula cadastrada com sucesso!");
           }
+
           reset();
           setVideoFile(null);
           setVideoFilePreview(null);
@@ -176,7 +177,10 @@ export function RegisterClass() {
           if (
             typeof error === "object" &&
             error !== null &&
-            "STATUS" in error
+            "STATUS" in error &&
+            "MSG" in error &&
+            typeof error.MSG === "object" &&
+            "message" in error.MSG!
           ) {
             switch (error.STATUS) {
               case 409:
@@ -185,13 +189,26 @@ export function RegisterClass() {
                 );
                 break;
               case 406:
-                showAlertError(
-                  "A video aula não pode conter mais que 15 minutos de duração."
-                );
+                if (error.MSG.message === "Video must have an audio.") {
+                  showAlertError(
+                    "Verifique se o arquivo de vídeo contém áudio."
+                  );
+                } else if (
+                  error.MSG.message ===
+                  "Video duration can not be more than 15 minutes."
+                ) {
+                  showAlertError(
+                    "A videoaula não pode conter mais que 15 minutos de duração."
+                  );
+                }
                 break;
               default:
-                showAlertError("Houve um erro ao tentar cadastrar videoaula.");
+                showAlertError(
+                  "Houve um erro ao tentar cadastrar a videoaula."
+                );
             }
+          } else {
+            showAlertError("Houve um erro ao tentar cadastrar a videoaula.");
           }
           console.log(error);
         } finally {
