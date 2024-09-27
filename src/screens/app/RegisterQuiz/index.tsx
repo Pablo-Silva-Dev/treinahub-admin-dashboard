@@ -10,6 +10,7 @@ import { showAlertSuccess } from "@/utils/alerts";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
 interface RegisterQuizInputs {
@@ -30,6 +31,7 @@ export function RegisterQuiz() {
   );
 
   const { isLoading, setIsLoading } = useLoading();
+  const navigate = useNavigate();
 
   const validationSchema = yup.object({
     training_id: yup.string().required(REQUIRED_FIELD_MESSAGE),
@@ -91,17 +93,19 @@ export function RegisterQuiz() {
         setIsLoading(true);
         if (selectedTraining) {
           const { id } = selectedTraining;
-          await quizzesRepository.createQuiz({
+          const quiz = await quizzesRepository.createQuiz({
             training_id: id,
           } as never);
+          console.log(quiz);
           showAlertSuccess("Questionário cadastrado com sucesso!");
+          navigate(`/dashboard/cadastrar-pergunta?quizId=${quiz.id}`);
         }
       } catch (error) {
         console.log(error);
       } finally {
         setIsLoading(false);
       }
-    }, [quizzesRepository, selectedTraining, setIsLoading]);
+    }, [navigate, quizzesRepository, selectedTraining, setIsLoading]);
 
   useEffect(() => {
     setTrainingsOptions();

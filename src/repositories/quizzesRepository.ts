@@ -22,10 +22,11 @@ export class QuizzesRepository implements IQuizzesRepository {
       throw error;
     }
   }
-  //TODO-PABLO: check if this methods will be necessary and implement it so
-  async getQuizById(quiz_id: string): Promise<IQuizDTO | void> {
+  async getQuizById(quizId: string): Promise<IQuizDTO | void> {
     try {
-      const response = await api.get<IApiSuccessResponse<IQuizDTO>>("/quizzes");
+      const response = await api.get<IApiSuccessResponse<IQuizDTO>>(
+        `/quizzes/get-by-id/${quizId}`
+      );
       return response.data.RES;
     } catch (error) {
       throw error;

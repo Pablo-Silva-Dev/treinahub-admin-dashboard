@@ -15,6 +15,7 @@ const FILE_TYPE_UNSUPPORTED_MESSAGE =
   "Formato inválido. Forneça um arquivo do tipo  ";
 const NAVIGATION_TIMER = 1000;
 const PRIMARY_COLOR = "#0267FF";
+const MAX_CONTENT_LENGTH_MESSAGE = "Conteúdo está excendo a quantidade máxima de caracteres permitidos"
 
 const ITEMS_PER_PAGE_OPTIONS = [
   { value: 10, label: "10" },
@@ -40,4 +41,5 @@ export {
   PHONE_INVALID_MESSAGE,
   PRIMARY_COLOR,
   REQUIRED_FIELD_MESSAGE,
+  MAX_CONTENT_LENGTH_MESSAGE
 };
