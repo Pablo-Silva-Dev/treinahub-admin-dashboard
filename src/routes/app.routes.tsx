@@ -13,6 +13,7 @@ import { ManageUsers } from "@/screens/app/ManageUsers";
 import { RegisterClass } from "@/screens/app/RegisterClass";
 import { RegisterContactSupport } from "@/screens/app/RegisterContactSupport";
 import { RegisterFaqQuestion } from "@/screens/app/RegisterFaqQuestion";
+import { RegisterQuestionOption } from "@/screens/app/RegisterQuestionOption";
 import { RegisterQuiz } from "@/screens/app/RegisterQuiz";
 import { RegisterQuizQuestion } from "@/screens/app/RegisterQuizQuestion";
 import { RegisterTraining } from "@/screens/app/RegisterTraining";
@@ -60,6 +61,10 @@ const appRoutesBase: route[] = [
   {
     path: "/dashboard/cadastrar-pergunta",
     element: <RegisterQuizQuestion />,
+  },
+  {
+    path: "/dashboard/cadastrar-resposta",
+    element: <RegisterQuestionOption />,
   },
   {
     path: "/dashboard/cadastrar-pergunta-frequente",

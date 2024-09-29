@@ -21,10 +21,10 @@ export class QuizQuestionsRepository implements IQuizQuestionsRepository {
     }
   }
 
-  async listQuizQuestionByQuiz(quizId: string): Promise<IQuizQuestionDTO[]> {
+  async listQuizQuestionsByQuiz(quizId: string): Promise<IQuizQuestionDTO[]> {
     try {
       const response = await api.get<IApiSuccessResponse<IQuizQuestionDTO[]>>(
-        `/quizzes-questions/-list-by-quiz/${quizId}`
+        `/quizzes-questions/list-by-quiz/${quizId}`
       );
       return response.data.RES;
     } catch (error) {

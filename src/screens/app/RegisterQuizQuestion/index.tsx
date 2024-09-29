@@ -121,7 +121,7 @@ export function RegisterQuizQuestion() {
           );
           showAlertSuccess("Pergunta cadastrada com sucesso!");
           navigate(
-            `/dashboard/cadastrar-resposta?quizQuestionId=${quizQuestion.id}`
+            `/dashboard/cadastrar-resposta?quizQuestionId=${quizQuestion.id}&quizId=${id}`
           );
         }
       } catch (error) {

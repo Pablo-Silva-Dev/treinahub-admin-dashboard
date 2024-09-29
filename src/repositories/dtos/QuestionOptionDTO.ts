@@ -11,5 +11,5 @@ export interface IQuestionOptionDTO {
 export interface ICreateQuestionOptionDTO {
   question_id: string;
   content: string;
-  is_correct: boolean;
+  is_correct?: boolean;
 }
