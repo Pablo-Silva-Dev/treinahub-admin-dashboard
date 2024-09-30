@@ -7,6 +7,7 @@ import { Home } from "@/screens/app/Home";
 import { DashboardLayout } from "@/screens/app/layout";
 import { ManageClasses } from "@/screens/app/ManageClasses";
 import { ManageFaqQuestions } from "@/screens/app/ManageFaqQuestions";
+import { ManageQuizzes } from "@/screens/app/ManageQuizzes";
 import { ManageSupportContact } from "@/screens/app/ManageSupportContact";
 import { ManageTrainings } from "@/screens/app/ManageTrainings";
 import { ManageUsers } from "@/screens/app/ManageUsers";
@@ -57,6 +58,10 @@ const appRoutesBase: route[] = [
   {
     path: "/dashboard/cadastrar-questionario",
     element: <RegisterQuiz />,
+  },
+  {
+    path: "/dashboard/gerenciar-questionarios",
+    element: <ManageQuizzes />,
   },
   {
     path: "/dashboard/cadastrar-pergunta",

@@ -35,7 +35,7 @@ export class QuizzesRepository implements IQuizzesRepository {
   async deleteQuiz(quiz_id: string): Promise<void> {
     try {
       const response = await api.delete<IApiSuccessResponse<void>>(
-        `/quizzes/${quiz_id}`
+        `/quizzes/delete/${quiz_id}`
       );
       return response.data.RES;
     } catch (error) {

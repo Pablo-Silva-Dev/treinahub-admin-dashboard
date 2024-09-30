@@ -5,7 +5,7 @@ import { ITrainingDTO } from "./TrainingDTO";
 export interface IQuizDTO {
   id: string;
   training_id: string;
-  question?: IQuizQuestionDTO[];
+  questions?: IQuizQuestionDTO[];
   quiz_attempts?: IQuizAttemptDTO[];
   training: ITrainingDTO;
 }
