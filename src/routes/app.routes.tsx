@@ -7,6 +7,7 @@ import { Home } from "@/screens/app/Home";
 import { DashboardLayout } from "@/screens/app/layout";
 import { ManageClasses } from "@/screens/app/ManageClasses";
 import { ManageFaqQuestions } from "@/screens/app/ManageFaqQuestions";
+import { ManageQuestionsAndOptions } from "@/screens/app/ManageQuestionsAndOptions";
 import { ManageQuizzes } from "@/screens/app/ManageQuizzes";
 import { ManageSupportContact } from "@/screens/app/ManageSupportContact";
 import { ManageTrainings } from "@/screens/app/ManageTrainings";
@@ -70,6 +71,10 @@ const appRoutesBase: route[] = [
   {
     path: "/dashboard/cadastrar-resposta",
     element: <RegisterQuestionOption />,
+  },
+  {
+    path: "/dashboard/gerenciar-perguntas-e-respostas",
+    element: <ManageQuestionsAndOptions />,
   },
   {
     path: "/dashboard/cadastrar-pergunta-frequente",

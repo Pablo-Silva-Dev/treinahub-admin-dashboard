@@ -31,9 +31,7 @@ export class QuizQuestionsRepository implements IQuizQuestionsRepository {
       throw error;
     }
   }
-  async getQuizQuestionById(
-    quizQuestionId: string
-  ): Promise<IQuizQuestionDTO | void> {
+  async getQuizQuestionById(quizQuestionId: string): Promise<IQuizQuestionDTO> {
     try {
       const response = await api.get<IApiSuccessResponse<IQuizQuestionDTO>>(
         `/quizzes-questions/get-by-id/${quizQuestionId}`

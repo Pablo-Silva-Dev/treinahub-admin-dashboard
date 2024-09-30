@@ -58,7 +58,7 @@ export const menuItems = [
       },
       {
         title: "Gerenciar perguntas e respostas",
-        link: "gerenciar-perguntas",
+        link: "gerenciar-perguntas-e-respostas",
       },
     ],
     icon: "edit",
