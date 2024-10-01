@@ -24,6 +24,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { QuestionOptionsList } from "./components";
 
@@ -55,8 +56,10 @@ export function RegisterQuestionOption() {
   const [correctOptionSwitch, setCorrectOptionSwitch] = useState(false);
   const [showRegisteredOptions, setShowRegisteredOptions] = useState(false);
 
+  const navigate = useNavigate();
+
   const { isLoading, setIsLoading } = useLoading();
-  const MIN_OPTION_CONTENT_LENGTH = 12;
+  const MIN_OPTION_CONTENT_LENGTH = 3;
   const MAX_OPTION_CONTENT_LENGTH = 120;
   const MIN_QUESTION_OPTIONS = 2;
   const MAX_QUESTION_OPTIONS = 4;
@@ -346,6 +349,9 @@ export function RegisterQuestionOption() {
     setCorrectOptionSwitch(false);
     setShowRegisteredOptions(false);
     setValue("content", "");
+    navigate(
+      `/dashboard/gerenciar-perguntas-e-respostas?quizId=${selectQuizInput?.value}`
+    );
   };
 
   return (

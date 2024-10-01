@@ -2,6 +2,7 @@ import { PRIMARY_COLOR } from "@/appConstants/index";
 import error_warning from "@/assets/error_warning.svg";
 import error_warning_dark from "@/assets/error_warning_dark.svg";
 import { PlusButton } from "@/components/buttons/PlusButton";
+import { SelectInput } from "@/components/inputs/SelectInput";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { Subtitle } from "@/components/typography/Subtitle";
@@ -10,6 +11,7 @@ import {
   IQuizQuestionDTO,
   IUpdateQuizQuestionDTO,
 } from "@/repositories/dtos/QuestionDTO";
+import { IQuizDTO } from "@/repositories/dtos/QuizDTO";
 import { QuizQuestionsRepository } from "@/repositories/quizQuestionsRepository";
 import { QuizzesRepository } from "@/repositories/quizzesRepository";
 import { useLoading } from "@/store/loading";
@@ -20,23 +22,31 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useCallback, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { EditQuizQuestionModal } from "./components/EditQuizQuestionModal";
 import { QuizQuestionCard } from "./components/QuizQuestionCard";
 
 export function ManageQuestionsAndOptions() {
-  const [quizzes, setQuizzes] = useState<ICompleteQuizQuestionDTO[]>([]);
+  const [quizQuestions, setQuizQuestions] = useState<
+    ICompleteQuizQuestionDTO[]
+  >([]);
   const [isDeleteModalOpen, setIsDeleteModalQuizOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalQuizOpen] = useState(false);
   const [selectedQuizQuestion, setSelectedQuizQuestion] =
     useState<IQuizQuestionDTO | null>(null);
+  const [quizzes, setQuizzes] = useState<IQuizDTO[]>([]);
+  const [selectedQuizIdInput, setSelectedQuizIdInput] = useState("");
 
   const { theme } = useThemeStore();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { setIsLoading } = useLoading();
+
+  const queryParams = new URLSearchParams(location.search);
+  const quizIdQueryParam = queryParams.get("quizId");
 
   const quizzesRepository = useMemo(() => {
     return new QuizzesRepository();
@@ -48,16 +58,56 @@ export function ManageQuestionsAndOptions() {
 
   const getQuizzes = useCallback(async () => {
     try {
+      setIsLoading(true);
       const quizzes = await quizzesRepository.listQuizzes();
+      if (quizzes) {
+        setQuizzes(quizzes);
+      }
       const quizzesQuestions = quizzes.map((q) => q.questions).flat();
       if (quizzesQuestions) {
-        setQuizzes(quizzesQuestions as ICompleteQuizQuestionDTO[]);
+        setQuizQuestions(quizzesQuestions as ICompleteQuizQuestionDTO[]);
         return quizzes;
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [quizzesRepository]);
+  }, [quizzesRepository, setIsLoading]);
+
+  const getQuestionsByQuiz = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      if (quizIdQueryParam) {
+        const quizzesQuestions =
+          await quizQuestionsRepository.listQuizQuestionsByQuiz(
+            quizIdQueryParam
+          );
+        return quizzesQuestions;
+      } else {
+        if (selectedQuizIdInput && !quizIdQueryParam) {
+          const quizzesQuestions =
+            await quizQuestionsRepository.listQuizQuestionsByQuiz(
+              selectedQuizIdInput
+            );
+          return quizzesQuestions;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [
+    quizIdQueryParam,
+    quizQuestionsRepository,
+    selectedQuizIdInput,
+    setIsLoading,
+  ]);
+
+  useEffect(() => {
+    getQuestionsByQuiz();
+  }, [getQuestionsByQuiz]);
 
   const { isLoading, error } = useQuery({
     queryKey: ["quizzes"],
@@ -115,6 +165,45 @@ export function ManageQuestionsAndOptions() {
     [queryClient, quizQuestionsRepository, setIsLoading]
   );
 
+  const quizzesOptions = useMemo(() => {
+    return quizzes
+      .map((quiz) => ({
+        value: quiz.id,
+        label: quiz.training.name,
+      }))
+      .concat({
+        value: "",
+        label: "Todos os treinamentos",
+      });
+  }, [quizzes]);
+
+  const filterQuestionsBySelectedQuiz = useCallback(async () => {
+    if (!selectedQuizIdInput && !quizIdQueryParam) {
+      const quizzes = await quizzesRepository.listQuizzes();
+      const quizzesQuestions = quizzes.map((q) => q.questions).flat();
+      if (quizzesQuestions) {
+        setQuizQuestions(quizzesQuestions as ICompleteQuizQuestionDTO[]);
+        return quizzes;
+      }
+    }
+
+    const filteredQuestions = await getQuestionsByQuiz();
+    if (filteredQuestions) {
+      setQuizQuestions(filteredQuestions as ICompleteQuizQuestionDTO[]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedQuizIdInput]);
+
+  useEffect(() => {
+    filterQuestionsBySelectedQuiz();
+  }, [filterQuestionsBySelectedQuiz, selectedQuizIdInput]);
+
+  const handleSelectQuiz = (val: { value: string; label: string }) => {
+    setSelectedQuizIdInput(val.value.toString());
+
+    navigate("/dashboard/gerenciar-perguntas-e-respostas", { replace: true });
+  };
+
   return (
     <main className="flex flex-1 flex-col w-[85%] md:w-[90%] lg:w-[95%] mt-2 ml-[40px] mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
       <div className="flex flex-col w-full mx-auto xl:pr-8">
@@ -135,6 +224,17 @@ export function ManageQuestionsAndOptions() {
             </Link>
           </div>
         </div>
+        <div className="mb-4 ml-4 w-[90%] max-w-[400px]">
+          <SelectInput
+            label="Filtrar questões por treinamento"
+            options={quizzesOptions}
+            onSelectOption={(val) => {
+              handleSelectQuiz(val as never);
+            }}
+            defaultValue="Selecione um treinamento"
+            placeholder="Selecione um treinamento"
+          />
+        </div>
         {isLoading ? (
           <div className="w-full mt-[10vh]">
             <Loading color={PRIMARY_COLOR} />
@@ -153,15 +253,21 @@ export function ManageQuestionsAndOptions() {
             className="w-full px-4 mt-2 flex flex-col max-h-[560px] overflow-y-auto"
             style={{ height: 560 }}
           >
-            <QuizQuestionCard
-              questions={quizzes}
-              onEditQuestion={(quiz: IQuizQuestionDTO) =>
-                handleToggleUpdateModal(quiz)
-              }
-              onDeleteQuestion={(quiz: IQuizQuestionDTO) =>
-                handleToggleDeleteModal(quiz)
-              }
-            />
+            {quizQuestions.length > 0 ? (
+              <QuizQuestionCard
+                questions={quizQuestions}
+                onEditQuestion={(quiz: IQuizQuestionDTO) =>
+                  handleToggleUpdateModal(quiz)
+                }
+                onDeleteQuestion={(quiz: IQuizQuestionDTO) =>
+                  handleToggleDeleteModal(quiz)
+                }
+              />
+            ) : (
+              <span className="text-gray-600 dark:text-gray-200 text-[12px] md:text-[14px]">
+                Não foram encontradas questões para o questionário informado.
+              </span>
+            )}
           </div>
         )}
       </div>
