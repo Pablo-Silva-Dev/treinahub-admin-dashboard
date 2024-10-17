@@ -15,7 +15,7 @@ export function QuizInfoCard({
   const navigate = useNavigate();
 
   const onSeeQuestions = () =>
-    navigate("/dashboard/gerenciar-perguntas-e-respotas");
+    navigate("/dashboard/gerenciar-perguntas-e-respostas");
 
   return (
     <div className="w-full flex flex-row items-center justify-between shadow-sm bg-white dark:bg-slate-700 rounded-md p-4 mb-2">

@@ -1,6 +1,5 @@
 import {
-  DESCRIPTION_MIN_MESSAGE,
-  REQUIRED_FIELD_MESSAGE,
+  REQUIRED_FIELD_MESSAGE
 } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
@@ -59,17 +58,13 @@ export function RegisterQuestionOption() {
   const navigate = useNavigate();
 
   const { isLoading, setIsLoading } = useLoading();
-  const MIN_OPTION_CONTENT_LENGTH = 3;
   const MAX_OPTION_CONTENT_LENGTH = 120;
   const MIN_QUESTION_OPTIONS = 2;
   const MAX_QUESTION_OPTIONS = 4;
 
   const validationSchema = yup.object({
     question_id: yup.string().required(REQUIRED_FIELD_MESSAGE),
-    content: yup
-      .string()
-      .required(REQUIRED_FIELD_MESSAGE)
-      .min(MIN_OPTION_CONTENT_LENGTH, DESCRIPTION_MIN_MESSAGE),
+    content: yup.string().required(REQUIRED_FIELD_MESSAGE),
   });
 
   const {
