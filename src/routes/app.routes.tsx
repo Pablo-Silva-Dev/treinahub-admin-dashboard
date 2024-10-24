@@ -7,12 +7,17 @@ import { Home } from "@/screens/app/Home";
 import { DashboardLayout } from "@/screens/app/layout";
 import { ManageClasses } from "@/screens/app/ManageClasses";
 import { ManageFaqQuestions } from "@/screens/app/ManageFaqQuestions";
+import { ManageQuestionsAndOptions } from "@/screens/app/ManageQuestionsAndOptions";
+import { ManageQuizzes } from "@/screens/app/ManageQuizzes";
 import { ManageSupportContact } from "@/screens/app/ManageSupportContact";
 import { ManageTrainings } from "@/screens/app/ManageTrainings";
 import { ManageUsers } from "@/screens/app/ManageUsers";
 import { RegisterClass } from "@/screens/app/RegisterClass";
 import { RegisterContactSupport } from "@/screens/app/RegisterContactSupport";
 import { RegisterFaqQuestion } from "@/screens/app/RegisterFaqQuestion";
+import { RegisterQuestionOption } from "@/screens/app/RegisterQuestionOption";
+import { RegisterQuiz } from "@/screens/app/RegisterQuiz";
+import { RegisterQuizQuestion } from "@/screens/app/RegisterQuizQuestion";
 import { RegisterTraining } from "@/screens/app/RegisterTraining";
 import { ErrorPage } from "@/screens/error";
 import { ReactNode } from "react";
@@ -50,6 +55,26 @@ const appRoutesBase: route[] = [
   {
     path: "/dashboard/cadastrar-videoaula",
     element: <RegisterClass />,
+  },
+  {
+    path: "/dashboard/cadastrar-questionario",
+    element: <RegisterQuiz />,
+  },
+  {
+    path: "/dashboard/gerenciar-questionarios",
+    element: <ManageQuizzes />,
+  },
+  {
+    path: "/dashboard/cadastrar-pergunta",
+    element: <RegisterQuizQuestion />,
+  },
+  {
+    path: "/dashboard/cadastrar-resposta",
+    element: <RegisterQuestionOption />,
+  },
+  {
+    path: "/dashboard/gerenciar-perguntas-e-respostas",
+    element: <ManageQuestionsAndOptions />,
   },
   {
     path: "/dashboard/cadastrar-pergunta-frequente",

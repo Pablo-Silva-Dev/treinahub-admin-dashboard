@@ -38,6 +38,32 @@ export const menuItems = [
     icon: "play-circle",
   },
   {
+    title: "Questionários",
+    actions: [
+      {
+        title: "Cadastrar questionário",
+        link: "cadastrar-questionario",
+      },
+      {
+        title: "Gerenciar questionários",
+        link: "gerenciar-questionarios",
+      },
+      {
+        title: "Cadastrar pergunta",
+        link: "cadastrar-pergunta",
+      },
+      {
+        title: "Cadastrar resposta",
+        link: "cadastrar-resposta",
+      },
+      {
+        title: "Gerenciar perguntas e respostas",
+        link: "gerenciar-perguntas-e-respostas",
+      },
+    ],
+    icon: "edit",
+  },
+  {
     title: "Certificados",
     actions: [
       {

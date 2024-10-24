@@ -1,6 +1,6 @@
-import { collapseLongString } from "../../../utils/formats";
 import { CSSProperties, forwardRef, InputHTMLAttributes } from "react";
 import Select, { StylesConfig } from "react-select";
+import { collapseLongString } from "../../../utils/formats";
 
 interface SelectInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -14,6 +14,7 @@ interface SelectInputProps extends InputHTMLAttributes<HTMLInputElement> {
   labelClassName?: string;
   singleValueClassName?: string;
   containerClassName?: string;
+  isDisabled?: boolean;
   onSelectOption?: (selectedOption: {
     value: number | string;
     label: string;
@@ -34,6 +35,7 @@ export const SelectInput = forwardRef<HTMLInputElement, SelectInputProps>(
       onSelectOption,
       labelClassName,
       containerClassName,
+      isDisabled,
       ...rest
     },
     ref
@@ -65,7 +67,7 @@ export const SelectInput = forwardRef<HTMLInputElement, SelectInputProps>(
           fontSize: "14px",
           transform: state.isFocused ? "rotateZ(90deg)" : null,
           transition: "transform 0.2s",
-        } as never),
+        }) as never,
     };
 
     const MAX_SELECT_INPUT_MID_WIDTH_OPTION_STRING_LENGTH = 32;
@@ -139,6 +141,7 @@ export const SelectInput = forwardRef<HTMLInputElement, SelectInputProps>(
                 "'"
           }
           isSearchable={isSearchable}
+          isDisabled={isDisabled}
           {...rest}
           blurInputOnSelect
           ref={ref as never}

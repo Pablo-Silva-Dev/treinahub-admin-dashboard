@@ -1,4 +1,3 @@
-import { CheckboxProps } from "@material-tailwind/react/";
 import { AccordionProps } from "@material-tailwind/react/components/Accordion";
 import { AccordionBodyProps } from "@material-tailwind/react/components/AccordionBody";
 import { AccordionHeaderProps } from "@material-tailwind/react/components/AccordionHeader";
@@ -8,10 +7,12 @@ import { ButtonProps } from "@material-tailwind/react/components/Button";
 import { CardProps } from "@material-tailwind/react/components/Card";
 import { CardBodyProps } from "@material-tailwind/react/components/CardBody";
 import { CardFooterProps } from "@material-tailwind/react/components/CardFooter";
+import { CheckboxProps } from "@material-tailwind/react/components/Checkbox";
 import { IconButtonProps } from "@material-tailwind/react/components/IconButton";
 import { ListItemProps } from "@material-tailwind/react/components/ListItem";
 import { SpinnerProps } from "@material-tailwind/react/components/Spinner";
 import { TooltipProps } from "@material-tailwind/react/components/Tooltip";
+import { ChipProps } from "@material-tailwind/react/components/chip";
 
 declare module "@material-tailwind/react" {
   export const Button: React.FC<ButtonProps>;
@@ -28,4 +29,6 @@ declare module "@material-tailwind/react" {
   export const ListItem: React.FC<ListItemProps>;
   export const Spinner: React.FC<SpinnerProps>;
   export const Checkbox: React.FC<CheckboxProps>;
+  export const Switch: React.FC<SwitchProps>;
+  export const Chip: React.FC<ChipProps>;
 }

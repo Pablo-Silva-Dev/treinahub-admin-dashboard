@@ -1,5 +1,5 @@
 import { InputHTMLAttributes, forwardRef } from "react";
-import "../../../styles/globals.css"
+import "../../../styles/globals.css";
 
 interface TextAreaInputProps extends InputHTMLAttributes<HTMLTextAreaElement> {
   label: string;
@@ -22,7 +22,7 @@ export const TextAreaInput = forwardRef<
         : maxTextLength;
 
     return (
-      <div className="w-full flex flex-col h-[200px]">
+      <div className="w-full flex flex-col max-h-[200px]">
         <span className="text-gray-800 dark:text-gray-200 text-[12px] lg:text-sm mb-1">
           {label}
         </span>

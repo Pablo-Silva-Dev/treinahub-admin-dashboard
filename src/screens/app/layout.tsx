@@ -1,5 +1,6 @@
 import logo from "@/assets/logo.svg";
 import logo_text from "@/assets/logo_text.svg";
+import logo_text_dark from "@/assets/logo_text_dark.svg";
 import { CompanyFooterLink } from "@/components/miscellaneous/CompanyFooterLink";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Title } from "@/components/typography/Title";
@@ -148,7 +149,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       <div className="flex flex-row w-full min-h-screen">
         <nav className="hidden xl:flex flex-col w-[320px] min-h-screen overflow-auto p-8 bg-white dark:bg-slate-900 items-start">
           <Link to="/dashboard">
-            <img src={logo_text} alt="logo-text" width={200} className="mb-2" />
+            <img
+              src={theme === "dark" ? logo_text_dark : logo_text}
+              alt="logo-text"
+              width={200}
+              className="mb-2"
+            />
           </Link>
           {menuItems.map((item, idx) => (
             <Accordion
@@ -200,7 +206,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           >
             <div className="flex flex-row items-center">
               <Link to="/dashboard">
-                <img src={logo} alt="logo-text" width={40} />
+                <img
+                  src={logo}
+                  alt="logo-text"
+                  width={40}
+                  className="block md:hidden"
+                />
               </Link>
               <div className="hidden lg:flex mr-4">
                 <Breadcrumbs className="ml-4 bg-gray-200 dark:bg-slate-800">
@@ -302,7 +313,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             </button>
           </div>
           <Link to="/dashboard">
-            <img src={logo_text} alt="logo-text" width={200} className="mb-2" />
+            <img
+              src={theme === "dark" ? logo_text_dark : logo_text}
+              alt="logo-text"
+              width={200}
+              className="mb-2"
+            />
           </Link>
           {menuItems.map((item, idx) => (
             <Accordion
