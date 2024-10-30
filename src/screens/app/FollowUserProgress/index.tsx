@@ -114,7 +114,7 @@ export function FollowUserProgress() {
         ) : error ? (
           <img
             src={theme === "light" ? error_warning : error_warning_dark}
-            alt="ps-trainings"
+            alt="treinahub"
           />
         ) : (
           <>
