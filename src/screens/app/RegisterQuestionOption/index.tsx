@@ -254,6 +254,8 @@ export function RegisterQuestionOption() {
         setQuestionOptions(questionOptions);
         setShowRegisteredOptions(true);
         return questionOptions;
+      }else{
+        return []
       }
     } catch (error) {
       console.log(error);

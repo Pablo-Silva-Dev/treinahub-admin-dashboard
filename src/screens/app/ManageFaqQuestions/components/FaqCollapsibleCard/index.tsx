@@ -47,8 +47,8 @@ export function FaqCollapsibleCard({
   return (
     <div className="w-full md:w-[90%] overflow-y-auto flex flex-col bg-white p-4 dark:bg-slate-700 rounded-md shadow-md">
       {questions.map((question, i) => (
-        <>
-          <div key={question.question} className="mb-4">
+        <div key={question.question + i} className="mb-4">
+          <div className="mb-4">
             <div className="w-full flex flex-row justify-between items-center mb-2">
               <div className="w-full flex flex-row justify-between">
                 <button onClick={() => toggleQuestion(i)}>
@@ -95,7 +95,7 @@ export function FaqCollapsibleCard({
           {i !== questions.length - 1 && (
             <div className="w-full h-[1px] bg-gray-200 dark:bg-slate-600 mb-4" />
           )}
-        </>
+        </div>
       ))}
     </div>
   );

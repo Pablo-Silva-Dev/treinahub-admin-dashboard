@@ -17,6 +17,7 @@ import {
 } from "@/components/miscellaneous/UploadedFile";
 import { ICreateTrainingDTO } from "@/repositories/interfaces/trainingsRepository";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
+import { useAuthenticationStore } from "@/store/auth";
 import { useLoading } from "@/store/loading";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -28,6 +29,7 @@ interface RegisterTrainingInputs {
   name: string;
   description: string;
   file: any;
+  company_id: string;
 }
 
 export function RegisterTraining() {
@@ -41,6 +43,7 @@ export function RegisterTraining() {
   const [wasFileUploaded, setWasFileUploaded] = useState(false);
 
   const { isLoading, setIsLoading } = useLoading();
+  const { user } = useAuthenticationStore();
 
   const trainingsRepository = useMemo(() => {
     return new TrainingsRepositories();
@@ -111,6 +114,7 @@ export function RegisterTraining() {
             await trainingsRepository.createTraining({
               ...data,
               file,
+              company_id: user.companyId,
             });
             showAlertSuccess("Treinamento cadastrado com sucesso!");
             reset();
@@ -134,7 +138,7 @@ export function RegisterTraining() {
           setIsLoading(false);
         }
       },
-      [file, reset, setIsLoading, trainingsRepository]
+      [file, reset, setIsLoading, trainingsRepository, user.companyId]
     );
 
   const descriptionValue = watch("description");
@@ -155,7 +159,7 @@ export function RegisterTraining() {
         </div>
         <form
           className="w-full"
-          onSubmit={handleSubmit(handleRegisterTraining)}
+          onSubmit={handleSubmit(handleRegisterTraining as never)}
         >
           <div className="w-full mb-4">
             <TextInput

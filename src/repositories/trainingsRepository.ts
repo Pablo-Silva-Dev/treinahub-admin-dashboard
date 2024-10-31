@@ -8,12 +8,13 @@ import {
 
 export class TrainingsRepositories implements ITrainingsRepository {
   async createTraining(data: ICreateTrainingDTO): Promise<ITrainingDTO> {
-    const { name, description, file } = data;
+    const { name, description, file, company_id } = data;
 
     const formData = new FormData();
 
     formData.append("name", name);
     formData.append("description", description);
+    formData.append("company_id", company_id);
     formData.append("file", file, file.name);
 
     try {

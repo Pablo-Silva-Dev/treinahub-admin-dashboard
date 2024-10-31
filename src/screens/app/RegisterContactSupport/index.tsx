@@ -9,6 +9,7 @@ import { MaskedTextInput } from "@/components/inputs/MaskedTextInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { ContactsSupportRepository } from "@/repositories/contactsSupportRepository";
+import { useAuthenticationStore } from "@/store/auth";
 import { useLoading } from "@/store/loading";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
 import { formatPhoneNumber } from "@/utils/formats";
@@ -49,6 +50,7 @@ export function RegisterContactSupport() {
   });
 
   const { isLoading, setIsLoading } = useLoading();
+  const { user } = useAuthenticationStore();
 
   const contactsSupportRepository = useMemo(() => {
     return new ContactsSupportRepository();
@@ -62,6 +64,7 @@ export function RegisterContactSupport() {
       await contactsSupportRepository.createContactSupport({
         ...data,
         contact_number: formatPhoneNumber(data.contact_number),
+        company_id: user.companyId,
       });
       showAlertSuccess("Contato cadastrado com sucesso!");
       reset();

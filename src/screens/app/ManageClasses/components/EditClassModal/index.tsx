@@ -90,12 +90,13 @@ export function EditClassModal({
 
   const getVideoClassDetails = useCallback(async () => {
     try {
-      const videoClass = await videoClassesRepository.getVideoClassById(
-        selectedVideoClassId!
-      );
-      setName(videoClass.name);
-      setDescription(videoClass.description);
-      setTrainingId(videoClass.training_id);
+      if (selectedVideoClassId) {
+        const videoClass =
+          await videoClassesRepository.getVideoClassById(selectedVideoClassId);
+        setName(videoClass.name);
+        setDescription(videoClass.description);
+        setTrainingId(videoClass.training_id);
+      }
     } catch (error) {
       console.log(error);
     }

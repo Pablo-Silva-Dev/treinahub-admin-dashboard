@@ -67,15 +67,17 @@ export function ConsultCertificates() {
   const getCertificatesByUser = useCallback(
     async (userId: string) => {
       try {
-        const certificates = await (
-          await certificatesRepository.listCertificatesByUser(userId)
-        ).filter((c) => c.training !== null);
-        setCertificates(certificates);
+        if (selectedUserId) {
+          const certificates = (
+            await certificatesRepository.listCertificatesByUser(userId)
+          ).filter((c) => c.training !== null);
+          setCertificates(certificates);
+        }
       } catch (error) {
         console.log(error);
       }
     },
-    [certificatesRepository]
+    [certificatesRepository, selectedUserId]
   );
 
   useEffect(() => {
@@ -85,15 +87,17 @@ export function ConsultCertificates() {
   const getCertificatesByTraining = useCallback(
     async (trainingId: string) => {
       try {
-        const certificates = (
-          await certificatesRepository.listCertificatesByTraining(trainingId)
-        ).filter((c) => c.training !== null);
-        setCertificates(certificates);
+        if (selectedTrainingId) {
+          const certificates = (
+            await certificatesRepository.listCertificatesByTraining(trainingId)
+          ).filter((c) => c.training !== null);
+          setCertificates(certificates);
+        }
       } catch (error) {
         console.log(error);
       }
     },
-    [certificatesRepository]
+    [certificatesRepository, selectedTrainingId]
   );
 
   useEffect(() => {

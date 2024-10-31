@@ -8,6 +8,7 @@ import { TextAreaInput } from "@/components/inputs/TextAreaInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { FaqQuestionsRepository } from "@/repositories/faqQuestionsRepository";
+import { useAuthenticationStore } from "@/store/auth";
 import { useLoading } from "@/store/loading";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -46,6 +47,7 @@ export function RegisterFaqQuestion() {
   const answerValue = watch("answer");
 
   const { isLoading, setIsLoading } = useLoading();
+  const { user } = useAuthenticationStore();
 
   const faqQuestionsRepository = useMemo(() => {
     return new FaqQuestionsRepository();
@@ -56,7 +58,10 @@ export function RegisterFaqQuestion() {
   > = async (data) => {
     try {
       setIsLoading(true);
-      await faqQuestionsRepository.createFaqQuestion(data);
+      await faqQuestionsRepository.createFaqQuestion({
+        ...data,
+        company_id: user.companyId,
+      });
       showAlertSuccess("Pergunta cadastrada com sucesso!");
       reset();
     } catch (error) {

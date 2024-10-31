@@ -276,11 +276,13 @@ export function VideoClassesTable({
                 }
               )
             ) : (
-              <div className="w-full h-[25vh]  mt-4 flex-1 flex flex-col">
+              <tr>
+              <td colSpan={TABLE_HEAD.length} className="text-center py-4">
                 <span className="text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300">
                   Sem dados para exibir
                 </span>
-              </div>
+              </td>
+            </tr>
             )}
           </tbody>
         </table>

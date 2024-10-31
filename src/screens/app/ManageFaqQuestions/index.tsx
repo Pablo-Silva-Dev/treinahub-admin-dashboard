@@ -69,10 +69,12 @@ export function ManageFaqQuestions() {
   const getFaqQuestion = useCallback(
     async (faqQuestionId: string) => {
       try {
-        const faqQuestion =
-          await faqQuestionsRepository.getFaqQuestionById(faqQuestionId);
-        setSelectedFaqQuestion(faqQuestion);
-        return faqQuestion;
+        if (faqQuestionId) {
+          const faqQuestion =
+            await faqQuestionsRepository.getFaqQuestionById(faqQuestionId);
+          setSelectedFaqQuestion(faqQuestion);
+          return faqQuestion;
+        }
       } catch (error) {
         console.log(error);
       }
@@ -88,12 +90,14 @@ export function ManageFaqQuestions() {
     async (faqQuestionId: string) => {
       try {
         setIsLoading(true);
-        await faqQuestionsRepository.deleteFaqQuestion(faqQuestionId);
-        handleToggleDeleteFaqQuestionModal();
-        showAlertSuccess("Contato deletado com sucesso!");
-        queryClient.invalidateQueries([
-          "contacts-support",
-        ] as InvalidateQueryFilters);
+        if (faqQuestionId) {
+          await faqQuestionsRepository.deleteFaqQuestion(faqQuestionId);
+          handleToggleDeleteFaqQuestionModal();
+          showAlertSuccess("Contato deletado com sucesso!");
+          queryClient.invalidateQueries([
+            "contacts-support",
+          ] as InvalidateQueryFilters);
+        }
       } catch (error) {
         console.log("Houve um erro ao tentar deletar contato.");
         console.log(error);
@@ -113,10 +117,12 @@ export function ManageFaqQuestions() {
     async (data: IUpdateFaqQuestionDTO) => {
       try {
         setIsLoading(true);
-        await faqQuestionsRepository.updateFaqQuestion({
-          ...data,
-          id: selectedFaqQuestion!.id,
-        });
+        if (selectedFaqQuestion) {
+          await faqQuestionsRepository.updateFaqQuestion({
+            ...data,
+            id: selectedFaqQuestion.id,
+          });
+        }
         showAlertSuccess("FAQ atualizado com sucesso!");
         queryClient.invalidateQueries([
           "faq-questions",
@@ -183,7 +189,9 @@ export function ManageFaqQuestions() {
           onClose={handleToggleDeleteFaqQuestionModal}
           onRequestClose={handleToggleDeleteFaqQuestionModal as never}
           onConfirmAction={() =>
-            handleDeleteContactSupport(selectedFaqQuestion!.id)
+            handleDeleteContactSupport(
+              selectedFaqQuestion ? selectedFaqQuestion.id : ""
+            )
           }
           resource="pergunta"
         />

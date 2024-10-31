@@ -14,6 +14,7 @@ import {
 import { ITrainingDTO } from "@/repositories/interfaces/trainingsRepository";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
 import { VideoClassesRepository } from "@/repositories/videoClassesRepository";
+import { useAuthenticationStore } from "@/store/auth";
 import { useLoading } from "@/store/loading";
 import { useThemeStore } from "@/store/theme";
 import {
@@ -52,6 +53,7 @@ export function ManageClasses() {
 
   const queryClient = useQueryClient();
   const { theme } = useThemeStore();
+  const { user } = useAuthenticationStore();
   const { isLoading: loading, setIsLoading } = useLoading();
 
   const videoClassesRepositories = useMemo(() => {
@@ -182,7 +184,9 @@ export function ManageClasses() {
 
   const getTrainings = useCallback(async () => {
     try {
-      const trainings = await trainingsRepositories.listTrainings();
+      const trainings = await trainingsRepositories.listTrainings(
+        user.companyId
+      );
       setTrainings(trainings);
       return videoClasses;
     } catch (error) {

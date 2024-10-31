@@ -9,6 +9,7 @@ import { Subtitle } from "@/components/typography/Subtitle";
 import { ITrainingDTO } from "@/repositories/dtos/TrainingDTO";
 import { IUpdateTrainingDTO } from "@/repositories/interfaces/trainingsRepository";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
+import { useAuthenticationStore } from "@/store/auth";
 import { useLoading } from "@/store/loading";
 import { useThemeStore } from "@/store/theme";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
@@ -33,6 +34,7 @@ export function ManageTrainings() {
 
   const navigate = useNavigate();
   const { theme } = useThemeStore();
+  const { user } = useAuthenticationStore();
   const queryClient = useQueryClient();
 
   const { setIsLoading } = useLoading();
@@ -47,13 +49,13 @@ export function ManageTrainings() {
 
   const getTrainings = useCallback(async () => {
     try {
-      const trainings = await trainingsRepository.listTrainings();
+      const trainings = await trainingsRepository.listTrainings(user.companyId);
       setTrainings(trainings);
       return trainings;
     } catch (error) {
       console.log(error);
     }
-  }, [trainingsRepository]);
+  }, [trainingsRepository, user.companyId]);
 
   const { isLoading, error } = useQuery({
     queryKey: ["trainings"],
@@ -161,33 +163,41 @@ export function ManageTrainings() {
             />
           </div>
         ) : (
-          <div className="lg:w-full flex-row flex-wrap flex items-start px-4 mt-2 justify-center lg:justify-start">
-            {trainings.map((training) => (
-              <TrainingInfoCard
-                key={training.id}
-                training={training.name}
-                description={training.description}
-                cover_url={
-                  training.cover_url
-                    ? training.cover_url
-                    : video_thumbnail_placeholder
-                }
-                onEdit={() => handleToggleEditModalTraining(training)}
-                onDelete={() => handleToggleDeleteModal(training)}
-                onSeeTraining={() => handleSeeTraining(training.id)}
-                showsSeeClassesButton={
-                  training &&
-                  training.video_classes &&
-                  training.video_classes.length > 0
-                    ? true
-                    : false
-                }
-                selectedTrainingId={
-                  selectedTraining && (selectedTraining.id as string)
-                }
-              />
-            ))}
-          </div>
+          <>
+            {trainings.length > 0 ? (
+              <div className="lg:w-full flex-row flex-wrap flex items-start px-4 mt-2 justify-center lg:justify-start">
+                {trainings.map((training) => (
+                  <TrainingInfoCard
+                    key={training.id}
+                    training={training.name}
+                    description={training.description}
+                    cover_url={
+                      training.cover_url
+                        ? training.cover_url
+                        : video_thumbnail_placeholder
+                    }
+                    onEdit={() => handleToggleEditModalTraining(training)}
+                    onDelete={() => handleToggleDeleteModal(training)}
+                    onSeeTraining={() => handleSeeTraining(training.id)}
+                    showsSeeClassesButton={
+                      training &&
+                      training.video_classes &&
+                      training.video_classes.length > 0
+                        ? true
+                        : false
+                    }
+                    selectedTrainingId={
+                      selectedTraining && (selectedTraining.id as string)
+                    }
+                  />
+                ))}
+              </div>
+            ) : (
+              <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200 ml-[18px]">
+                Até o momento, nenhum treinamento foi registrado.
+              </span>
+            )}
+          </>
         )}
       </div>
       <DeleteModal

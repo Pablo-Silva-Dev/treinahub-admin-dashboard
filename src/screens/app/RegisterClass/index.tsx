@@ -18,6 +18,7 @@ import {
 import { ICreateVideoClassDTO } from "@/repositories/dtos/VideoClassDTO";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
 import { VideoClassesRepository } from "@/repositories/videoClassesRepository";
+import { useAuthenticationStore } from "@/store/auth";
 import { useLoading } from "@/store/loading";
 import {
   showAlertError,
@@ -58,6 +59,7 @@ export function RegisterClass() {
   );
 
   const { isLoading, setIsLoading } = useLoading();
+  const { user } = useAuthenticationStore();
 
   const validationSchema = yup.object({
     name: yup.string().required(REQUIRED_FIELD_MESSAGE),
@@ -138,7 +140,9 @@ export function RegisterClass() {
     try {
       setIsLoading(true);
       const trainingsRepositories = new TrainingsRepositories();
-      const trainings = await trainingsRepositories.listTrainings();
+      const trainings = await trainingsRepositories.listTrainings(
+        user.companyId
+      );
 
       const trainingsOptions = trainings.map((training) => ({
         label: training.name,

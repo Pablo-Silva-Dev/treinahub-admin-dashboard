@@ -164,15 +164,16 @@ export function EditTrainingModal({
   const getTrainingDetails = useCallback(async () => {
     const trainingsRepository = new TrainingsRepositories();
     try {
-      const trainingDetails = await trainingsRepository.getTrainingById(
-        selectedTrainingId!
-      );
-      setName(trainingDetails.name);
-      setDescription(trainingDetails.description);
-      reset({
-        name: trainingDetails.name,
-        description: trainingDetails.description,
-      });
+      if (selectedTrainingId) {
+        const trainingDetails =
+          await trainingsRepository.getTrainingById(selectedTrainingId);
+        setName(trainingDetails.name);
+        setDescription(trainingDetails.description);
+        reset({
+          name: trainingDetails.name,
+          description: trainingDetails.description,
+        });
+      }
     } catch (error) {
       console.log(error);
     }

@@ -5,6 +5,7 @@ import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { ITrainingDTO } from "@/repositories/dtos/TrainingDTO";
 import { QuizzesRepository } from "@/repositories/quizzesRepository";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
+import { useAuthenticationStore } from "@/store/auth";
 import { useLoading } from "@/store/loading";
 import { showAlertSuccess } from "@/utils/alerts";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -31,6 +32,7 @@ export function RegisterQuiz() {
   );
 
   const { isLoading, setIsLoading } = useLoading();
+  const { user } = useAuthenticationStore();
   const navigate = useNavigate();
 
   const validationSchema = yup.object({
@@ -72,7 +74,9 @@ export function RegisterQuiz() {
     try {
       setIsLoading(true);
       const trainingsRepositories = new TrainingsRepositories();
-      const trainings = await trainingsRepositories.listTrainings();
+      const trainings = await trainingsRepositories.listTrainings(
+        user.companyId
+      );
 
       const trainingsOptions = trainings.map((training) => ({
         label: training.name,
@@ -85,7 +89,7 @@ export function RegisterQuiz() {
     } finally {
       setIsLoading(false);
     }
-  }, [setIsLoading]);
+  }, [setIsLoading, user.companyId]);
 
   const handleRegisterQuiz: SubmitHandler<RegisterQuizInputs> =
     useCallback(async () => {

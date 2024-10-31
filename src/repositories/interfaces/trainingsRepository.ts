@@ -20,6 +20,7 @@ export interface ICreateTrainingDTO {
   name: string;
   description: string;
   file: Blob;
+  company_id: string;
 }
 
 export interface IUpdateTrainingDTO {

@@ -27,7 +27,7 @@ export function QuizQuestionCard({
   return (
     <>
       {questions.map((question) => (
-        <div className="w-full flex flex-col shadow-sm bg-white dark:bg-slate-700 rounded-md p-4 mb-2">
+        <div className="w-full flex flex-col shadow-sm bg-white dark:bg-slate-700 rounded-md p-4 mb-2" key={question.id}>
           <div className="w-full flex flex-col md:flex-row justify-between items-center">
             <div className="flex flex-row flex-1 mr-3 mb-1">
               <span className="text-gray-800 dark:text-gray-50 text-[11px] md:text-[14px] font-bold font-secondary mb-1 mr-3">
