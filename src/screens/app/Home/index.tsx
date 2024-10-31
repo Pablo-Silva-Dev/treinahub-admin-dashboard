@@ -34,21 +34,21 @@ export function Home() {
 
   const getUsers = useCallback(async () => {
     try {
-      const users = await usersRepository.listUsers();
+      const users = await usersRepository.listUsers(user.companyId);
       return users;
     } catch (error) {
       console.log(error);
     }
-  }, [usersRepository]);
+  }, [user.companyId, usersRepository]);
 
   const getTrainings = useCallback(async () => {
     try {
-      const trainings = await trainingsRepository.listTrainings();
+      const trainings = await trainingsRepository.listTrainings(user.companyId);
       return trainings;
     } catch (error) {
       console.log(error);
     }
-  }, [trainingsRepository]);
+  }, [trainingsRepository, user.companyId]);
 
   const getCertificates = useCallback(async () => {
     try {

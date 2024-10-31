@@ -13,6 +13,7 @@ import error_warning_dark from "@/assets/error_warning_dark.svg";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ITrainingMetricsDTO } from "@/repositories/dtos/TrainingMetricDTO";
 import { TrainingMetricsRepository } from "@/repositories/trainingMetricsRepository";
+import { useAuthenticationStore } from "@/store/auth";
 import { useThemeStore } from "@/store/theme";
 import { useQuery } from "@tanstack/react-query";
 
@@ -30,6 +31,7 @@ export function FollowUserProgress() {
 
   const { isLoading, setIsLoading } = useLoading();
   const { theme } = useThemeStore();
+  const { user } = useAuthenticationStore();
 
   const usersRepository = useMemo(() => {
     return new UsersRepositories();
@@ -42,7 +44,7 @@ export function FollowUserProgress() {
   const getUsers = useCallback(async () => {
     try {
       setIsLoading(true);
-      const users = await usersRepository.listUsers();
+      const users = await usersRepository.listUsers(user.companyId);
       setUsers(users);
       return users;
     } catch (error) {

@@ -7,6 +7,7 @@ import error_warning_dark from "@/assets/error_warning_dark.svg";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { IUpdateUserDTO, IUserDTO } from "@/repositories/dtos/UserDTO";
 import { UsersRepositories } from "@/repositories/usersRepositories";
+import { useAuthenticationStore } from "@/store/auth";
 import { useLoading } from "@/store/loading";
 import { useThemeStore } from "@/store/theme";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
@@ -36,6 +37,7 @@ export function ManageUsers() {
 
   const queryClient = useQueryClient();
   const { theme } = useThemeStore();
+  const { user } = useAuthenticationStore();
 
   const clearUpdateUserForm = () => {
     setPassword("");
@@ -47,13 +49,13 @@ export function ManageUsers() {
 
   const getUsers = useCallback(async () => {
     try {
-      const users = await usersRepository.listUsers();
+      const users = await usersRepository.listUsers(user.companyId);
       setUsers(users);
       return users;
     } catch (error) {
       console.log(error);
     }
-  }, [usersRepository]);
+  }, [user.companyId, usersRepository]);
 
   const handleDeleteUser = useCallback(
     async (userId: string) => {

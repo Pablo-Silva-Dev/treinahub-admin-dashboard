@@ -26,10 +26,11 @@ export class TrainingsRepositories implements ITrainingsRepository {
       throw error;
     }
   }
-  async listTrainings(): Promise<ITrainingDTO[]> {
+  async listTrainings(companyId: string): Promise<ITrainingDTO[]> {
     try {
-      const response =
-        await api.get<IApiSuccessResponse<ITrainingDTO[]>>("/trainings/list");
+      const response = await api.get<IApiSuccessResponse<ITrainingDTO[]>>(
+        `/trainings/list/${companyId}`
+      );
       return response.data.RES;
     } catch (error) {
       throw error;

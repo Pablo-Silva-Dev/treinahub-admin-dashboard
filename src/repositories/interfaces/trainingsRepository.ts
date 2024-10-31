@@ -31,7 +31,7 @@ export interface IUpdateTrainingDTO {
 
 export interface ITrainingsRepository {
   createTraining(data: ICreateTrainingDTO): Promise<ITrainingDTO>;
-  listTrainings(): Promise<ITrainingDTO[]>;
+  listTrainings(companyId: string): Promise<ITrainingDTO[]>;
   getTrainingById(id: string): Promise<ITrainingDTO>;
   updateTraining(data: IUpdateTrainingDTO): Promise<ITrainingDTO>;
   deleteTraining(id: string): Promise<void>;

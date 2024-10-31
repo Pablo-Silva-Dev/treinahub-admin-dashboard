@@ -14,7 +14,7 @@ export interface IAuthenticateUserResponse {
   name: string;
   email: string;
   token: string;
-  companyId: string
+  companyId: string;
 }
 
 export interface IRegisterUserRequest {
@@ -33,7 +33,7 @@ export interface IUsersRepository {
     data: IAuthenticateUserRequest
   ): Promise<IAuthenticateUserResponse>;
   registerUser(data: IRegisterUserRequest): Promise<IUserDTO>;
-  listUsers(): Promise<IUserDTO[] | []>;
+  listUsers(companyId: string): Promise<IUserDTO[] | []>;
   getUserByEmail(email: string): Promise<IUserDTO | void>;
   getUserByCpf(cpf: string): Promise<IUserDTO | void>;
   getUserById(id: string): Promise<IUserDTO | void>;

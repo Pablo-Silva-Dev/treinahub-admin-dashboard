@@ -24,10 +24,11 @@ export class UsersRepositories implements IUsersRepository {
       throw error;
     }
   }
-  async listUsers(): Promise<IUserDTO[] | []> {
+  async listUsers(companyId: string): Promise<IUserDTO[] | []> {
     try {
-      const response =
-        await api.get<IApiSuccessResponse<IUserDTO[]>>("/users/list");
+      const response = await api.get<IApiSuccessResponse<IUserDTO[]>>(
+        `/users/list/${companyId}`
+      );
       return response.data.RES;
     } catch (error) {
       throw error;
