@@ -8,6 +8,7 @@ import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { ContactsSupportRepository } from "@/repositories/contactsSupportRepository";
 import { IContactSupportDTO } from "@/repositories/dtos/ContactSupportDTO";
+import { useAuthenticationStore } from "@/store/auth";
 import { useLoading } from "@/store/loading";
 import { useThemeStore } from "@/store/theme";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
@@ -34,6 +35,7 @@ export function ManageSupportContact() {
 
   const { isLoading, setIsLoading } = useLoading();
   const { theme } = useThemeStore();
+  const { user } = useAuthenticationStore();
   const queryClient = useQueryClient();
 
   const handleToggleEditSupportContactModal = useCallback(
@@ -63,7 +65,9 @@ export function ManageSupportContact() {
   const getContactsSupport = useCallback(async () => {
     try {
       setIsLoading(true);
-      const contactSupports = await contactsSupportRepository.listContacts();
+      const contactSupports = await contactsSupportRepository.listContacts(
+        user.companyId
+      );
       setContactsSupport(contactSupports);
       return contactSupports;
     } catch (error) {

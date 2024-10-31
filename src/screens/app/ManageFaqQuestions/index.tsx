@@ -10,6 +10,7 @@ import {
   IUpdateFaqQuestionDTO,
 } from "@/repositories/dtos/FaqQuestionDTO";
 import { FaqQuestionsRepository } from "@/repositories/faqQuestionsRepository";
+import { useAuthenticationStore } from "@/store/auth";
 import { useLoading } from "@/store/loading";
 import { useThemeStore } from "@/store/theme";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
@@ -31,6 +32,7 @@ export function ManageFaqQuestions() {
 
   const { isLoading: loading, setIsLoading } = useLoading();
   const { theme } = useThemeStore();
+  const { user } = useAuthenticationStore();
   const queryClient = useQueryClient();
 
   const handleToggleEditFaqQuestionModal = useCallback(() => {
@@ -48,7 +50,9 @@ export function ManageFaqQuestions() {
   const getFaqQuestions = useCallback(async () => {
     try {
       setIsLoading(true);
-      const faqQuestions = await faqQuestionsRepository.listFaqQuestions();
+      const faqQuestions = await faqQuestionsRepository.listFaqQuestions(
+        user.companyId
+      );
       setFaqQuestions(faqQuestions);
       return faqQuestions;
     } catch (error) {
@@ -56,7 +60,7 @@ export function ManageFaqQuestions() {
     } finally {
       setIsLoading(false);
     }
-  }, [faqQuestionsRepository, setIsLoading]);
+  }, [faqQuestionsRepository, setIsLoading, user.companyId]);
 
   useEffect(() => {
     getFaqQuestions();

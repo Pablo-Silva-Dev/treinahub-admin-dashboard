@@ -11,8 +11,10 @@ import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { MaskedTextInput } from "@/components/inputs/MaskedTextInput";
 import { PasswordTextInput } from "@/components/inputs/PasswordInput";
+import { SelectInput } from "@/components/inputs/SelectInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { PasswordRequirements } from "@/components/miscellaneous/PasswordRequirements";
+import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
 import { birthDateMask, cpfMask } from "@/utils/masks";
 import {
   birthDateValidationRegex,
@@ -32,6 +34,7 @@ export interface SignUpFormInputs {
   birth_date: string;
   phone: string;
   password: string;
+  company_id: string;
 }
 
 interface SignUpFormProps {
@@ -41,6 +44,7 @@ interface SignUpFormProps {
   passwordConfirmation: string;
   setPasswordConfirmation: Dispatch<SetStateAction<string>>;
   isLoading: boolean;
+  companiesList: ICompanyDTO[];
 }
 
 export default function SignUpForm({
@@ -50,6 +54,7 @@ export default function SignUpForm({
   passwordConfirmation,
   setPasswordConfirmation,
   isLoading,
+  companiesList,
 }: SignUpFormProps) {
   const validationSchema = yup.object({
     name: yup.string().required(REQUIRED_FIELD_MESSAGE),
@@ -73,6 +78,7 @@ export default function SignUpForm({
       .string()
       .min(MIN_PASSWORD_LENGTH, PASSWORD_MIN_LENGTH_MESSAGE)
       .required(REQUIRED_FIELD_MESSAGE),
+    company_id: yup.string().required(REQUIRED_FIELD_MESSAGE),
   });
   const passwordValidated = useRef(false);
 
@@ -81,6 +87,7 @@ export default function SignUpForm({
     handleSubmit,
     formState: { errors, isValid },
     watch,
+    setValue,
   } = useForm<SignUpFormInputs>({
     resolver: yupResolver(validationSchema),
     mode: "onBlur",
@@ -96,8 +103,19 @@ export default function SignUpForm({
   const emailValue = watch("email");
   const cpfValue = watch("cpf");
   const birthDateValue = watch("birth_date");
+  const companyId = watch("company_id");
 
   const [wasTermsAccepted, setWasTermsAccepted] = useState(false);
+
+  type IOption = {
+    label: string;
+    value: string;
+  };
+
+  const companiesSelectInputs: IOption[] = companiesList.map((company) => ({
+    value: company.id,
+    label: company.fantasy_name,
+  }));
 
   return (
     <form
@@ -173,6 +191,21 @@ export default function SignUpForm({
                 <ErrorMessage errorMessage={errors.phone.message} />
               )}
             </div>
+            <div className="w-full ml-0.5">
+              <SelectInput
+                options={companiesSelectInputs}
+                label="Empresa"
+                placeholder="Selecione sua empresa"
+                onSelectOption={(value) => {
+                  setValue("company_id", value.value as string, {
+                    shouldValidate: true,
+                  });
+                }}
+              />
+              {errors.company_id && (
+                <ErrorMessage errorMessage={errors.company_id.message} />
+              )}
+            </div>
           </>
         }
         {nameValue &&
@@ -180,7 +213,8 @@ export default function SignUpForm({
           cpfValue &&
           birthDateMask &&
           phoneValue &&
-          birthDateValue && (
+          birthDateValue &&
+          companyId && (
             <>
               <div className="w-full mt-2">
                 <PasswordRequirements

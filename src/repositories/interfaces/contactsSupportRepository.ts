@@ -5,7 +5,7 @@ import {
 } from "../dtos/ContactSupportDTO";
 
 export interface IContactsSupport {
-  listContacts(): Promise<IContactSupportDTO[]>;
+  listContacts(companyId: string): Promise<IContactSupportDTO[]>;
   createContactSupport(
     data: ICreateContactSupportDTO
   ): Promise<IContactSupportDTO>;

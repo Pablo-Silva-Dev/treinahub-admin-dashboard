@@ -7,10 +7,10 @@ import {
 import { IContactsSupport } from "./interfaces/contactsSupportRepository";
 
 export class ContactsSupportRepository implements IContactsSupport {
-  async listContacts(): Promise<IContactSupportDTO[]> {
+  async listContacts(companyId: string): Promise<IContactSupportDTO[]> {
     try {
       const response = await api.get<IApiSuccessResponse<IContactSupportDTO[]>>(
-        "/contacts-support/list"
+        `/contacts-support/list/${companyId}`
       );
       return response.data.RES;
     } catch (error) {

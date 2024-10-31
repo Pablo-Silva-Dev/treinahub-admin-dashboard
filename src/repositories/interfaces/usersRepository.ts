@@ -14,6 +14,7 @@ export interface IAuthenticateUserResponse {
   name: string;
   email: string;
   token: string;
+  companyId: string
 }
 
 export interface IRegisterUserRequest {
@@ -24,6 +25,7 @@ export interface IRegisterUserRequest {
   birth_date: Date;
   password: string;
   is_admin?: boolean;
+  company_id: string;
 }
 
 export interface IUsersRepository {

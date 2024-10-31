@@ -4,6 +4,7 @@ import { persist } from "zustand/middleware";
 type User = {
   name: string;
   email: string;
+  companyId: string;
   token: string;
 };
 

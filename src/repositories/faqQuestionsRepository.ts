@@ -20,10 +20,10 @@ export class FaqQuestionsRepository implements IFaqQuestionsRepository {
       throw error;
     }
   }
-  async listFaqQuestions(): Promise<IFaqQuestionDTO[]> {
+  async listFaqQuestions(companyId: string): Promise<IFaqQuestionDTO[]> {
     try {
       const response = await api.get<IApiSuccessResponse<IFaqQuestionDTO[]>>(
-        "/faq-questions/list"
+        `/faq-questions/list/${companyId}`
       );
       return response.data.RES;
     } catch (error) {
