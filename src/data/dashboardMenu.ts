@@ -1,5 +1,15 @@
 export const menuItems = [
   {
+    title: "Empresa",
+    actions: [
+      {
+        title: "Gerenciar dados da empresa",
+        link: "gerenciar-dados-da-empresa",
+      },
+    ],
+    icon: "briefcase",
+  },
+  {
     title: "Usuários",
     actions: [
       {

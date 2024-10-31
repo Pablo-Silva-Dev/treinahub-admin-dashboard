@@ -6,6 +6,7 @@ import { FollowUserProgress } from "@/screens/app/FollowUserProgress";
 import { Home } from "@/screens/app/Home";
 import { DashboardLayout } from "@/screens/app/layout";
 import { ManageClasses } from "@/screens/app/ManageClasses";
+import { ManageCompany } from "@/screens/app/ManageCompany";
 import { ManageFaqQuestions } from "@/screens/app/ManageFaqQuestions";
 import { ManageQuestionsAndOptions } from "@/screens/app/ManageQuestionsAndOptions";
 import { ManageQuizzes } from "@/screens/app/ManageQuizzes";
@@ -43,6 +44,10 @@ const appRoutesBase: route[] = [
   {
     path: "/dashboard/gerenciar-usuarios",
     element: <ManageUsers />,
+  },
+  {
+    path: "/dashboard/gerenciar-dados-da-empresa",
+    element: <ManageCompany />,
   },
   {
     path: "/dashboard/cadastrar-treinamento",
