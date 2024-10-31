@@ -191,38 +191,46 @@ export function ConsultCertificates() {
           </div>
         ) : (
           <>
-            <div className="flex flex-col lg:flex-row items-center w-[80vw] sm:w-[75vw] md:w-[80vw] xl:w-[65vw]">
-              <div className="w-full lg:w-[370px] flex flex-row lg:mr-4 mb-4">
-                <SelectInput
-                  options={selectUsersInputOptions}
-                  label="Filtrar por usuário"
-                  containerClassName="w-[100%] md:w-[50vh]"
-                  placeholder="Selecione um usuario"
-                  onSelectOption={(val) =>
-                    setSelectedUserId(val.value.toString())
-                  }
-                />
+            {certificates.length > 0 ? (
+              <div className="w-full flex flex-col">
+                <div className="flex flex-col lg:flex-row items-center w-full">
+                  <div className="w-full flex flex-row lg:mr-4 mb-4">
+                    <SelectInput
+                      options={selectUsersInputOptions}
+                      label="Filtrar por usuário"
+                      containerClassName="w-full"
+                      placeholder="Selecione um usuario"
+                      onSelectOption={(val) =>
+                        setSelectedUserId(val.value.toString())
+                      }
+                    />
+                  </div>
+                  <div className="flex w-full flex-row mb-4">
+                    <SelectInput
+                      options={selectTrainingsInputOptions}
+                      label="Filtrar por treinamento"
+                      containerClassName="w-full"
+                      placeholder="Selecione um usuario"
+                      onSelectOption={(val) =>
+                        setSelectedTrainingId(val.value.toString())
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="w-full flex-col flex items-center">
+                  <CertificatesTable
+                    certificates={certificates}
+                    onDownloadCertificate={handleDownloadCertificate}
+                    onSeeCertificate={handleToggleDetailsModal}
+                    onSelectCertificate={getCertificateDetails}
+                  />
+                </div>
               </div>
-              <div className="flex w-full lg:w-[400px] flex-row mb-4">
-                <SelectInput
-                  options={selectTrainingsInputOptions}
-                  label="Filtrar por treinamento"
-                  containerClassName="w-[100%] md:w-[50vh]"
-                  placeholder="Selecione um usuario"
-                  onSelectOption={(val) =>
-                    setSelectedTrainingId(val.value.toString())
-                  }
-                />
-              </div>
-            </div>
-            <div className="w-full flex-col flex items-center">
-              <CertificatesTable
-                certificates={certificates}
-                onDownloadCertificate={handleDownloadCertificate}
-                onSeeCertificate={handleToggleDetailsModal}
-                onSelectCertificate={getCertificateDetails}
-              />
-            </div>
+            ) : (
+              <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200">
+                Até o momento nenhum certificado foi emitido.
+              </span>
+            )}
           </>
         )}
       </div>
