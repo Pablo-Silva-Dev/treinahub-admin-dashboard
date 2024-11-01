@@ -10,6 +10,7 @@ export interface IFilePreview {
 interface UploadedFileProps {
   file: IFilePreview;
   onCancel: () => void;
+  imgWidth?: number;
 }
 
 export function UploadedFile({ file, onCancel }: UploadedFileProps) {

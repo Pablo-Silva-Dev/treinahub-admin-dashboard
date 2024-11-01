@@ -13,3 +13,27 @@ export interface ICompanyDTO {
   logo_url: string;
   users?: IUserDTO[];
 }
+
+export interface IUpdatableCompanyDTO {
+  id: string;
+  fantasy_name?: string;
+  email?: string;
+  phone?: string;
+}
+
+export interface IUpdateCompanyDTO {
+  id: string;
+  fantasy_name?: string;
+  email?: string;
+  phone?: string;
+}
+
+export interface IUpdateCompanyPlanDTO {
+  id: string;
+  current_plan: TPlan;
+}
+
+export interface IUpdateCompanyLogoDTO {
+  id: string;
+  img_file: Blob;
+}
