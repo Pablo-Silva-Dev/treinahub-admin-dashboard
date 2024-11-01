@@ -1,3 +1,4 @@
+import { ITrainingDTO } from "./TrainingDTO";
 import { IUserDTO } from "./UserDTO";
 
 export type TPlan = "gold" | "platinum" | "diamond";
@@ -12,6 +13,7 @@ export interface ICompanyDTO {
   current_plan: TPlan;
   logo_url: string;
   users?: IUserDTO[];
+  trainings?: ITrainingDTO[];
 }
 
 export interface IUpdatableCompanyDTO {

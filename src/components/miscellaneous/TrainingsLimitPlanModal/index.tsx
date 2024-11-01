@@ -1,7 +1,7 @@
 import {
-    MAX_TRAININGS_CREATION_ALLOWED_DIAMOND_PLAN,
-    MAX_TRAININGS_CREATION_ALLOWED_GOLD_PLAN,
-    MAX_TRAININGS_CREATION_ALLOWED_PLATINUM_PLAN,
+  MAX_TRAININGS_CREATION_ALLOWED_DIAMOND_PLAN,
+  MAX_TRAININGS_CREATION_ALLOWED_GOLD_PLAN,
+  MAX_TRAININGS_CREATION_ALLOWED_PLATINUM_PLAN,
 } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { Subtitle } from "@/components/typography/Subtitle";
@@ -9,8 +9,8 @@ import { Title } from "@/components/typography/Title";
 import { usePlanVerification } from "@/hooks/usePlanVerification";
 import { useThemeStore } from "@/store/theme";
 import {
-    reactModalCustomStyles,
-    reactModalCustomStylesDark,
+  reactModalCustomStyles,
+  reactModalCustomStylesDark,
 } from "@/styles/react-modal";
 import Modal from "react-modal";
 

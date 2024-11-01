@@ -11,10 +11,12 @@ import { FileInput } from "@/components/inputs/FileInput";
 import { TextAreaInput } from "@/components/inputs/TextAreaInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
+import { TrainingsLimitPlanModal } from "@/components/miscellaneous/TrainingsLimitPlanModal";
 import {
   IFilePreview,
   UploadedFile,
 } from "@/components/miscellaneous/UploadedFile";
+import { usePlanVerification } from "@/hooks/usePlanVerification";
 import { ICreateTrainingDTO } from "@/repositories/interfaces/trainingsRepository";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
 import { useAuthenticationStore } from "@/store/auth";
@@ -41,9 +43,11 @@ export function RegisterTraining() {
   const [filePreview, setFilePreview] = useState<IFilePreview | null>(null);
   const [file, setFile] = useState<Blob | null>(null);
   const [wasFileUploaded, setWasFileUploaded] = useState(false);
+  const [isPlanLimitModalOpen, setIsPlanLimitModalOpen] = useState(false);
 
   const { isLoading, setIsLoading } = useLoading();
   const { user } = useAuthenticationStore();
+  const { canRegisterMoreTrainings, addTraining } = usePlanVerification();
 
   const trainingsRepository = useMemo(() => {
     return new TrainingsRepositories();
@@ -111,11 +115,12 @@ export function RegisterTraining() {
         try {
           setIsLoading(true);
           if (file) {
-            await trainingsRepository.createTraining({
+            const training = await trainingsRepository.createTraining({
               ...data,
               file,
               company_id: user.companyId,
             });
+            addTraining(training);
             showAlertSuccess("Treinamento cadastrado com sucesso!");
             reset();
             setFile(null);
@@ -147,6 +152,10 @@ export function RegisterTraining() {
     setFile(null);
     setWasFileUploaded(false);
   };
+
+  const handleToggleLimitModal = useCallback(() => {
+    setIsPlanLimitModalOpen(!isPlanLimitModalOpen);
+  }, [isPlanLimitModalOpen]);
 
   return (
     <main className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-800 w-full">
@@ -218,7 +227,10 @@ export function RegisterTraining() {
           </div>
           <div className="w-full mt-2">
             <Button
-              type="submit"
+              type={canRegisterMoreTrainings ? "submit" : "button"}
+              onClick={
+                !canRegisterMoreTrainings ? handleToggleLimitModal : undefined
+              }
               title="Cadastrar Treinamento"
               disabled={!isValid || isLoading}
               isLoading={isLoading}
@@ -226,6 +238,12 @@ export function RegisterTraining() {
           </div>
         </form>
       </div>
+      <TrainingsLimitPlanModal
+        isOpen={isPlanLimitModalOpen}
+        onClose={handleToggleLimitModal}
+        //TODO-PABLO: Implement update plan function
+        onUpdatePlan={() => console.log("Update plan")}
+      />
     </main>
   );
 }
