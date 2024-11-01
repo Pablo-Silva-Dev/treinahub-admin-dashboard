@@ -1,4 +1,9 @@
-import { PRIMARY_COLOR } from "@/appConstants/index";
+import {
+  MAX_TRAININGS_CREATION_ALLOWED_DIAMOND_PLAN,
+  MAX_TRAININGS_CREATION_ALLOWED_GOLD_PLAN,
+  MAX_TRAININGS_CREATION_ALLOWED_PLATINUM_PLAN,
+  PRIMARY_COLOR,
+} from "@/appConstants/index";
 import error_warning from "@/assets/error_warning.svg";
 import error_warning_dark from "@/assets/error_warning_dark.svg";
 import video_thumbnail_placeholder from "@/assets/video_thumbnail_placeholder.svg";
@@ -6,6 +11,7 @@ import { PlusButton } from "@/components/buttons/PlusButton";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { Subtitle } from "@/components/typography/Subtitle";
+import { usePlanVerification } from "@/hooks/usePlanVerification";
 import { ITrainingDTO } from "@/repositories/dtos/TrainingDTO";
 import { IUpdateTrainingDTO } from "@/repositories/interfaces/trainingsRepository";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
@@ -19,15 +25,17 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { EditTrainingModal } from "./components/EditTrainingModal";
 import { TrainingInfoCard } from "./components/TrainingInfoCard";
+import { TrainingsLimitPlanModal } from "./components/TrainingsLimitPlanModal";
 
 export function ManageTrainings() {
   const [trainings, setTrainings] = useState<ITrainingDTO[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalTrainingOpen] = useState(false);
   const [isEditModalTrainingOpen, setIsEditModalTrainingOpen] = useState(false);
+  const [isPlanLimitModalOpen, setIsPlanLimitModalOpen] = useState(false);
   const [selectedTraining, setSelectedTraining] = useState<ITrainingDTO | null>(
     null
   );
@@ -36,6 +44,7 @@ export function ManageTrainings() {
   const { theme } = useThemeStore();
   const { user } = useAuthenticationStore();
   const queryClient = useQueryClient();
+  const { companyPlan } = usePlanVerification();
 
   const { setIsLoading } = useLoading();
 
@@ -45,6 +54,10 @@ export function ManageTrainings() {
 
   const handleSeeTraining = (trainingId: string) => {
     navigate(`/dashboard/gerenciar-videoaulas?trainingId=${trainingId}`);
+  };
+
+  const handleRegisterTraining = () => {
+    navigate("/dashboard/cadastrar-treinamento");
   };
 
   const getTrainings = useCallback(async () => {
@@ -132,6 +145,29 @@ export function ManageTrainings() {
     ]
   );
 
+  const handleToggleLimitModal = useCallback(() => {
+    setIsPlanLimitModalOpen(!isPlanLimitModalOpen);
+  }, [isPlanLimitModalOpen]);
+
+  const canRegisterMoreTrainings = useMemo(() => {
+    if (
+      companyPlan === "gold" &&
+      trainings.length < MAX_TRAININGS_CREATION_ALLOWED_GOLD_PLAN
+    )
+      return true;
+    if (
+      companyPlan === "platinum" &&
+      trainings.length < MAX_TRAININGS_CREATION_ALLOWED_PLATINUM_PLAN
+    )
+      return true;
+    if (
+      companyPlan === "diamond" &&
+      trainings.length < MAX_TRAININGS_CREATION_ALLOWED_DIAMOND_PLAN
+    )
+      return true;
+    return false;
+  }, [companyPlan, trainings.length]);
+
   return (
     <main className="flex flex-1 flex-col w-[85%] md:w-[90%] lg:w-[95%] mt-2 ml-[40px] mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
       <div className="flex flex-col  w-full mx-auto xl:pr-8">
@@ -144,9 +180,14 @@ export function ManageTrainings() {
             />
           </div>
           <div className="mr-4">
-            <Link to="/dashboard/cadastrar-treinamento">
-              <PlusButton title="Cadastrar novo treinamento" />
-            </Link>
+            <PlusButton
+              title="Cadastrar novo treinamento"
+              onClick={
+                canRegisterMoreTrainings
+                  ? handleRegisterTraining
+                  : handleToggleLimitModal
+              }
+            />
           </div>
         </div>
         {isLoading ? (
@@ -214,6 +255,12 @@ export function ManageTrainings() {
         onConfirmAction={handleUpdateUser}
         isLoading={isLoading}
         selectedTrainingId={selectedTraining && selectedTraining.id}
+      />
+      <TrainingsLimitPlanModal
+        isOpen={isPlanLimitModalOpen}
+        onClose={handleToggleLimitModal}
+        //TODO-PABLO: Implement update plan function
+        onUpdatePlan={() => console.log("Update plan")}
       />
     </main>
   );
