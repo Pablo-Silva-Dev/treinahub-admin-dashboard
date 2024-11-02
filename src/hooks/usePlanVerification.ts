@@ -10,6 +10,9 @@ import {
   MAX_TRAININGS_CREATION_ALLOWED_DIAMOND_PLAN,
   MAX_TRAININGS_CREATION_ALLOWED_GOLD_PLAN,
   MAX_TRAININGS_CREATION_ALLOWED_PLATINUM_PLAN,
+  MAX_VIDEO_CLASSES_BY_TRAINING_CREATION_ALLOWED_DIAMOND_PLAN,
+  MAX_VIDEO_CLASSES_BY_TRAINING_CREATION_ALLOWED_GOLD_PLAN,
+  MAX_VIDEO_CLASSES_BY_TRAINING_CREATION_ALLOWED_PLATINUM_PLAN,
 } from "../appConstants";
 
 export const usePlanVerification = () => {
@@ -105,17 +108,20 @@ export const usePlanVerification = () => {
   const canRegisterMoreVideoClasses = useMemo(() => {
     if (
       currentCompanyPlan === "gold" &&
-      videoClasses.length < MAX_TRAININGS_CREATION_ALLOWED_GOLD_PLAN
+      videoClasses.length <
+        MAX_VIDEO_CLASSES_BY_TRAINING_CREATION_ALLOWED_GOLD_PLAN
     )
       return true;
     if (
       currentCompanyPlan === "platinum" &&
-      videoClasses.length < MAX_TRAININGS_CREATION_ALLOWED_PLATINUM_PLAN
+      videoClasses.length <
+        MAX_VIDEO_CLASSES_BY_TRAINING_CREATION_ALLOWED_PLATINUM_PLAN
     )
       return true;
     if (
       currentCompanyPlan === "diamond" &&
-      videoClasses.length < MAX_TRAININGS_CREATION_ALLOWED_DIAMOND_PLAN
+      videoClasses.length <
+        MAX_VIDEO_CLASSES_BY_TRAINING_CREATION_ALLOWED_DIAMOND_PLAN
     )
       return true;
     return false;
@@ -124,7 +130,6 @@ export const usePlanVerification = () => {
   const addVideoClass = (videoClass: IVideoClassDTO) => {
     setTrainings((prevVideoClasses) => [...prevVideoClasses, videoClass]);
   };
-
 
   return {
     companyPlan: currentCompanyPlan,
