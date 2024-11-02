@@ -56,7 +56,7 @@ export function CompanyInfoCard({
           </span>
         </div>
         <div className="w-full flex flex-col mb-4">
-          <span className="text-[12px] md:text-[14px] text-gray-900 dark:text-gray-100  font-bold  mb-2">
+          <span className="text-[12px] md:text-[14px] text-gray-900 dark:text-gray-100  font-bold">
             Telefone
           </span>
           <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200">
