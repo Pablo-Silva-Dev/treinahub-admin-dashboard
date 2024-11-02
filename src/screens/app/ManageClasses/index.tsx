@@ -2,7 +2,6 @@
 import { PRIMARY_COLOR } from "@/appConstants/index";
 import error_warning from "@/assets/error_warning.svg";
 import error_warning_dark from "@/assets/error_warning_dark.svg";
-import { PlusButton } from "@/components/buttons/PlusButton";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
@@ -29,7 +28,7 @@ import {
 } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { VideoClassesTable } from "./components/ClassesTable";
 import { EditClassModal } from "./components/EditClassModal";
@@ -215,11 +214,6 @@ export function ManageClasses() {
               content="Consulte, visualize e gerencie suas videoaulas."
               className="mt-4 mb-6 text-gray-800 dark:text-gray-50 text-sm md:text-[15px]"
             />
-          </div>
-          <div className="mr-4">
-            <Link to="/dashboard/cadastrar-videoaula">
-              <PlusButton title="Cadastrar nova videoaula" />
-            </Link>
           </div>
         </div>
         <div className="lg:w-full flex-col flex md:items-center px-4">

@@ -3,9 +3,9 @@ import error_warning from "@/assets/error_warning.svg";
 import error_warning_dark from "@/assets/error_warning_dark.svg";
 import video_thumbnail_placeholder from "@/assets/video_thumbnail_placeholder.svg";
 import { PlusButton } from "@/components/buttons/PlusButton";
+import { LimitPlanModal } from "@/components/miscellaneous/LimitPlanModal";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
-import { TrainingsLimitPlanModal } from "@/components/miscellaneous/TrainingsLimitPlanModal";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { usePlanVerification } from "@/hooks/usePlanVerification";
 import { ITrainingDTO } from "@/repositories/dtos/TrainingDTO";
@@ -233,7 +233,7 @@ export function ManageTrainings() {
         isLoading={isLoading}
         selectedTrainingId={selectedTraining && selectedTraining.id}
       />
-      <TrainingsLimitPlanModal
+      <LimitPlanModal
         isOpen={isPlanLimitModalOpen}
         onClose={handleToggleLimitModal}
         //TODO-PABLO: Implement update plan function

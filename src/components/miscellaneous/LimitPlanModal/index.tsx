@@ -1,8 +1,3 @@
-import {
-  MAX_TRAININGS_CREATION_ALLOWED_DIAMOND_PLAN,
-  MAX_TRAININGS_CREATION_ALLOWED_GOLD_PLAN,
-  MAX_TRAININGS_CREATION_ALLOWED_PLATINUM_PLAN,
-} from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Title } from "@/components/typography/Title";
@@ -14,26 +9,19 @@ import {
 } from "@/styles/react-modal";
 import Modal from "react-modal";
 
-interface TrainingsLimitPlanModalProps {
+interface LimitPlanModalProps {
   isOpen: boolean;
   onClose: () => void;
   onUpdatePlan: () => void;
 }
 
-export function TrainingsLimitPlanModal({
+export function LimitPlanModal({
   isOpen,
   onClose,
   onUpdatePlan,
-}: TrainingsLimitPlanModalProps) {
+}: LimitPlanModalProps) {
   const { theme } = useThemeStore();
-  const { companyPlan } = usePlanVerification();
-
-  const maxTrainingsAllowed =
-    companyPlan === "gold"
-      ? MAX_TRAININGS_CREATION_ALLOWED_GOLD_PLAN
-      : companyPlan === "platinum"
-        ? MAX_TRAININGS_CREATION_ALLOWED_PLATINUM_PLAN
-        : MAX_TRAININGS_CREATION_ALLOWED_DIAMOND_PLAN;
+  const { companyPlan, maxTrainingsAllowed } = usePlanVerification();
 
   return (
     <Modal

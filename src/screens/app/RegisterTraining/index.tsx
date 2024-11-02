@@ -10,8 +10,8 @@ import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { FileInput } from "@/components/inputs/FileInput";
 import { TextAreaInput } from "@/components/inputs/TextAreaInput";
 import { TextInput } from "@/components/inputs/TextInput";
+import { LimitPlanModal } from "@/components/miscellaneous/LimitPlanModal";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
-import { TrainingsLimitPlanModal } from "@/components/miscellaneous/TrainingsLimitPlanModal";
 import {
   IFilePreview,
   UploadedFile,
@@ -143,7 +143,7 @@ export function RegisterTraining() {
           setIsLoading(false);
         }
       },
-      [file, reset, setIsLoading, trainingsRepository, user.companyId]
+      [addTraining, file, reset, setIsLoading, trainingsRepository, user.companyId]
     );
 
   const descriptionValue = watch("description");
@@ -238,7 +238,7 @@ export function RegisterTraining() {
           </div>
         </form>
       </div>
-      <TrainingsLimitPlanModal
+      <LimitPlanModal
         isOpen={isPlanLimitModalOpen}
         onClose={handleToggleLimitModal}
         //TODO-PABLO: Implement update plan function
