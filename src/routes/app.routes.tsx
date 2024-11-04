@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { lazy, ReactNode, Suspense } from "react";
+import Loading from "react-loading";
 
 const ErrorPage = lazy(() => import("@/screens/error"));
 const NotFound = lazy(() => import("@/screens/404"));
@@ -130,15 +131,23 @@ const appRoutesBase: route[] = [
   },
 ];
 
+const LoadingFallback = () => {
+  return (
+    <div className="w-full h-screen flex items-center justify-center">
+      <Loading />
+    </div>
+  );
+};
+
 const appRoutes = appRoutesBase.map((route) => ({
   path: route.path,
   element: (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingFallback />}>
       <DashboardLayout>{route.element}</DashboardLayout>
     </Suspense>
   ),
   errorElement: (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingFallback />}>
       <ErrorPage />
     </Suspense>
   ),
