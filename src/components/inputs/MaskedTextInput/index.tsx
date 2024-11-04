@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import InputMask, { Props } from "react-input-mask";
-import "../../../styles/globals.css"
+import "../../../styles/globals.css";
 
 interface TextInputProps extends Props {
   inputLabel: string;
@@ -14,7 +14,7 @@ export const MaskedTextInput = forwardRef<HTMLInputElement, TextInputProps>(
           {inputLabel}
         </span>
         <InputMask
-          className="w-full h-[52px] p-4 border-2 rounded-lg text-gray-700 dark:text-gray-100 focus:border-blue-700 focus:border-3 focus:outline-none focus:text-gray-700 bg-white dark:bg-slate-700 placeholder-custom"
+          className="w-full h-[52px] p-4 border-2 rounded-lg text-gray-700 dark:text-gray-100 focus:border-blue-700 focus:border-3 focus:outline-none focus:text-gray-400 bg-white dark:bg-slate-700 placeholder-custom"
           inputRef={ref}
           {...rest}
         />
