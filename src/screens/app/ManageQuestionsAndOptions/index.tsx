@@ -28,7 +28,7 @@ import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { EditQuizQuestionModal } from "./components/EditQuizQuestionModal";
 import { QuizQuestionCard } from "./components/QuizQuestionCard";
 
-export function ManageQuestionsAndOptions() {
+export default function ManageQuestionsAndOptions() {
   const [quizQuestions, setQuizQuestions] = useState<
     ICompleteQuizQuestionDTO[]
   >([]);

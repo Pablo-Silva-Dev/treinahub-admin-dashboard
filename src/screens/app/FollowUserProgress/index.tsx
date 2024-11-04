@@ -22,7 +22,7 @@ type SelectUserOption = {
   id: string;
 };
 
-export function FollowUserProgress() {
+export default function FollowUserProgress() {
   const [selectedUser, setSelectedUser] = useState<SelectUserOption | null>(
     null
   );

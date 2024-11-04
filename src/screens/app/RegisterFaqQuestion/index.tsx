@@ -21,7 +21,7 @@ interface RegisterFaqQuestionInputs {
   answer: string;
 }
 
-export function RegisterFaqQuestion() {
+export default function RegisterFaqQuestion() {
   const MIN_TEXT_LENGTH = 24;
   const MAX_TEXT_LENGTH = 500;
 

@@ -26,7 +26,7 @@ interface RegisterContactSupportInputs {
   email: string;
 }
 
-export function RegisterContactSupport() {
+export default function RegisterContactSupport() {
   const validationSchema = yup.object({
     name: yup.string().required(REQUIRED_FIELD_MESSAGE),
     email: yup

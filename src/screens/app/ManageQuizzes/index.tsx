@@ -20,7 +20,7 @@ import { Link } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { QuizInfoCard } from "./components/QuizCard";
 
-export function ManageQuizzes() {
+export default function ManageQuizzes() {
   const [quizzes, setQuizzes] = useState<IQuizDTO[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalQuizOpen] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<IQuizDTO | null>(null);

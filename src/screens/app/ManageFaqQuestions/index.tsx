@@ -23,7 +23,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { EditFaqQuestionModal } from "./components/EditFaqQuestionModal";
 import { FaqCollapsibleCard } from "./components/FaqCollapsibleCard";
 
-export function ManageFaqQuestions() {
+export default function ManageFaqQuestions() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [faqQuestions, setFaqQuestions] = useState<IFaqQuestionDTO[]>([]);

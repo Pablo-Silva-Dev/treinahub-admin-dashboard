@@ -15,7 +15,7 @@ import Feather from "feather-icons-react";
 import { useCallback, useMemo } from "react";
 import MetricsCard from "./components/MetricsCard";
 
-export function Home() {
+export default function Home() {
   const { user } = useAuthenticationStore();
   const { theme } = useThemeStore();
 

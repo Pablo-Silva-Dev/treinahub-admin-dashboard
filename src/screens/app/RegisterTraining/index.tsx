@@ -34,7 +34,7 @@ interface RegisterTrainingInputs {
   company_id: string;
 }
 
-export function RegisterTraining() {
+export default function RegisterTraining() {
   const MIN_TRAINING_NAME_LENGTH = 16;
   const MIN_TRAINING_DESCRIPTION_LENGTH = 40;
   const MAX_TRAINING_DESCRIPTION_LENGTH = 500;

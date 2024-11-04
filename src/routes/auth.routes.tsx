@@ -1,12 +1,14 @@
-import { NotFound } from "@/screens/404";
-import { InitialScreen } from "@/screens/auth/InitialScreen";
-import { AuthenticationLayout } from "@/screens/auth/layout";
-import { RecoveryPassword } from "@/screens/auth/RecoveryPassword";
-import { SignUp } from "@/screens/auth/SignUp";
-import { UpdatePassword } from "@/screens/auth/UpdatePassword";
-import { ErrorPage } from "@/screens/error";
-import { ReactNode } from "react";
+import { Loading } from "@/components/miscellaneous/Loading";
+import { lazy, ReactNode, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+const NotFound = lazy(() => import("@/screens/404"));
+const ErrorPage = lazy(() => import("@/screens/error"));
+const InitialScreen = lazy(() => import("@/screens/auth/InitialScreen"));
+const AuthenticationLayout = lazy(() => import("@/screens/auth/layout"));
+const RecoveryPassword = lazy(() => import("@/screens/auth/RecoveryPassword"));
+const SignUp = lazy(() => import("@/screens/auth/SignUp"));
+const UpdatePassword = lazy(() => import("@/screens/auth/UpdatePassword"));
 
 type route = {
   path: string;
@@ -36,10 +38,26 @@ const authRoutesBase: route[] = [
   },
 ];
 
+const LoadingFallback = () => {
+  return (
+    <div className="w-full h-screen flex items-center justify-center">
+      <Loading />
+    </div>
+  );
+};
+
 const authRoutes = authRoutesBase.map((route) => ({
   path: route.path,
-  element: <AuthenticationLayout>{route.element}</AuthenticationLayout>,
-  errorElement: <ErrorPage />,
+  element: (
+    <Suspense fallback={<LoadingFallback />}>
+      <AuthenticationLayout>{route.element}</AuthenticationLayout>
+    </Suspense>
+  ),
+  errorElement: (
+    <Suspense fallback={<LoadingFallback />}>
+      <ErrorPage />
+    </Suspense>
+  ),
 }));
 
 const authRouter = createBrowserRouter(authRoutes);

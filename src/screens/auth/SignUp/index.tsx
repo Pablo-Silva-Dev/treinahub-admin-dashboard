@@ -11,7 +11,7 @@ import SignUpForm from "./components/SignUpForm";
 import { UseTermsModal } from "./components/UseTermsModal";
 import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
 
-export function SignUp() {
+export default function SignUp() {
   const { isLoading, setIsLoading } = useLoading();
   const navigate = useNavigate();
   const [passwordConfirmation, setPasswordConfirmation] = useState("");

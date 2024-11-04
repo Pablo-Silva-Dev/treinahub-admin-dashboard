@@ -10,7 +10,7 @@ interface IJwtPayload {
   isAdmin: boolean;
 }
 
-export function InitialScreen() {
+export default function InitialScreen() {
   const { signIn } = useAuthenticationStore();
   const { isLoading, setIsLoading } = useLoading();
 

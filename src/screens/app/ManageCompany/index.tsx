@@ -26,7 +26,7 @@ import { CompanyInfoCard } from "./components/CompanyCard";
 import { EditCompanyModal } from "./components/EditCompanyModal";
 import { UpdateCompanyLogoModal } from "./components/UpdateCompanyLogoModal";
 
-export function ManageCompany() {
+export default function ManageCompany() {
   const [company, setCompany] = useState<ICompanyDTO | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isUpdateCompanyLogoModalOpen, setIsUpdateCompanyLogoModalOpen] =

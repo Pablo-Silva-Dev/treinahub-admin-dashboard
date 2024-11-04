@@ -23,7 +23,7 @@ type IOption = {
   value: string;
 };
 
-export function RegisterQuiz() {
+export default function RegisterQuiz() {
   const [trainingsOptionsList, setTrainingsOptionsList] = useState<IOption[]>(
     []
   );

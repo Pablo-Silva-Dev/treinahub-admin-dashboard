@@ -12,7 +12,7 @@ import RecoveryPasswordBySMSForm, {
   RecoveryPasswordBySMSInputs,
 } from "./components/RecoveryPasswordBySMS";
 
-export function RecoveryPassword() {
+export default function RecoveryPassword() {
   const RESEND_CODE_TIMER = 60;
 
   const [wasCodeSent, setWasCodeSent] = useState(false);

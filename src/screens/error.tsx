@@ -2,7 +2,7 @@ import error_warning from "@/assets/error_warning.svg";
 import { useAuthenticationStore } from "@/store/auth";
 import { Link } from "react-router-dom";
 
-export function ErrorPage() {
+export default function ErrorPage() {
   const { isAuthenticated } = useAuthenticationStore();
 
   return (

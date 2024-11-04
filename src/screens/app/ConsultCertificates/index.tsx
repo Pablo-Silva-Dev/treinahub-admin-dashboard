@@ -13,7 +13,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { CertificatesTable } from "./components/CertificatesTable";
 import { SeeCertificateModal } from "./components/SeeCertificateModal";
 
-export function ConsultCertificates() {
+export default function ConsultCertificates() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState("");
   const [selectedTrainingId, setSelectedTrainingId] = useState("");

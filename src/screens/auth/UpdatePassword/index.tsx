@@ -10,7 +10,7 @@ import {
   UpdatePasswordInputs,
 } from "./components/UpdatePasswordForm";
 
-export function UpdatePassword() {
+export default function UpdatePassword() {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
 

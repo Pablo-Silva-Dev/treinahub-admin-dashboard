@@ -23,7 +23,7 @@ import { Link } from "react-router-dom";
 import { EditSupportContactModal } from "./components/EditSupportContact";
 import { ContactSupportCard } from "./components/SupportContactCard";
 
-export function ManageSupportContact() {
+export default function ManageSupportContact() {
   const [editContactSupportModal, setEditModalSupportContact] = useState(false);
   const [deleteContactSupportModal, setDeleteModalSupportContact] =
     useState(false);

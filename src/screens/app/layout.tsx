@@ -42,7 +42,7 @@ interface LoadingBarProps {
   complete: () => void;
 }
 
-export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
 }: DashboardLayoutProps) => {
   const [pathSegments, setPathSegments] = useState({ base: "", action: "" });
@@ -364,3 +364,5 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     </section>
   );
 };
+
+export default DashboardLayout

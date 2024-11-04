@@ -45,7 +45,7 @@ type IOption = {
   value: string;
 };
 
-export function RegisterClass() {
+export default function RegisterClass() {
   const MIN_CLASS_DESCRIPTION_LENGTH = 24;
   const MAX_CLASS_DESCRIPTION_LENGTH = 500;
   const MAX_CLASS_VIDEO_FILE_SIZE = 500 * 1024 * 1024; //500MB

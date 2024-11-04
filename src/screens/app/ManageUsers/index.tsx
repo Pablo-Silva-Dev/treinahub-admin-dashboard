@@ -22,7 +22,7 @@ import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { EditUserModal } from "./components/EditUserModal";
 import { UsersTable } from "./components/UsersTable";
 
-export function ManageUsers() {
+export default function ManageUsers() {
   const [isDeleteModalOpen, setIsDeleteModalUserOpen] = useState(false);
   const [isEditUserModalOpen, setIsEditModalUserOpen] = useState(false);
   const [users, setUsers] = useState<IUserDTO[]>([]);

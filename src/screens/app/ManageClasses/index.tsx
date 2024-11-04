@@ -34,7 +34,7 @@ import { VideoClassesTable } from "./components/ClassesTable";
 import { EditClassModal } from "./components/EditClassModal";
 import { WatchClassModal } from "./components/WatchClassmodal";
 
-export function ManageClasses() {
+export default function ManageClasses() {
   const [isDeleteModalOpen, setIsDeleteModalClassOpen] = useState(false);
   const [isEditClassModalOpen, setIsEditModalClassOpen] = useState(false);
   const [isWatchClassModalOpen, setIsWatchModalClassOpen] = useState(false);

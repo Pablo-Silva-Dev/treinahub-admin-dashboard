@@ -37,7 +37,7 @@ type IOption = {
   value: string;
 };
 
-export function RegisterQuestionOption() {
+export default function RegisterQuestionOption() {
   const [questionOptionsList, setQuestionOptionsList] = useState<IOption[]>([]);
   const [quizzesOptionsList, setQuizzesOptionsList] = useState<IOption[]>([]);
   const [selectedQuiz, setSelectedQuiz] = useState<IQuizDTO | null>(null);

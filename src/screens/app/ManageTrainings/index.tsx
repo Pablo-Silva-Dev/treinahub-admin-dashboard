@@ -26,7 +26,7 @@ import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { EditTrainingModal } from "./components/EditTrainingModal";
 import { TrainingInfoCard } from "./components/TrainingInfoCard";
 
-export function ManageTrainings() {
+export default function ManageTrainings() {
   const [trainings, setTrainings] = useState<ITrainingDTO[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalTrainingOpen] = useState(false);
   const [isEditModalTrainingOpen, setIsEditModalTrainingOpen] = useState(false);

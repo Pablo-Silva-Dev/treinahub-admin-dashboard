@@ -4,7 +4,7 @@ import { useAuthenticationStore } from "@/store/auth";
 import { useThemeStore } from "@/store/theme";
 import { Link } from "react-router-dom";
 
-export function NotFound() {
+export default function NotFound() {
   const { isAuthenticated } = useAuthenticationStore();
   const { theme } = useThemeStore();
 
