@@ -30,7 +30,7 @@ export const TextAreaInput = forwardRef<
           name="text-area"
           id="text-area"
           maxLength={maxTextLength}
-          className="w-full flex flex-1 text-gray-700 border-2 rounded-lg focus:border-blue-700 focus:border-3 focus:outline-none focus:text-gray-400 bg-white dark:bg-slate-700 dark:text-gray-100 p-4 resize-none placeholder-custom"
+          className="w-full flex flex-1 text-gray-700 border-2 rounded-lg focus:border-blue-700 focus:border-3 focus:outline-none focus:text-gray-500 bg-white dark:bg-slate-700 dark:text-gray-100 p-4 resize-none placeholder-custom"
           ref={ref}
           {...rest}
         />

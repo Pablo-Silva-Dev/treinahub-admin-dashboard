@@ -60,7 +60,9 @@ export function CompanyInfoCard({
             Telefone
           </span>
           <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200">
-            {unformatPhoneNumber(company.phone) ?? "Não informado"}
+            {company.phone
+              ? unformatPhoneNumber(company.phone)
+              : "Não informado"}
           </span>
         </div>
         {company.users && (

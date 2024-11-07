@@ -13,7 +13,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           {inputLabel}
         </span>
         <input
-          className="w-full h-[52px] p-4 border-2 rounded-lg text-gray-700 dark:text-gray-100 focus:border-blue-700 focus:border-3 focus:outline-none focus:text-gray-400 bg-white dark:bg-slate-700 placeholder-custom"
+          className="w-full h-[52px] p-4 border-2 rounded-lg text-gray-700 dark:text-gray-100 focus:border-blue-700 focus:border-3 focus:outline-none focus:text-gray-500 bg-white dark:bg-slate-700 placeholder-custom"
           ref={ref}
           {...rest}
         />
