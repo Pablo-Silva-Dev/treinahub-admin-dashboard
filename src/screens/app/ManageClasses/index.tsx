@@ -32,7 +32,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { VideoClassesTable } from "./components/ClassesTable";
 import { EditClassModal } from "./components/EditClassModal";
-import { WatchClassModal } from "./components/WatchClassmodal";
 
 export default function ManageClasses() {
   const [isDeleteModalOpen, setIsDeleteModalClassOpen] = useState(false);
@@ -271,13 +270,13 @@ export default function ManageClasses() {
         isLoading={loading}
         selectedVideoClassId={selectedVideoClass && selectedVideoClass.id}
       />
-      <WatchClassModal
+      {/* <WatchClassModal
         classToWatch={selectedVideoClass && selectedVideoClass.name}
         isOpen={isWatchClassModalOpen}
         onClose={handleToggleWatchClassModal}
         onRequestClose={handleToggleWatchClassModal}
-        videoUrl={selectedVideoClass && selectedVideoClass.hls_encoding_url}
-      />
+        videoUrl={selectedVideoClass && selectedVideoClass.video_url}
+      /> */}
     </main>
   );
 }

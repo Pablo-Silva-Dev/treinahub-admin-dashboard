@@ -1,4 +1,3 @@
-import { Loading } from "@/components/miscellaneous/Loading";
 import { Title } from "@/components/typography/Title";
 import { useThemeStore } from "@/store/theme";
 import {
@@ -9,7 +8,7 @@ import { IconButton } from "@material-tailwind/react";
 import { KeyboardEvent, MouseEvent } from "react";
 import { RiCloseCircleLine } from "react-icons/ri";
 import Modal from "react-modal";
-import Player from "react-player";
+import { PandaVideoPlayer } from "../PandaVideoPlayer";
 
 interface WatchClassModalProps {
   classToWatch: string | null;
@@ -67,26 +66,7 @@ export function WatchClassModal({
         </IconButton>
       </div>
       <div className="w-full h-[400px] bg-black flex items-center justify-center">
-        {videoUrl ? (
-          <Player
-            url={videoUrl}
-            controls
-            width="100%"
-            style={{ aspectRatio: 16 / 9 }}
-            volume={1}
-          />
-        ) : (
-          <div className="w-full flex flex-col items-center justify-center">
-            <Loading hideText />
-            <span className="text-[12px] md:text-[16px] text-gray-200 text-center m-4">
-              Sua videoaula está em processamento e será exibida após o
-              processamento finalizar.
-            </span>
-            <span className="text-[12px] md:text-[16px] text-gray-200 text-center m-1">
-              Por favor, aguarde.
-            </span>
-          </div>
-        )}
+        {videoUrl && <PandaVideoPlayer iframeSrc={videoUrl} />}
       </div>
     </Modal>
   );

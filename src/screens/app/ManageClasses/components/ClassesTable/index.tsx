@@ -166,8 +166,8 @@ export function VideoClassesTable({
                     training,
                     description,
                     duration,
-                    hls_encoding_url,
-                    dash_encoding_url,
+                    status,
+                    thumbnail_url,
                   },
                   index
                 ) => {
@@ -186,9 +186,14 @@ export function VideoClassesTable({
                           className="flex items-center m-4 mr-0 md:mr-[-5%] xl:mr-[-12px] w-[80px] relative"
                         >
                           <img
-                            src={video_thumbnail_placeholder}
+                            src={
+                              thumbnail_url
+                                ? thumbnail_url
+                                : video_thumbnail_placeholder
+                            }
                             alt="videoaula"
                             width="80%"
+                            className="rounded-sm"
                           />
                         </button>
                       </td>
@@ -230,16 +235,18 @@ export function VideoClassesTable({
                       <td className={classes}>
                         <Text
                           content={
-                            dash_encoding_url !== null &&
-                            hls_encoding_url !== null
-                              ? "Disponível"
-                              : "Processando..."
+                            status === "CONVERTING"
+                              ? "Processando..."
+                              : status === "CONVERTED"
+                                ? "Disponível"
+                                : "Falha no processamento"
                           }
                           className={
-                            dash_encoding_url !== null &&
-                            hls_encoding_url !== null
+                            status === "CONVERTED"
                               ? "block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-green-400 mr-1"
-                              : "block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-orange-400 mr-1"
+                              : status === "CONVERTING"
+                                ? "block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-orange-400 mr-1"
+                                : "block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-red-400 mr-1"
                           }
                         />
                       </td>
@@ -277,12 +284,12 @@ export function VideoClassesTable({
               )
             ) : (
               <tr>
-              <td colSpan={TABLE_HEAD.length} className="text-center py-4">
-                <span className="text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300">
-                  Sem dados para exibir
-                </span>
-              </td>
-            </tr>
+                <td colSpan={TABLE_HEAD.length} className="text-center py-4">
+                  <span className="text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300">
+                    Sem dados para exibir
+                  </span>
+                </td>
+              </tr>
             )}
           </tbody>
         </table>
