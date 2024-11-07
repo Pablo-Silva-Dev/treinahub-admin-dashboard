@@ -1,4 +1,4 @@
-import { ITEMS_PER_PAGE_OPTIONS } from "@/appConstants/index";
+import { ITEMS_PER_PAGE_OPTIONS_SHORT_TABLE } from "@/appConstants/index";
 import video_thumbnail_placeholder from "@/assets/video_thumbnail_placeholder.svg";
 import { SortButton } from "@/components/buttons/SortButton";
 import { SelectInput } from "@/components/inputs/SelectInput";
@@ -62,7 +62,7 @@ export function VideoClassesTable({
   >([]);
   const [tableData, setTableData] = useState<IVideoClassDTO[]>([]);
   const [itemsPerPage, setItemsPerPage] = useState(
-    ITEMS_PER_PAGE_OPTIONS[0].value
+    ITEMS_PER_PAGE_OPTIONS_SHORT_TABLE[0].value
   );
 
   const pages = Array.from(
@@ -307,7 +307,7 @@ export function VideoClassesTable({
         <div className="flex md:flex-row flex-col md:w-full w-[90%] mx-auto items-center justify-center">
           <SelectInput
             label="Items por página"
-            options={ITEMS_PER_PAGE_OPTIONS}
+            options={ITEMS_PER_PAGE_OPTIONS_SHORT_TABLE}
             className="mx-auto w-[96px]"
             containerClassName="md:mr-5 my-4 lg:my-0"
             labelClassName="text-[10px] lg:text-sm text-gray-700 dark:text-gray-100"
