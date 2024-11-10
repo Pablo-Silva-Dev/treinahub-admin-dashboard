@@ -7,6 +7,7 @@ import { Title } from "@/components/typography/Title";
 import { menuItems } from "@/data/dashboardMenu";
 import { useAuthenticationStore } from "@/store/auth";
 import { useThemeStore } from "@/store/theme";
+import "@/styles/globals.css";
 import {
   reactMobileMenuModalCustomStyles,
   reactModalCustomStyles,
@@ -17,7 +18,7 @@ import {
   AccordionBody,
   AccordionHeader,
   Breadcrumbs,
-  ListItem,
+  Button,
 } from "@material-tailwind/react";
 import FeatherIcon from "feather-icons-react";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
@@ -32,7 +33,6 @@ import {
 import Modal from "react-modal";
 import { Link, useNavigate } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
-
 interface DashboardLayoutProps {
   children: ReactNode;
 }
@@ -147,13 +147,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       <LoadingBar ref={ref as never} height={4} color="#0267FF" />
       <Toaster />
       <div className="flex flex-row w-full min-h-screen">
-        <nav className="hidden xl:flex flex-col w-[320px] min-h-screen overflow-auto p-8 bg-white dark:bg-slate-900 items-start">
+        <nav className="hidden xl:flex flex-col w-[320px] min-h-screen overflow-auto p-8 px-4 bg-white dark:bg-slate-900 items-start">
           <Link to="/dashboard">
             <img
               src={theme === "dark" ? logo_text_dark : logo_text}
               alt="logo-text"
               width={200}
-              className="mb-2"
+              className="mb-2 pl-6"
             />
           </Link>
           {menuItems.map((item, idx) => (
@@ -163,33 +163,35 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               key={item.title}
             >
               <AccordionHeader
-                className="flex  justify-start border-none mb-[-12px]"
+                className="flex justify-start border-none mb-[-24px]"
                 onClick={() => handleOpenedAccordionIndexes(idx)}
               >
-                <ListItem
-                  className={`text-[12px] lg:text-[14px] text-black dark:text-white hover:text-slate-800 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-800 focus:text-slate-800 dark:focus:text-gray-200 focus:bg-gray-200 dark:focus:bg-slate-800 font-secondary`}
+                <Button
+                  className={`bg-transparent hover:shadow-none shadow-none w-full flex flex-row items-center text-[12px] lg:text-[14px] text-black dark:text-white font-secondary hover:bg-transparent focus:bg-transparent rounded-none no-ripple-effect`}
+                  ripple={false}
                 >
                   <FeatherIcon
                     icon={item.icon}
-                    size={24}
+                    size={28}
                     className="text-black dark:text-white mr-2"
                     strokeWidth={1}
                   />
                   {item.title}
-                </ListItem>
+                </Button>
               </AccordionHeader>
               <AccordionBody className="flex flex-col py-0 px-4">
                 {item.actions.map((action) => (
                   <Link
                     to={"/dashboard/" + action.link}
                     key={action.title}
-                    className={`mb-1 p-0 text-[13px] font-bold text-black dark:text-white`}
+                    className={`mb-1 p-0 text-[13px] font-bold text-black dark:text-white hover:bg-transparent`}
                   >
-                    <ListItem
-                      className={`text-primary dark:text-primary-light font-light font-poppinshover:text-blue-700 hover:text-slate-800 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-800 focus:text-slate-800 dark:focus:text-gray-200 focus:bg-gray-200 dark:focus:bg-slate-800 font-secondary`}
+                    <Button
+                      className={`bg-transparent hover:shadow-none shadow-none flex p-1 pl-2 ml-4 w-full text-[10px] lg:text-[11px] text-gray-700 dark:text-gray-300 font-secondary font-medium hover:bg-transparent focus:bg-transparent focus:border-l-[4px] text-left focus:border-l-primary rounded-none no-ripple-effect focus:font-bold `}
+                      ripple={false}
                     >
                       {action.title}
-                    </ListItem>
+                    </Button>
                   </Link>
                 ))}
               </AccordionBody>
@@ -317,7 +319,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               src={theme === "dark" ? logo_text_dark : logo_text}
               alt="logo-text"
               width={200}
-              className="mb-2"
+              className="mb-2 pl-4"
             />
           </Link>
           {menuItems.map((item, idx) => (
@@ -327,33 +329,35 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               key={item.title}
             >
               <AccordionHeader
-                className="flex  justify-start border-none mb-[-12px]"
+                className="flex justify-start border-none mb-[-24px]"
                 onClick={() => handleOpenedAccordionIndexes(idx)}
               >
-                <ListItem
-                  className={`text-[12px] lg:text-[14px] text-black dark:text-white hover:text-slate-800 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-800 focus:text-slate-800 dark:focus:text-gray-200 focus:bg-gray-200 dark:focus:bg-slate-800 font-secondary`}
+                <Button
+                  className={`bg-transparent hover:shadow-none shadow-none w-full flex flex-row items-center text-b text-black dark:text-white font-secondary hover:bg-transparent focus:bg-transparent rounded-none no-ripple-effect`}
+                  ripple={false}
                 >
                   <FeatherIcon
                     icon={item.icon}
-                    size={24}
+                    size={28}
                     className="text-black dark:text-white mr-2"
                     strokeWidth={1}
                   />
                   {item.title}
-                </ListItem>
+                </Button>
               </AccordionHeader>
               <AccordionBody className="flex flex-col py-0 px-4">
                 {item.actions.map((action) => (
                   <Link
                     to={"/dashboard/" + action.link}
                     key={action.title}
-                    className={` mb-1 p-0 text-[12px] font-bold`}
+                    className={`mb-1 p-0 text-[13px] font-bold text-black dark:text-white hover:bg-transparent`}
                   >
-                    <ListItem
-                      className={`text-primary dark:text-primary-light font-light font-poppinshover:text-blue-700 hover:text-slate-800 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-800 focus:text-slate-800 dark:focus:text-gray-200 focus:bg-gray-200 dark:focus:bg-slate-800 font-secondary`}
+                    <Button
+                      className={`bg-transparent hover:shadow-none shadow-none flex p-1 pl-2 ml-4 w-full text-[11px] lg:text-[12px] text-gray-700 dark:text-gray-300 font-secondary font-medium hover:bg-transparent focus:bg-transparent focus:border-l-[4px] text-left focus:border-l-primary rounded-none no-ripple-effect focus:font-bold `}
+                      ripple={false}
                     >
                       {action.title}
-                    </ListItem>
+                    </Button>
                   </Link>
                 ))}
               </AccordionBody>
@@ -365,4 +369,4 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   );
 };
 
-export default DashboardLayout
+export default DashboardLayout;
