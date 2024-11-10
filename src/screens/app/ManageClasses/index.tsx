@@ -21,6 +21,7 @@ import {
   showAlertLoading,
   showAlertSuccess,
 } from "@/utils/alerts";
+import { IconButton } from "@material-tailwind/react";
 import {
   InvalidateQueryFilters,
   useQuery,
@@ -28,11 +29,12 @@ import {
 } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import { RiCloseCircleLine } from "react-icons/ri";
 import { useLocation, useNavigate } from "react-router-dom";
 import { DeleteModal } from "../../../components/miscellaneous/DeleteModal";
 import { VideoClassesTable } from "./components/ClassesTable";
 import { EditClassModal } from "./components/EditClassModal";
-import { WatchClassModal } from "./components/WatchClassmodal";
+import { PandaVideoPlayer } from "./components/PandaVideoPlayer";
 
 export default function ManageClasses() {
   const [isDeleteModalOpen, setIsDeleteModalClassOpen] = useState(false);
@@ -244,6 +246,29 @@ export default function ManageClasses() {
                   placeholder="Selecione um treinamento"
                 />
               </div>
+              {isWatchClassModalOpen &&
+                selectedVideoClass &&
+                selectedVideoClass.video_url &&
+                selectedVideoClass.name && (
+                  <div className="w-screen h-screen flex flex-col items-center justify-center absolute top-0 right-0 z-10">
+                    <div className="w-[90%] lg:w-[50%] bg-white  dark:bg-slate-700 shadow-md rounded-md p-4 ">
+                      <div className="w-full flex flex-row items-center justify-between mb-2">
+                        <span className="text-[12px] md:text-[14px] font-bold text-gray-800 dark:text-gray-200 mb">
+                          {selectedVideoClass.name}
+                        </span>
+                        <IconButton
+                          variant="text"
+                          onClick={handleToggleWatchClassModal}
+                        >
+                          <RiCloseCircleLine className="md:h-8 md:w-8 h-5 w-5 text-red-500" />
+                        </IconButton>
+                      </div>
+                      <PandaVideoPlayer
+                        iframeSrc={selectedVideoClass.video_url}
+                      />
+                    </div>
+                  </div>
+                )}
               <VideoClassesTable
                 classes={videoClasses}
                 onDeleteVideoClass={handleToggleDeleteModal}
@@ -270,13 +295,6 @@ export default function ManageClasses() {
         onConfirmAction={handleUpdateVideoClass}
         isLoading={loading}
         selectedVideoClassId={selectedVideoClass && selectedVideoClass.id}
-      />
-      <WatchClassModal
-        classToWatch={selectedVideoClass && selectedVideoClass.name}
-        isOpen={isWatchClassModalOpen}
-        onClose={handleToggleWatchClassModal}
-        onRequestClose={handleToggleWatchClassModal}
-        videoUrl={selectedVideoClass && selectedVideoClass.hls_encoding_url}
       />
     </main>
   );
