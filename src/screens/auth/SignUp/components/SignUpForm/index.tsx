@@ -105,6 +105,8 @@ export default function SignUpForm({
   const birthDateValue = watch("birth_date");
   const companyId = watch("company_id");
 
+  const PHONE_VALIDATION_LENGTH = 11;
+
   const [wasTermsAccepted, setWasTermsAccepted] = useState(false);
 
   type IOption = {
@@ -187,8 +189,9 @@ export default function SignUpForm({
                 inputMode="numeric"
                 {...register("phone")}
               />
-              {errors.phone && (
-                <ErrorMessage errorMessage={errors.phone.message} />
+              {(errors.phone ||
+                phoneValue.length > PHONE_VALIDATION_LENGTH) && (
+                <ErrorMessage errorMessage={errors.phone?.message} />
               )}
             </div>
             <div className="w-full ml-0.5">
@@ -288,6 +291,7 @@ export default function SignUpForm({
               !passwordValidated.current ||
               passwordValue !== passwordConfirmation ||
               !wasTermsAccepted ||
+              phoneValue.length > PHONE_VALIDATION_LENGTH ||
               isLoading
             }
           />
