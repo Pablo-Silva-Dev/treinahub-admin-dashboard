@@ -189,8 +189,8 @@ export default function SignUpForm({
                 inputMode="numeric"
                 {...register("phone")}
               />
-              {(errors.phone ||
-                phoneValue.length > PHONE_VALIDATION_LENGTH) && (
+              {(errors && errors.phone ||
+                phoneValue && phoneValue.length > PHONE_VALIDATION_LENGTH) && (
                 <ErrorMessage errorMessage={errors.phone?.message} />
               )}
             </div>
