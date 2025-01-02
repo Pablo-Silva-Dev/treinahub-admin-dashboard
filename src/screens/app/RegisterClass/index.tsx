@@ -175,7 +175,7 @@ export default function RegisterClass() {
         try {
           setIsLoading(true);
           showAlertLoading(
-            "Por favor, aguarde enquanto processamos a videoaula..."
+            "Aguarde enquanto fazemos o upload da videoaula. Essa ação pode levar alguns segundos..."
           );
           if (videoFile) {
             const videoClass = await videoClassesRepository.createVideoClass({
