@@ -2,7 +2,6 @@ import { DESCRIPTION_MIN_MESSAGE } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { TextAreaInput } from "@/components/inputs/TextAreaInput";
-import { TextInput } from "@/components/inputs/TextInput";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Title } from "@/components/typography/Title";
 import { VideoClassesRepository } from "@/repositories/videoClassesRepository";
@@ -27,7 +26,6 @@ import * as yup from "yup";
 interface UpdateVideoClassInputs {
   id?: string;
   training_id?: string;
-  name?: string;
   description?: string;
 }
 
@@ -60,17 +58,12 @@ export function EditClassModal({
     return new VideoClassesRepository();
   }, []);
 
-  const MIN_TRAINING_NAME_LENGTH = 16;
   const MIN_TRAINING_DESCRIPTION_LENGTH = 40;
   const MAX_TRAINING_DESCRIPTION_LENGTH = 500;
 
   const validationSchema = yup.object({
     id: yup.string().optional(),
     training_id: yup.string().optional(),
-    name: yup
-      .string()
-      .min(MIN_TRAINING_NAME_LENGTH, DESCRIPTION_MIN_MESSAGE)
-      .optional(),
     description: yup
       .string()
       .optional()
@@ -129,23 +122,14 @@ export function EditClassModal({
       }
     >
       <Title
-        content="Atualização dos dados do aula"
+        content="Atualização dos dados da aula"
         className="text-center text-black dark:text-white mb-4 font-bold text-[14px] md:text-lg"
       />
       <Subtitle
-        content="Você pode alterar o nome e a descrição da aula"
+        content="Você pode alterar a descrição da aula. Para atualizar o nome ou o conteúdo da aula é necessário remover a aula e realizar um novo upload."
         className="text-center text-gray-700 dark:text-gray-100  text-[13px] md:text-[14px]"
       />
       <form onSubmit={handleSubmit(handleUpdateVideoClass)} className="my-4">
-        <TextInput
-          inputLabel="Nome"
-          placeholder="Nome da videoaula"
-          {...register("name")}
-          defaultValue={name}
-        />
-        {errors && errors.name && (
-          <ErrorMessage errorMessage={errors.name?.message} />
-        )}
         <div className="my-4">
           <TextAreaInput
             label="Descrição"

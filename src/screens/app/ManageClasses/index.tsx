@@ -150,7 +150,6 @@ export default function ManageClasses() {
 
   const handleUpdateVideoClass = useCallback(
     async (data: IUpdateVideoClassDTO) => {
-      JSON.stringify(data); //do not remove this line, its being used to hold the operation until data be recognized
       try {
         setIsLoading(true);
         showAlertLoading(
@@ -159,21 +158,12 @@ export default function ManageClasses() {
         await videoClassesRepositories.updateVideoClass({
           ...data,
           id: selectedVideoClass!.id,
+          name: selectedVideoClass!.name,
         });
         queryClient.invalidateQueries([
           "video-classes",
         ] as InvalidateQueryFilters);
       } catch (error) {
-        if (typeof error === "object" && error !== null && "STATUS" in error) {
-          if (error.STATUS === 409) {
-            showAlertError(
-              "Já existe uma videoaula com o nome informado para este treinamento."
-            );
-          } else {
-            showAlertError("Houve um erro ao tentar atualizar videoaula.");
-          }
-        }
-        showAlertError("Houve um erro ao tentar atualizar videoaula.");
         console.log(error);
       } finally {
         setIsLoading(false);
