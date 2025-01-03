@@ -205,18 +205,9 @@ export default function RegisterClass() {
                 );
                 break;
               case 406:
-                if (error.MSG.message === "Video must have an audio.") {
-                  showAlertError(
-                    "Verifique se o arquivo de vídeo contém áudio."
-                  );
-                } else if (
-                  error.MSG.message ===
-                  "Video duration can not be more than 15 minutes."
-                ) {
-                  showAlertError(
-                    "A videoaula não pode conter mais que 15 minutos de duração."
-                  );
-                }
+                showAlertError(
+                  "O vídeo enviado não atende aos critérios de tamanho e formato. Verifique se o vídeo possui áudio e  o arquivo não ultrapassa 150MB."
+                );
                 break;
               default:
                 showAlertError(
@@ -318,6 +309,12 @@ export default function RegisterClass() {
                 )}
               </>
             )}
+          </div>
+
+          <div className="w-full mb-2">
+            <span className="text-gray-700 dark:text-gray-300 text-xs md:text-sm">
+              * Máximo de 150MB
+            </span>
           </div>
 
           <div className="w-full flex flex-col md:flex-row mb-6">
