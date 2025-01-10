@@ -3,6 +3,7 @@ import {
   FREE_EMPLOYEES_LIMIT_GOLD_PLAN,
   FREE_EMPLOYEES_LIMIT_SILVER_PLAN,
 } from "@/appConstants/index";
+import businessPlaceholder from "@/assets/business_placeholder.svg";
 import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
 import { unformatPhoneNumber } from "@/utils/formats";
 import { Avatar, Tooltip } from "@material-tailwind/react";
@@ -40,13 +41,15 @@ export function CompanyInfoCard({
     return totalEmployees;
   }, [company.current_plan]);
 
-  console.log(FREE_EMPLOYEES_LIMIT_BRONZE_PLAN);
-
   return (
     <div className="w-full flex flex-col  bg-white dark:bg-slate-700 p-4 rounded-md mb-2">
       <div className="w-full flex flex-col mb-4">
         <div className="w-full flex flex-row mb-4">
-          <Avatar src={company.logo_url} size="xl" variant="rounded" />
+          <Avatar
+            src={company.logo_url ? company.logo_url : businessPlaceholder}
+            size="xl"
+            variant="rounded"
+          />
           <Tooltip content="Atualizar logo da empresa">
             <button
               className="flex justify-center items-center bg-primary-light h-6 w-6 lg:h-7 lg:w-7 rounded-full mt-[40px] ml-[-12px] z-10"
