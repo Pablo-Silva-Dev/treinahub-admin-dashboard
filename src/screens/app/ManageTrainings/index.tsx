@@ -3,11 +3,9 @@ import error_warning from "@/assets/error_warning.svg";
 import error_warning_dark from "@/assets/error_warning_dark.svg";
 import video_thumbnail_placeholder from "@/assets/video_thumbnail_placeholder.svg";
 import { PlusButton } from "@/components/buttons/PlusButton";
-import { LimitPlanModal } from "@/components/miscellaneous/LimitPlanModal";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { Subtitle } from "@/components/typography/Subtitle";
-import { usePlanVerification } from "@/hooks/usePlanVerification";
 import { ITrainingDTO } from "@/repositories/dtos/TrainingDTO";
 import { IUpdateTrainingDTO } from "@/repositories/interfaces/trainingsRepository";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
@@ -39,7 +37,6 @@ export default function ManageTrainings() {
   const { theme } = useThemeStore();
   const { user } = useAuthenticationStore();
   const queryClient = useQueryClient();
-  const { canRegisterMoreTrainings, removeTraining } = usePlanVerification();
 
   const { setIsLoading } = useLoading();
 
@@ -75,7 +72,6 @@ export default function ManageTrainings() {
       try {
         setIsLoading(true);
         await trainingsRepository.deleteTraining(trainingId);
-        removeTraining(trainingId);
         showAlertSuccess("Treinamento deletado com sucesso!");
         setIsDeleteModalTrainingOpen(false);
         queryClient.invalidateQueries(["trainings"] as InvalidateQueryFilters);
@@ -88,7 +84,7 @@ export default function ManageTrainings() {
         setIsLoading(false);
       }
     },
-    [queryClient, removeTraining, setIsLoading, trainingsRepository]
+    [queryClient, setIsLoading, trainingsRepository]
   );
 
   const handleToggleEditModalTraining = useCallback(
@@ -159,11 +155,7 @@ export default function ManageTrainings() {
           <div className="mr-4">
             <PlusButton
               title="Cadastrar novo treinamento"
-              onClick={
-                canRegisterMoreTrainings
-                  ? handleRegisterTraining
-                  : handleToggleLimitModal
-              }
+              onClick={handleRegisterTraining}
             />
           </div>
         </div>
@@ -232,12 +224,6 @@ export default function ManageTrainings() {
         onConfirmAction={handleUpdateUser}
         isLoading={isLoading}
         selectedTrainingId={selectedTraining && selectedTraining.id}
-      />
-      <LimitPlanModal
-        isOpen={isPlanLimitModalOpen}
-        onClose={handleToggleLimitModal}
-        //TODO-PABLO: Implement update plan function
-        onUpdatePlan={() => console.log("Update plan")}
       />
     </main>
   );

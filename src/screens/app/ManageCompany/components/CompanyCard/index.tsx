@@ -1,7 +1,19 @@
+import {
+  FREE_EMPLOYEES_LIMIT_BRONZE_PLAN,
+  FREE_EMPLOYEES_LIMIT_GOLD_PLAN,
+  FREE_EMPLOYEES_LIMIT_SILVER_PLAN,
+} from "@/appConstants/index";
 import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
 import { unformatPhoneNumber } from "@/utils/formats";
 import { Avatar, Tooltip } from "@material-tailwind/react";
-import { MdDelete, MdEdit, MdOutlinePhotoCamera } from "react-icons/md";
+import { useMemo } from "react";
+import {
+  MdAttachMoney,
+  MdDelete,
+  MdEdit,
+  MdOutlinePhotoCamera,
+} from "react-icons/md";
+import { PlanStorageProgressCard } from "../PlanStorageProgressCard";
 
 interface CompanyInfoCardProps {
   company: ICompanyDTO;
@@ -17,6 +29,22 @@ export function CompanyInfoCard({
   onUpdateLogo,
   onUpdate,
 }: CompanyInfoCardProps) {
+  const totalEmployees = useMemo(() => {
+    if (company.users) {
+      return company.users.filter((user) => !user.is_admin).length;
+    }
+  }, [company.users]);
+
+  const totalFreeEmployees = useMemo(() => {
+    const totalEmployees =
+      company.current_plan === "bronze"
+        ? FREE_EMPLOYEES_LIMIT_BRONZE_PLAN
+        : company.current_plan === "silver"
+          ? FREE_EMPLOYEES_LIMIT_SILVER_PLAN
+          : FREE_EMPLOYEES_LIMIT_GOLD_PLAN;
+    return totalEmployees;
+  }, [company.current_plan]);
+
   return (
     <div className="w-full flex flex-col  bg-white dark:bg-slate-700 p-4 rounded-md mb-2">
       <div className="w-full flex flex-col mb-4">
@@ -30,11 +58,34 @@ export function CompanyInfoCard({
               <MdOutlinePhotoCamera className="text-gray-50 h-4 w-4" />
             </button>
           </Tooltip>
+
+          <div className="w-full flex flex-col md:flex-row md:items-center ml-3">
+            <button
+              className="flex items-center justify-between bg-transparent text-gray-800 dark:text-gray-200 py-2 px-4 rounded-md border-2 border-black dark:border-white text-[12px] md:text-[14px] mr-3 mb-2"
+              onClick={onUpdate}
+            >
+              Alterar dados
+              <MdEdit className="w-4 h-4 lg:w-5 lg:h-5 dark:text-gray-50" />
+            </button>
+            {/* TODO-PABLO: Integrate redirection to Stripe upgrade plan screen*/}
+            <button className="flex items-center justify-between bg-primary text-gray-100 py-2 px-4 rounded-md mr-3 mb-2 border-2 border-primary text-[12px] md:text-[14px]">
+              Mudar plano
+              <MdAttachMoney className="w-4 h-4 lg:w-5 lg:h-5 text-gray-100" />
+            </button>
+            <button
+              className="flex items-center justify-between text-red-300 py-2 px-4 mr-3  mb-2 rounded-md border-2 border-red-500 text-[12px] md:text-[14px]"
+              onClick={onDelete}
+            >
+              Remover empresa
+              <MdDelete className="w-4 h-4 lg:w-5 lg:h-5 text-red-400" />
+            </button>
+          </div>
         </div>
+
         <div className="w-full bg-purple flex flex-col md:flex-row">
           <div className="w-full">
             <div className="w-full mb-2">
-              <h2 className="text-[14px] md:text-[16px] text-gray-800 dark:text-gray-200 font-bold">
+              <h2 className="text-[16px] md:text-[20px] text-gray-800 dark:text-gray-200 font-bold">
                 Informações da empresa
               </h2>
             </div>
@@ -72,16 +123,7 @@ export function CompanyInfoCard({
                   : "Não informado"}
               </span>
             </div>
-            {company.users && (
-              <div className="w-full flex flex-col mb-4">
-                <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200  font-bold">
-                  Número de usuários na plataforma
-                </span>
-                <span className="text-[12px] md:text-[14px] text-gray-700 dark:text-gray-300">
-                  {company.users.length}
-                </span>
-              </div>
-            )}
+
             <div className="w-full flex flex-col mb-4">
               <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200  font-bold">
                 Número de funcionários
@@ -98,18 +140,11 @@ export function CompanyInfoCard({
                 {company.company_sector}
               </span>
             </div>
-            <div className="w-full flex flex-col mb-4">
-              <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200  font-bold">
-                Plano atual
-              </span>
-              <span className="text-[12px] md:text-[14px] text-gray-700 dark:text-gray-300">
-                {company.current_plan.toUpperCase()}
-              </span>
-            </div>
           </div>
+
           <div className="w-full">
             <div className="w-full mb-2">
-              <h2 className="text-[14px] md:text-[16px] text-gray-800 dark:text-gray-200 font-bold">
+              <h2 className="text-[16px] md:text-[20px] text-gray-800 dark:text-gray-200 font-bold">
                 Informações de endereço da empresa
               </h2>
             </div>
@@ -174,31 +209,66 @@ export function CompanyInfoCard({
               </span>
             </div>
           </div>
+
+          <div className="w-full">
+            <div className="w-full mb-2">
+              <h2 className="text-[16px] md:text-[20px] text-gray-800 dark:text-gray-200 font-bold">
+                Informações do plano e consumo da empresa
+              </h2>
+            </div>
+            <div className="w-full flex flex-col mb-4">
+              <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200  font-bold">
+                Plano atual
+              </span>
+              <span className="text-[12px] md:text-[14px] text-gray-700 dark:text-gray-300">
+                {company.current_plan.toUpperCase()}
+              </span>
+            </div>
+
+            {company.users && (
+              <div className="w-full flex flex-col mb-4">
+                <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200  font-bold">
+                  Número de colaboradores na plataforma
+                </span>
+                <span className="text-[12px] md:text-[14px] text-gray-700 dark:text-gray-300">
+                  {totalEmployees}
+                </span>
+              </div>
+            )}
+            {company.users && (
+              <div className="w-full flex flex-col mb-4">
+                <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200  font-bold">
+                  Número de colaboradores gratuitos inclusos no plano
+                </span>
+                <span className="text-[12px] md:text-[14px] text-gray-700 dark:text-gray-300">
+                  {totalFreeEmployees}
+                </span>
+              </div>
+            )}
+            {company.users && (
+              <div className="w-full flex flex-col mb-4">
+                <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200  font-bold">
+                  Número de colaboradores adicionais
+                </span>
+                <span className="text-[12px] md:text-[14px] text-gray-700 dark:text-gray-300">
+                  {company.number_of_additional_employees}
+                </span>
+              </div>
+            )}
+
+            <div className="w-full flex flex-col mb-4">
+              <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200 font-bold">
+                Storage utilizado
+              </span>
+              <PlanStorageProgressCard
+                consumedStorage={company.used_storage}
+                plan={company.current_plan}
+              />
+            </div>
+          </div>
         </div>
       </div>
-      <div className="w-full flex flex-col sm:flex-row justify-end items-end">
-        <div className="w-full md:w-[240px] flex flex-col">
-          <button
-            className="flex items-center justify-between bg-transparent text-gray-800 dark:text-gray-200 py-2 px-4 rounded-md mb-2 border-2 border-black dark:border-white text-[12px] md:text-[14px]"
-            onClick={onUpdate}
-          >
-            Alterar dados
-            <MdEdit className="w-4 h-4 lg:w-5 lg:h-5 dark:text-gray-50" />
-          </button>
-          {/* TODO-PABLO: Integrate redirection to Stripe upgrade plan screen*/}
-          {/* <button className="flex items-center justify-between bg-black text-gray-100 py-2 px-4 rounded-md mb-2 border-2 border-black text-[12px] md:text-[14px]">
-            Mudar plano
-            <MdAttachMoney className="w-4 h-4 lg:w-5 lg:h-5 text-gray-100" />
-          </button> */}
-          <button
-            className="flex items-center justify-between text-red-300 py-2 px-4  rounded-md border-2 border-red-500 text-[12px] md:text-[14px]"
-            onClick={onDelete}
-          >
-            Remover empresa
-            <MdDelete className="w-4 h-4 lg:w-5 lg:h-5 text-red-400" />
-          </button>
-        </div>
-      </div>
+      <div className="w-full flex flex-col sm:flex-row justify-end items-end"></div>
     </div>
   );
 }

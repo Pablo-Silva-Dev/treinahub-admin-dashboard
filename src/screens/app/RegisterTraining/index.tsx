@@ -10,13 +10,11 @@ import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { FileInput } from "@/components/inputs/FileInput";
 import { TextAreaInput } from "@/components/inputs/TextAreaInput";
 import { TextInput } from "@/components/inputs/TextInput";
-import { LimitPlanModal } from "@/components/miscellaneous/LimitPlanModal";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import {
   IFilePreview,
   UploadedFile,
 } from "@/components/miscellaneous/UploadedFile";
-import { usePlanVerification } from "@/hooks/usePlanVerification";
 import { ICreateTrainingDTO } from "@/repositories/interfaces/trainingsRepository";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
 import { useAuthenticationStore } from "@/store/auth";
@@ -47,7 +45,6 @@ export default function RegisterTraining() {
 
   const { isLoading, setIsLoading } = useLoading();
   const { user } = useAuthenticationStore();
-  const { canRegisterMoreTrainings, addTraining } = usePlanVerification();
 
   const trainingsRepository = useMemo(() => {
     return new TrainingsRepositories();
@@ -115,12 +112,11 @@ export default function RegisterTraining() {
         try {
           setIsLoading(true);
           if (file) {
-            const training = await trainingsRepository.createTraining({
+            await trainingsRepository.createTraining({
               ...data,
               file,
               company_id: user.companyId,
             });
-            addTraining(training);
             showAlertSuccess("Treinamento cadastrado com sucesso!");
             reset();
             setFile(null);
@@ -143,7 +139,7 @@ export default function RegisterTraining() {
           setIsLoading(false);
         }
       },
-      [addTraining, file, reset, setIsLoading, trainingsRepository, user.companyId]
+      [file, reset, setIsLoading, trainingsRepository, user.companyId]
     );
 
   const descriptionValue = watch("description");
@@ -152,10 +148,6 @@ export default function RegisterTraining() {
     setFile(null);
     setWasFileUploaded(false);
   };
-
-  const handleToggleLimitModal = useCallback(() => {
-    setIsPlanLimitModalOpen(!isPlanLimitModalOpen);
-  }, [isPlanLimitModalOpen]);
 
   return (
     <main className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-800 w-full">
@@ -227,10 +219,7 @@ export default function RegisterTraining() {
           </div>
           <div className="w-full mt-2">
             <Button
-              type={canRegisterMoreTrainings ? "submit" : "button"}
-              onClick={
-                !canRegisterMoreTrainings ? handleToggleLimitModal : undefined
-              }
+              type="submit"
               title="Cadastrar Treinamento"
               disabled={!isValid || isLoading}
               isLoading={isLoading}
@@ -238,12 +227,6 @@ export default function RegisterTraining() {
           </div>
         </form>
       </div>
-      <LimitPlanModal
-        isOpen={isPlanLimitModalOpen}
-        onClose={handleToggleLimitModal}
-        //TODO-PABLO: Implement update plan function
-        onUpdatePlan={() => console.log("Update plan")}
-      />
     </main>
   );
 }

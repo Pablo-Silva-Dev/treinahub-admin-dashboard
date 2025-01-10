@@ -10,13 +10,11 @@ import { FileInput } from "@/components/inputs/FileInput";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { TextAreaInput } from "@/components/inputs/TextAreaInput";
 import { TextInput } from "@/components/inputs/TextInput";
-import { LimitPlanModal } from "@/components/miscellaneous/LimitPlanModal";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import {
   IFilePreview,
   UploadedFile,
 } from "@/components/miscellaneous/UploadedFile";
-import { usePlanVerification } from "@/hooks/usePlanVerification";
 import { ICreateVideoClassDTO } from "@/repositories/dtos/VideoClassDTO";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
 import { VideoClassesRepository } from "@/repositories/videoClassesRepository";
@@ -59,18 +57,10 @@ export default function RegisterClass() {
   const [trainingsOptionsList, setTrainingsOptionsList] = useState<IOption[]>(
     []
   );
-  const [isPlanLimitModalOpen, setIsPlanLimitModalOpen] = useState(false);
-  const [selectedTrainingId, setSelectedTrainingId] = useState("");
+  const [, setSelectedTrainingId] = useState("");
 
   const { isLoading, setIsLoading } = useLoading();
   const { user } = useAuthenticationStore();
-  const {
-    getVideoClassesByTraining,
-    isFetching,
-    canRegisterMoreVideoClasses,
-    addVideoClass,
-  } = usePlanVerification();
-
   const validationSchema = yup.object({
     name: yup.string().required(REQUIRED_FIELD_MESSAGE),
     description: yup
@@ -178,11 +168,10 @@ export default function RegisterClass() {
             "Aguarde enquanto fazemos o upload da videoaula. Essa ação pode levar alguns segundos..."
           );
           if (videoFile) {
-            const videoClass = await videoClassesRepository.createVideoClass({
+            await videoClassesRepository.createVideoClass({
               ...data,
               video_file: videoFile,
             });
-            addVideoClass(videoClass);
             showAlertSuccess("Videoaula cadastrada com sucesso!");
           }
 
@@ -223,20 +212,12 @@ export default function RegisterClass() {
           toast.dismiss("loading");
         }
       },
-      [setIsLoading, videoFile, reset, addVideoClass]
+      [setIsLoading, videoFile, reset]
     );
 
   useEffect(() => {
     setTrainingsOptions();
   }, [setTrainingsOptions]);
-
-  useEffect(() => {
-    getVideoClassesByTraining(selectedTrainingId);
-  }, [getVideoClassesByTraining, selectedTrainingId]);
-
-  const handleToggleLimitModal = useCallback(() => {
-    setIsPlanLimitModalOpen(!isPlanLimitModalOpen);
-  }, [isPlanLimitModalOpen]);
 
   return (
     <main className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-800 w-full">
@@ -333,24 +314,13 @@ export default function RegisterClass() {
           <div className="w-full mt-2">
             <Button
               title="Cadastrar Aula"
-              type={canRegisterMoreVideoClasses ? "submit" : "button"}
-              onClick={
-                !canRegisterMoreVideoClasses
-                  ? handleToggleLimitModal
-                  : undefined
-              }
-              isLoading={isLoading || isFetching}
-              disabled={isLoading || !isValid || !videoFile || isFetching}
+              type="submit"
+              isLoading={isLoading}
+              disabled={isLoading || !isValid || !videoFile}
             />
           </div>
         </form>
       </div>
-      <LimitPlanModal
-        isOpen={isPlanLimitModalOpen}
-        onClose={handleToggleLimitModal}
-        //TODO-PABLO: Implement update plan function
-        onUpdatePlan={() => console.log("Update plan")}
-      />
     </main>
   );
 }
