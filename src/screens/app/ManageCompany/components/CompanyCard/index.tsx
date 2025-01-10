@@ -7,12 +7,7 @@ import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
 import { unformatPhoneNumber } from "@/utils/formats";
 import { Avatar, Tooltip } from "@material-tailwind/react";
 import { useMemo } from "react";
-import {
-  MdAttachMoney,
-  MdDelete,
-  MdEdit,
-  MdOutlinePhotoCamera,
-} from "react-icons/md";
+import { MdDelete, MdEdit, MdOutlinePhotoCamera } from "react-icons/md";
 import { PlanStorageProgressCard } from "../PlanStorageProgressCard";
 
 interface CompanyInfoCardProps {
@@ -45,6 +40,8 @@ export function CompanyInfoCard({
     return totalEmployees;
   }, [company.current_plan]);
 
+  console.log(FREE_EMPLOYEES_LIMIT_BRONZE_PLAN);
+
   return (
     <div className="w-full flex flex-col  bg-white dark:bg-slate-700 p-4 rounded-md mb-2">
       <div className="w-full flex flex-col mb-4">
@@ -65,13 +62,13 @@ export function CompanyInfoCard({
               onClick={onUpdate}
             >
               Alterar dados
-              <MdEdit className="w-4 h-4 lg:w-5 lg:h-5 dark:text-gray-50" />
+              <MdEdit className="w-4 h-4 lg:w-5 lg:h-5 dark:text-gray-50 ml-1" />
             </button>
             {/* TODO-PABLO: Integrate redirection to Stripe upgrade plan screen*/}
-            <button className="flex items-center justify-between bg-primary text-gray-100 py-2 px-4 rounded-md mr-3 mb-2 border-2 border-primary text-[12px] md:text-[14px]">
+            {/* <button className="flex items-center justify-between bg-primary text-gray-100 py-2 px-4 rounded-md mr-3 mb-2 border-2 border-primary text-[12px] md:text-[14px]">
               Mudar plano
               <MdAttachMoney className="w-4 h-4 lg:w-5 lg:h-5 text-gray-100" />
-            </button>
+            </button> */}
             <button
               className="flex items-center justify-between text-red-300 py-2 px-4 mr-3  mb-2 rounded-md border-2 border-red-500 text-[12px] md:text-[14px]"
               onClick={onDelete}
