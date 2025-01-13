@@ -104,7 +104,9 @@ export default function ManageClasses() {
         return videoClassesList;
       } else {
         const videoClassesList =
-          await videoClassesRepositories.listVideoClasses();
+          await videoClassesRepositories.listVideoClassesByCompany(
+            user.companyId
+          );
         setVideoClasses(videoClassesList);
         return videoClassesList;
       }
@@ -266,6 +268,9 @@ export default function ManageClasses() {
                 onWatchVideoClass={handleToggleWatchClassModal as never}
                 onSelectVideoClass={getVideoClass}
                 videoClass={selectedVideoClass as never}
+                showStorage={
+                  !trainingIdQueryParam
+                }
               />
             </div>
           )}

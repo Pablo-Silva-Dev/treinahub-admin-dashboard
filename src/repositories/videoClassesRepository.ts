@@ -37,6 +37,19 @@ export class VideoClassesRepository implements IVideoClassesRepository {
       throw error;
     }
   }
+  async listVideoClassesByCompany(
+    companyId: string
+  ): Promise<IVideoClassDTO[]> {
+    try {
+      const response = await api.get<IApiSuccessResponse<IVideoClassDTO[]>>(
+        `/video-classes/list-by-company/${companyId}`
+      );
+      return response.data.RES;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getVideoClassById(videoClassId: string): Promise<IVideoClassDTO> {
     try {
       const response = await api.get<IApiSuccessResponse<IVideoClassDTO>>(

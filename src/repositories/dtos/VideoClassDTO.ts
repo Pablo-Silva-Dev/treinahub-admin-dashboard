@@ -10,7 +10,7 @@ export interface IVideoClassDTO {
   training_name: string;
   training?: ITrainingDTO;
   formatted_duration?: string;
-  status?: "CONVERTED" | "CONVERTING" | "FAILED";
+  status?: "CONVERTED" | "CONVERTING" | "FAILED" | "DRAFT";
   thumbnail_url?: string;
   storage_size: number;
 }

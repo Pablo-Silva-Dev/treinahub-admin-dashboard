@@ -29,17 +29,6 @@ import {
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
 
-const TABLE_HEAD = [
-  { label: "", propRef: "" },
-  { label: "Aula", propRef: "name" },
-  { label: "Descrição", propRef: "description" },
-  { label: "Treinamento", propRef: "name" },
-  { label: "Duração", propRef: "duration" },
-  { label: "Tamanho", propRef: "storage_size" },
-  { label: "Status", propRef: "status" },
-  { label: "Ações", propRef: "" },
-];
-
 interface VideoClassesTableProps {
   classes: IVideoClassDTO[];
   onUpdateVideoClass: (data: IUpdateVideoClassDTO) => void;
@@ -47,6 +36,7 @@ interface VideoClassesTableProps {
   onSelectVideoClass: (videoClassId: string) => void;
   onWatchVideoClass: (videoClassId: string) => void;
   videoClass: IUpdateVideoClassDTO;
+  showStorage: boolean;
 }
 
 export function VideoClassesTable({
@@ -56,7 +46,29 @@ export function VideoClassesTable({
   onUpdateVideoClass,
   onSelectVideoClass,
   onWatchVideoClass,
+  showStorage,
 }: VideoClassesTableProps) {
+  const TABLE_HEAD = showStorage
+    ? [
+        { label: "", propRef: "" },
+        { label: "Aula", propRef: "name" },
+        { label: "Descrição", propRef: "description" },
+        { label: "Treinamento", propRef: "name" },
+        { label: "Duração", propRef: "duration" },
+        { label: "Tamanho", propRef: "storage_size" },
+        { label: "Status", propRef: "status" },
+        { label: "Ações", propRef: "" },
+      ]
+    : [
+        { label: "", propRef: "" },
+        { label: "Aula", propRef: "name" },
+        { label: "Descrição", propRef: "description" },
+        { label: "Treinamento", propRef: "name" },
+        { label: "Duração", propRef: "duration" },
+        { label: "Status", propRef: "status" },
+        { label: "Ações", propRef: "" },
+      ];
+
   const [page, setPage] = useState(1);
   const [pagesListIndex, setPagesListIndex] = useState(0);
   const [sortedVideoClasses, setSortedVideoClasses] = useState<
@@ -159,7 +171,7 @@ export function VideoClassesTable({
             </tr>
           </thead>
           <tbody className="w-[90%] lg:w-full">
-            {tableData.length > 0 ? (
+            {tableData && tableData.length > 0 ? (
               tableData.map(
                 (
                   {
@@ -235,27 +247,33 @@ export function VideoClassesTable({
                           className="block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300 mr-4"
                         />
                       </td>
-                      <td className={classes}>
-                        <Text
-                          content={convertGBsToMbs(storage_size) + " MB"}
-                          className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300 mr-4"
-                        />
-                      </td>
+                      {showStorage && (
+                        <td className={classes}>
+                          <Text
+                            content={convertGBsToMbs(storage_size) + " MB"}
+                            className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300 mr-4"
+                          />
+                        </td>
+                      )}
                       <td className={classes}>
                         <Text
                           content={
                             status === "CONVERTING"
                               ? "Processando..."
-                              : status === "CONVERTED"
-                                ? "Disponível"
-                                : "Falha no processamento"
+                              : status === "DRAFT"
+                                ? "Processando..."
+                                : status === "CONVERTED"
+                                  ? "Disponível"
+                                  : "Falha no processamento"
                           }
                           className={
                             status === "CONVERTED"
                               ? "block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-green-400 mr-1"
                               : status === "CONVERTING"
                                 ? "block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-orange-400 mr-1"
-                                : "block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-red-400 mr-1"
+                                : status === "DRAFT"
+                                  ? "block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-orange-400 mr-1"
+                                  : "block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-red-400 mr-1"
                           }
                         />
                       </td>

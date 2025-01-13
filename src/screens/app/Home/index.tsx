@@ -61,12 +61,12 @@ export default function Home() {
 
   const getVideoClasses = useCallback(async () => {
     try {
-      const videoClasses = await videoClassesRepository.listVideoClasses();
+      const videoClasses = await videoClassesRepository.listVideoClassesByCompany(user.companyId);
       return videoClasses;
     } catch (error) {
       console.log(error);
     }
-  }, [videoClassesRepository]);
+  }, [user.companyId, videoClassesRepository]);
 
   const queries = useQueries({
     queries: [
