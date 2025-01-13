@@ -4,6 +4,12 @@ const sortItems = (items: any[], propRef: string, sortType: "asc" | "desc") => {
     const aValue = a[propRef];
     const bValue = b[propRef];
 
+
+    // Handle numeric comparison
+    if (typeof aValue === "number" && typeof bValue === "number") {
+      return sortType === "asc" ? aValue - bValue : bValue - aValue;
+    }
+
     // Function to extract numeric part from a string
     const extractNumber = (value: string) => {
       const match = value.match(/\d+/);
@@ -20,8 +26,8 @@ const sortItems = (items: any[], propRef: string, sortType: "asc" | "desc") => {
       return sortType === "asc" ? aNumber - bNumber : bNumber - aNumber;
     } else if (typeof aValue === "string" && typeof bValue === "string") {
       // General string comparison
-      return sortType === "asc" 
-        ? aValue.toLowerCase().localeCompare(bValue.toLowerCase()) 
+      return sortType === "asc"
+        ? aValue.toLowerCase().localeCompare(bValue.toLowerCase())
         : bValue.toLowerCase().localeCompare(aValue.toLowerCase());
     } else if (typeof aValue === "number" && typeof bValue === "number") {
       // Numeric comparison
@@ -34,7 +40,11 @@ const sortItems = (items: any[], propRef: string, sortType: "asc" | "desc") => {
   return sortedData;
 };
 
-const sortCertificates = (items: any[], propRef: string, sortType: "asc" | "desc") => {
+const sortCertificates = (
+  items: any[],
+  propRef: string,
+  sortType: "asc" | "desc"
+) => {
   // Create a copy of the array to maintain immutability
   const sortedData = [...items].sort((a, b) => {
     const aValue = propRef in a.course ? a.course[propRef] : a[propRef];

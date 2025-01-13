@@ -9,6 +9,7 @@ import {
   IUpdateVideoClassDTO,
   IVideoClassDTO,
 } from "@/repositories/dtos/VideoClassDTO";
+import { convertGBsToMbs } from "@/utils/convertSize";
 import { secondsToFullTimeString } from "@/utils/convertTime";
 import { collapseLongString } from "@/utils/formats";
 import { sortItems } from "@/utils/sorting";
@@ -34,6 +35,7 @@ const TABLE_HEAD = [
   { label: "Descrição", propRef: "description" },
   { label: "Treinamento", propRef: "name" },
   { label: "Duração", propRef: "duration" },
+  { label: "Tamanho", propRef: "storage_size" },
   { label: "Status", propRef: "status" },
   { label: "Ações", propRef: "" },
 ];
@@ -168,6 +170,7 @@ export function VideoClassesTable({
                     duration,
                     status,
                     thumbnail_url,
+                    storage_size,
                   },
                   index
                 ) => {
@@ -230,6 +233,12 @@ export function VideoClassesTable({
                         <Text
                           content={secondsToFullTimeString(duration)}
                           className="block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300 mr-4"
+                        />
+                      </td>
+                      <td className={classes}>
+                        <Text
+                          content={convertGBsToMbs(storage_size) + " MB"}
+                          className="block overflow-hidden text-ellipsis whitespace-nowrap text-[11px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-gray-700 dark:text-gray-300 mr-4"
                         />
                       </td>
                       <td className={classes}>

@@ -280,7 +280,7 @@ export default function RegisterClass() {
                   label="Videoaula"
                   onUpload={handleSelectVideoFile}
                   buttonTitle="Selecione um arquivo de vídeo"
-                  labelDescription="Selecione um arquivo de video .mp4 ou .mov de até 50MB"
+                  labelDescription="Selecione um arquivo de video de até 150MB que seja compatível com os formatos suportados. Formatos suportados: .mp4, .mov, .avi, .mkv, .webm ou .flv."
                   {...register("video_file", {
                     onChange: handleSelectVideoFile as never,
                   })}
@@ -293,8 +293,16 @@ export default function RegisterClass() {
           </div>
 
           <div className="w-full mb-2">
-            <span className="text-gray-700 dark:text-gray-300 text-xs md:text-sm">
+            <span className="text-gray-700 dark:text-gray-300 text-xs md:text-sm mb-2">
               * Máximo de 150MB
+            </span>
+          </div>
+          <div className="w-full mb-4">
+            <span className="text-gray-700 dark:text-gray-300 text-xs md:text-sm">
+              * O tamanho final do arquivo pode ser de pelo menos 2 vezes
+              superior ao tamanho do arquivo original devido aos arquivos
+              adicionais gerados pelo processo de encoding necessário para
+              tornar seu vídeo reproduzível no player de vídeo.
             </span>
           </div>
 
