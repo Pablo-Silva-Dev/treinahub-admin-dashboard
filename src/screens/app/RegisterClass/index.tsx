@@ -15,6 +15,7 @@ import {
   IFilePreview,
   UploadedFile,
 } from "@/components/miscellaneous/UploadedFile";
+import { usePlan } from "@/hooks/usePlan";
 import { ICreateVideoClassDTO } from "@/repositories/dtos/VideoClassDTO";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
 import { VideoClassesRepository } from "@/repositories/videoClassesRepository";
@@ -61,6 +62,8 @@ export default function RegisterClass() {
 
   const { isLoading, setIsLoading } = useLoading();
   const { user } = useAuthenticationStore();
+  const { exceededStorage } = usePlan();
+
   const validationSchema = yup.object({
     name: yup.string().required(REQUIRED_FIELD_MESSAGE),
     description: yup
@@ -324,7 +327,7 @@ export default function RegisterClass() {
               title="Cadastrar Aula"
               type="submit"
               isLoading={isLoading}
-              disabled={isLoading || !isValid || !videoFile}
+              disabled={isLoading || !isValid || !videoFile || exceededStorage}
             />
           </div>
         </form>

@@ -15,6 +15,7 @@ import {
   IFilePreview,
   UploadedFile,
 } from "@/components/miscellaneous/UploadedFile";
+import { usePlan } from "@/hooks/usePlan";
 import { ICreateTrainingDTO } from "@/repositories/interfaces/trainingsRepository";
 import { TrainingsRepositories } from "@/repositories/trainingsRepository";
 import { useAuthenticationStore } from "@/store/auth";
@@ -41,10 +42,10 @@ export default function RegisterTraining() {
   const [filePreview, setFilePreview] = useState<IFilePreview | null>(null);
   const [file, setFile] = useState<Blob | null>(null);
   const [wasFileUploaded, setWasFileUploaded] = useState(false);
-  const [isPlanLimitModalOpen, setIsPlanLimitModalOpen] = useState(false);
 
   const { isLoading, setIsLoading } = useLoading();
   const { user } = useAuthenticationStore();
+  const { exceededStorage } = usePlan();
 
   const trainingsRepository = useMemo(() => {
     return new TrainingsRepositories();
@@ -221,7 +222,7 @@ export default function RegisterTraining() {
             <Button
               type="submit"
               title="Cadastrar Treinamento"
-              disabled={!isValid || isLoading}
+              disabled={!isValid || isLoading || exceededStorage}
               isLoading={isLoading}
             />
           </div>
