@@ -15,6 +15,7 @@ interface CompanyInfoCardProps {
   company: ICompanyDTO;
   onDelete: () => void;
   onUpdate: () => void;
+  onUpdateAddress: () => void;
   onUpdatePlan?: () => void;
   onUpdateLogo: () => void;
 }
@@ -24,6 +25,7 @@ export function CompanyInfoCard({
   onDelete,
   onUpdateLogo,
   onUpdate,
+  onUpdateAddress,
 }: CompanyInfoCardProps) {
   const totalEmployees = useMemo(() => {
     if (company.users) {
@@ -65,6 +67,13 @@ export function CompanyInfoCard({
               onClick={onUpdate}
             >
               Alterar dados
+              <MdEdit className="w-4 h-4 lg:w-5 lg:h-5 dark:text-gray-50 ml-1" />
+            </button>
+            <button
+              className="flex items-center justify-between bg-transparent text-gray-800 dark:text-gray-200 py-2 px-4 rounded-md border-2 border-black dark:border-white text-[12px] md:text-[14px] mr-3 mb-2"
+              onClick={onUpdateAddress}
+            >
+              Alterar endereço
               <MdEdit className="w-4 h-4 lg:w-5 lg:h-5 dark:text-gray-50 ml-1" />
             </button>
             {/* TODO-PABLO: Integrate redirection to Stripe upgrade plan screen*/}

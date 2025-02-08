@@ -155,7 +155,7 @@ export function EditCompanyModal({
           <TextInput
             inputLabel="Telefone"
             defaultValue={company?.phone}
-            placeholder="Novo telefone de contato"
+            placeholder="Exemplo: 31988888888"
             {...register("phone")}
           />
           {errors && errors.phone && (

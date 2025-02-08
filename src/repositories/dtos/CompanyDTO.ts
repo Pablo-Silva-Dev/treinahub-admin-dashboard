@@ -32,6 +32,15 @@ export interface IUpdatableCompanyDTO {
   fantasy_name?: string;
   email?: string;
   phone?: string;
+  cep?: string;
+  city?: string;
+  district?: string;
+  number_of_employees?: string;
+  company_sector?: string;
+  residence_complement?: string;
+  residence_number?: string;
+  street?: string;
+  uf?: string;
 }
 
 export interface IUpdateCompanyDTO {

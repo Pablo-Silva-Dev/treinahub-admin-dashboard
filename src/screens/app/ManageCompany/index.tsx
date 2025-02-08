@@ -23,6 +23,7 @@ import {
 } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CompanyInfoCard } from "./components/CompanyCard";
+import { EditCompanyAddressModal } from "./components/EditCompanyAddressModal";
 import { EditCompanyModal } from "./components/EditCompanyModal";
 import { UpdateCompanyLogoModal } from "./components/UpdateCompanyLogoModal";
 
@@ -32,6 +33,8 @@ export default function ManageCompany() {
   const [isUpdateCompanyLogoModalOpen, setIsUpdateCompanyLogoModalOpen] =
     useState(false);
   const [isUpdateCompanyModalOpen, setIsUpdateCompanyModalOpen] =
+    useState(false);
+  const [isUpdateCompanyAddressModalOpen, setIsUpdateCompanyAddressModalOpen] =
     useState(false);
   const [logoKey, setLogoKey] = useState(Date.now());
 
@@ -52,6 +55,10 @@ export default function ManageCompany() {
   const handleToggleUpdateCompanyModal = useCallback(() => {
     setIsUpdateCompanyModalOpen(!isUpdateCompanyModalOpen);
   }, [isUpdateCompanyModalOpen]);
+
+  const handleToggleUpdateCompanyAddressModal = useCallback(() => {
+    setIsUpdateCompanyAddressModalOpen(!isUpdateCompanyAddressModalOpen);
+  }, [isUpdateCompanyAddressModalOpen]);
 
   const companiesRepository = useMemo(() => {
     return new CompaniesRepository();
@@ -116,24 +123,19 @@ export default function ManageCompany() {
           });
         }
         showAlertSuccess("Dados da empresa atualizados com sucesso!");
-        handleToggleUpdateCompanyModal();
+        setIsUpdateCompanyAddressModalOpen(false);
+        setIsUpdateCompanyModalOpen(false);
         queryClient.invalidateQueries(["company"] as InvalidateQueryFilters);
       } catch (error) {
         showAlertError(
           "Houve um erro ao tentar atualizar dados da empresa. Por favor, tente novamente mais tarde."
         );
-        console.log("Error at updating company logo: ", error);
+        console.log("Error at updating company: ", error);
       } finally {
         setIsLoading(false);
       }
     },
-    [
-      companiesRepository,
-      handleToggleUpdateCompanyModal,
-      queryClient,
-      setIsLoading,
-      user.companyId,
-    ]
+    [companiesRepository, queryClient, setIsLoading, user.companyId]
   );
 
   useEffect(() => {
@@ -196,6 +198,7 @@ export default function ManageCompany() {
                 onDelete={handleToggleDeleteModal}
                 onUpdateLogo={handleToggleUpdateCompanyLogoModal}
                 onUpdate={handleToggleUpdateCompanyModal}
+                onUpdateAddress={handleToggleUpdateCompanyAddressModal}
               />
             )}
           </div>
@@ -219,6 +222,13 @@ export default function ManageCompany() {
         isOpen={isUpdateCompanyModalOpen}
         onClose={handleToggleUpdateCompanyModal}
         onRequestClose={handleToggleUpdateCompanyModal}
+        onConfirmAction={handleUpdateCompany}
+        isLoading={isLoading}
+      />
+      <EditCompanyAddressModal
+        isOpen={isUpdateCompanyAddressModalOpen}
+        onClose={handleToggleUpdateCompanyAddressModal}
+        onRequestClose={handleToggleUpdateCompanyAddressModal}
         onConfirmAction={handleUpdateCompany}
         isLoading={isLoading}
       />
