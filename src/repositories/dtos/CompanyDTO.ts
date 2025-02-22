@@ -25,6 +25,7 @@ export interface ICompanyDTO {
   trainings?: ITrainingDTO[];
   used_storage: number;
   number_of_additional_employees: number;
+  subscription_id?: string;
 }
 
 export interface IUpdatableCompanyDTO {

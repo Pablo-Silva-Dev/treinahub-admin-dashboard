@@ -85,7 +85,7 @@ export function CompanyInfoCard({
               className="flex items-center justify-between text-red-300 py-2 px-4 mr-3  mb-2 rounded-md border-2 border-red-500 text-[12px] md:text-[14px]"
               onClick={onDelete}
             >
-              Remover empresa
+              Cancelar assinatura e remover empresa
               <MdDelete className="w-4 h-4 lg:w-5 lg:h-5 text-red-400" />
             </button>
           </div>

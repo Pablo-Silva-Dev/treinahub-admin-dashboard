@@ -1,16 +1,17 @@
 import { PRIMARY_COLOR } from "@/appConstants/index";
 import error_warning from "@/assets/error_warning.svg";
 import error_warning_dark from "@/assets/error_warning_dark.svg";
-import { DeleteModal } from "@/components/miscellaneous/DeleteModal";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { Subtitle } from "@/components/typography/Subtitle";
+import { useStripe } from "@/hooks/useStripe";
 import { CompaniesRepository } from "@/repositories/companiesRepository";
 import {
   ICompanyDTO,
   IUpdatableCompanyDTO,
   IUpdateCompanyLogoDTO,
 } from "@/repositories/dtos/CompanyDTO";
+import { UsersRepositories } from "@/repositories/usersRepositories";
 import { useAuthenticationStore } from "@/store/auth";
 import { useLoading } from "@/store/loading";
 import { useThemeStore } from "@/store/theme";
@@ -21,7 +22,9 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { compare } from "bcryptjs";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { CancelSubscriptionModal } from "./components/CancelSubscriptionModal";
 import { CompanyInfoCard } from "./components/CompanyCard";
 import { EditCompanyAddressModal } from "./components/EditCompanyAddressModal";
 import { EditCompanyModal } from "./components/EditCompanyModal";
@@ -37,9 +40,12 @@ export default function ManageCompany() {
   const [isUpdateCompanyAddressModalOpen, setIsUpdateCompanyAddressModalOpen] =
     useState(false);
   const [logoKey, setLogoKey] = useState(Date.now());
+  const [password, setPassword] = useState("");
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
 
   const { theme } = useThemeStore();
   const { user, signOut } = useAuthenticationStore();
+  const { cancelSubscription } = useStripe();
 
   const { isLoading, setIsLoading } = useLoading();
   const queryClient = useQueryClient();
@@ -64,6 +70,10 @@ export default function ManageCompany() {
     return new CompaniesRepository();
   }, []);
 
+  const usersRepository = useMemo(() => {
+    return new UsersRepositories();
+  }, []);
+
   const getCompany = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -76,6 +86,25 @@ export default function ManageCompany() {
       setIsLoading(false);
     }
   }, [companiesRepository, setIsLoading, user.companyId]);
+
+  const checkPassword = useCallback(async () => {
+    const adminUser = await usersRepository.getUserByEmail(user.email);
+    if (adminUser && adminUser.is_admin) {
+      const isPasswordCorrect = await compare(password, adminUser.password);
+      if (isPasswordCorrect) {
+        setIsPasswordValid(true);
+      } else {
+        setIsPasswordValid(false);
+      }
+    }
+  }, [password, user.email, usersRepository]);
+
+  useEffect(() => {
+    const MIN_PASSWORD_LENGTH = 8;
+    if (password.length >= MIN_PASSWORD_LENGTH) {
+      checkPassword();
+    }
+  }, [checkPassword, password]);
 
   const handleUpdateCompanyLogo = useCallback(
     async (data: IUpdateCompanyLogoDTO) => {
@@ -150,6 +179,13 @@ export default function ManageCompany() {
   const handleDeleteCompany = useCallback(async () => {
     try {
       setIsLoading(true);
+      if (company && company.subscription_id && isPasswordValid) {
+        try {
+          await cancelSubscription(company.subscription_id);
+        } catch (error) {
+          console.log("Error at trying to canceling subscription: ", error);
+        }
+      }
       await companiesRepository.deleteCompany(user.companyId);
       signOut();
     } catch (error) {
@@ -160,7 +196,15 @@ export default function ManageCompany() {
     } finally {
       setIsLoading(false);
     }
-  }, [companiesRepository, setIsLoading, signOut, user.companyId]);
+  }, [
+    cancelSubscription,
+    companiesRepository,
+    company,
+    isPasswordValid,
+    setIsLoading,
+    signOut,
+    user.companyId,
+  ]);
 
   return (
     <main className="flex flex-1 flex-col w-[85%] md:w-[90%] lg:w-[95%] mt-2 ml-[40px] mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">
@@ -204,12 +248,15 @@ export default function ManageCompany() {
           </div>
         )}
       </div>
-      <DeleteModal
-        resource="empresa"
+      <CancelSubscriptionModal
         isOpen={isDeleteModalOpen}
         onClose={handleToggleDeleteModal}
         onRequestClose={handleToggleDeleteModal}
         onConfirmAction={() => handleDeleteCompany()}
+        password={password}
+        setPassword={setPassword}
+        isPasswordValid={isPasswordValid}
+        isButtonDisabled={isLoading || !isPasswordValid}
       />
       <UpdateCompanyLogoModal
         isOpen={isUpdateCompanyLogoModalOpen}
