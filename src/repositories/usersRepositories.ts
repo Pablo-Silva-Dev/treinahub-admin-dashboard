@@ -9,6 +9,7 @@ import {
   IAuthenticateUserRequest,
   IAuthenticateUserResponse,
   IRegisterUserRequest,
+  IUnAuthenticateUserRequest,
   IUsersRepository,
 } from "./interfaces/usersRepository";
 
@@ -126,6 +127,19 @@ export class UsersRepositories implements IUsersRepository {
       const response = await api.post<
         IApiSuccessResponse<IAuthenticateUserResponse>
       >("/users/auth", data);
+      return response.data.RES;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async unAuthenticateUser(
+    data: IUnAuthenticateUserRequest
+  ): Promise<string | null> {
+    try {
+      const response = await api.post<
+        IApiSuccessResponse<string | null>
+      >("/users/logout", data);
       return response.data.RES;
     } catch (error) {
       throw error;

@@ -10,6 +10,10 @@ export interface IAuthenticateUserRequest {
   password: string;
 }
 
+export interface IUnAuthenticateUserRequest {
+  email: string;
+}
+
 export interface IAuthenticateUserResponse {
   name: string;
   email: string;

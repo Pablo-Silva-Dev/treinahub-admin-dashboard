@@ -8,6 +8,7 @@ import { Title } from "@/components/typography/Title";
 import { menuItems } from "@/data/dashboardMenu";
 import { CompaniesRepository } from "@/repositories/companiesRepository";
 import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
+import { UsersRepositories } from "@/repositories/usersRepositories";
 import { useAuthenticationStore } from "@/store/auth";
 import { useThemeStore } from "@/store/theme";
 import "@/styles/globals.css";
@@ -16,6 +17,7 @@ import {
   reactModalCustomStyles,
   reactModalCustomStylesDark,
 } from "@/styles/react-modal";
+import { showAlertError } from "@/utils/alerts";
 import {
   Accordion,
   AccordionBody,
@@ -66,6 +68,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         action: segments[2] || "",
       });
     }
+  }, []);
+
+  const usersRepository = useMemo(() => {
+    return new UsersRepositories();
   }, []);
 
   const { base, action } = pathSegments;
@@ -160,8 +166,17 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     };
   }, [updateBreadcrumbs]);
 
-  const handleSignOut = () => {
+  const unAuthenticateUser = useCallback(async () => {
+    try {
+      await usersRepository.unAuthenticateUser({ email: user.email });
+    } catch (error) {
+      showAlertError("Erro ao sair da conta.");
+    }
+  }, [user.email, usersRepository]);
+
+  const handleSignOut = async () => {
     navigate("/");
+    await unAuthenticateUser();
     signOut();
   };
 
