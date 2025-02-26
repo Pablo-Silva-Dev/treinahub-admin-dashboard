@@ -58,7 +58,7 @@ export function EditClassModal({
     return new VideoClassesRepository();
   }, []);
 
-  const MIN_TRAINING_DESCRIPTION_LENGTH = 40;
+  const MIN_TRAINING_DESCRIPTION_LENGTH = 16;
   const MAX_TRAINING_DESCRIPTION_LENGTH = 500;
 
   const validationSchema = yup.object({

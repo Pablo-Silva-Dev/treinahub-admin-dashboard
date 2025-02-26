@@ -61,7 +61,7 @@ export function EditTrainingModal({
   selectedTrainingId,
 }: EditTrainingModalProps) {
   const MIN_TRAINING_NAME_LENGTH = 8;
-  const MIN_TRAINING_DESCRIPTION_LENGTH = 40;
+  const MIN_TRAINING_DESCRIPTION_LENGTH = 16;
   const MAX_TRAINING_DESCRIPTION_LENGTH = 500;
   const MAX_TRAINING_COVER_FILE_SIZE = 2 * 1024 * 1024; //2MB
 
