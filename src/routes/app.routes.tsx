@@ -1,47 +1,28 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { lazy, ReactNode, Suspense } from "react";
-import Loading from "react-loading";
+import { ReactNode } from "react";
 
-const ErrorPage = lazy(() => import("@/screens/error"));
-const NotFound = lazy(() => import("@/screens/404"));
-const ConsultCertificates = lazy(
-  () => import("@/screens/app/ConsultCertificates")
-);
-const FollowUserProgress = lazy(
-  () => import("@/screens/app/FollowUserProgress")
-);
-const Home = lazy(() => import("@/screens/app/Home"));
-const DashboardLayout = lazy(() => import("@/screens/app/layout"));
-const ManageClasses = lazy(() => import("@/screens/app/ManageClasses"));
-const ManageCompany = lazy(() => import("@/screens/app/ManageCompany"));
-const ManageFaqQuestions = lazy(
-  () => import("@/screens/app/ManageFaqQuestions")
-);
-const ManageQuestionsAndOptions = lazy(
-  () => import("@/screens/app/ManageQuestionsAndOptions")
-);
-const ManageQuizzes = lazy(() => import("@/screens/app/ManageQuizzes"));
-const ManageSupportContact = lazy(
-  () => import("@/screens/app/ManageSupportContact")
-);
-const ManageTrainings = lazy(() => import("@/screens/app/ManageTrainings"));
-const ManageUsers = lazy(() => import("@/screens/app/ManageUsers"));
-const RegisterClass = lazy(() => import("@/screens/app/RegisterClass"));
-const RegisterContactSupport = lazy(
-  () => import("@/screens/app/RegisterContactSupport")
-);
-const RegisterFaqQuestion = lazy(
-  () => import("@/screens/app/RegisterFaqQuestion")
-);
-const RegisterQuestionOption = lazy(
-  () => import("@/screens/app/RegisterQuestionOption")
-);
-const RegisterQuiz = lazy(() => import("@/screens/app/RegisterQuiz"));
-const RegisterQuizQuestion = lazy(
-  () => import("@/screens/app/RegisterQuizQuestion")
-);
-const RegisterTraining = lazy(() => import("@/screens/app/RegisterTraining"));
+import NotFound from "@/screens/404";
+import ConsultCertificates from "@/screens/app/ConsultCertificates";
+import FollowUserProgress from "@/screens/app/FollowUserProgress";
+import Home from "@/screens/app/Home";
+import DashboardLayout from "@/screens/app/layout";
+import ManageClasses from "@/screens/app/ManageClasses";
+import ManageCompany from "@/screens/app/ManageCompany";
+import ManageFaqQuestions from "@/screens/app/ManageFaqQuestions";
+import ManageQuestionsAndOptions from "@/screens/app/ManageQuestionsAndOptions";
+import ManageQuizzes from "@/screens/app/ManageQuizzes";
+import ManageSupportContact from "@/screens/app/ManageSupportContact";
+import ManageTrainings from "@/screens/app/ManageTrainings";
+import ManageUsers from "@/screens/app/ManageUsers";
+import RegisterClass from "@/screens/app/RegisterClass";
+import RegisterContactSupport from "@/screens/app/RegisterContactSupport";
+import RegisterFaqQuestion from "@/screens/app/RegisterFaqQuestion";
+import RegisterQuestionOption from "@/screens/app/RegisterQuestionOption";
+import RegisterQuiz from "@/screens/app/RegisterQuiz";
+import RegisterQuizQuestion from "@/screens/app/RegisterQuizQuestion";
+import RegisterTraining from "@/screens/app/RegisterTraining";
+import ErrorPage from "@/screens/error";
 
 type route = {
   path: string;
@@ -130,27 +111,10 @@ const appRoutesBase: route[] = [
     element: <FollowUserProgress />,
   },
 ];
-
-const LoadingFallback = () => {
-  return (
-    <div className="w-full h-screen flex items-center justify-center">
-      <Loading />
-    </div>
-  );
-};
-
 const appRoutes = appRoutesBase.map((route) => ({
   path: route.path,
-  element: (
-    <Suspense fallback={<LoadingFallback />}>
-      <DashboardLayout>{route.element}</DashboardLayout>
-    </Suspense>
-  ),
-  errorElement: (
-    <Suspense fallback={<LoadingFallback />}>
-      <ErrorPage />
-    </Suspense>
-  ),
+  element: <DashboardLayout>{route.element}</DashboardLayout>,
+  errorElement: <ErrorPage />,
 }));
 
 const appRouter = createBrowserRouter(appRoutes);
