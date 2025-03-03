@@ -1,6 +1,7 @@
 import { REQUIRED_FIELD_MESSAGE } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { SelectInput } from "@/components/inputs/SelectInput";
+import { RegistrationInfo } from "@/components/miscellaneous/RegistrationInfo";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { ITrainingDTO } from "@/repositories/dtos/TrainingDTO";
 import { QuizzesRepository } from "@/repositories/quizzesRepository";
@@ -116,37 +117,49 @@ export default function RegisterQuiz() {
   }, [setTrainingsOptions]);
 
   return (
-    <main className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-800 w-full">
-      <div className="flex flex-col items-center w-[90%] lg:w-[560px] mx-auto">
+    <main className="flex flex-col bg-gray-100 dark:bg-slate-800 w-full h-full pl-[80px] mt-2">
+      <div className="flex flex-col w-full">
         <div className="mb-4 w-full">
           <ScreenTitleIcon
             screenTitle="Cadastrar questionário"
-            iconName="play-circle"
+            iconName="edit"
           />
         </div>
-        <form className="w-full" onSubmit={handleSubmit(handleRegisterQuiz)}>
-          <div className="w-full flex flex-col md:flex-row mb-6">
-            <div className="w-full">
-              <SelectInput
-                label="Selecione um treinamento para dar início a criação do questionário"
-                options={trainingsOptionsList}
-                onSelectOption={handleTrainingSelect as never}
-                placeholder="Selecione um treinamento"
-                defaultValue="Selecione um treinamento"
-                widthVariant="mid"
-              />
-            </div>
-          </div>
+        <div className="w-full flex flex-col xl:flex-row justify-center mt-4">
+          <RegistrationInfo
+            iconName="edit"
+            infoText="Cadastre um questionário vinculado ao treinamento que deseja mesnurar o conhecimento obtido."
+            registration="Questionário"
+          />
+          <div className="flex flex-col items-center w-[90%] xl:w-[40vw] mr-6 xl:ml-4 bg-white dark:bg-slate-700 p-8 rounded-md">
+            <form
+              className="w-full"
+              onSubmit={handleSubmit(handleRegisterQuiz)}
+            >
+              <div className="w-full flex flex-col md:flex-row mb-6">
+                <div className="w-full">
+                  <SelectInput
+                    label="Selecione um treinamento para dar início a criação do questionário"
+                    options={trainingsOptionsList}
+                    onSelectOption={handleTrainingSelect as never}
+                    placeholder="Selecione um treinamento"
+                    defaultValue="Selecione um treinamento"
+                    widthVariant="mid"
+                  />
+                </div>
+              </div>
 
-          <div className="w-full mt-2">
-            <Button
-              title="Cadastrar Questionário"
-              type="submit"
-              isLoading={isLoading}
-              disabled={isLoading || !isValid}
-            />
+              <div className="w-full mt-2">
+                <Button
+                  title="Cadastrar Questionário"
+                  type="submit"
+                  isLoading={isLoading}
+                  disabled={isLoading || !isValid}
+                />
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </main>
   );

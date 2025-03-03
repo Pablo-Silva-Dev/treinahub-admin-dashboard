@@ -6,6 +6,7 @@ import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { TextAreaInput } from "@/components/inputs/TextAreaInput";
+import { RegistrationInfo } from "@/components/miscellaneous/RegistrationInfo";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { ICreateQuizQuestionDTO } from "@/repositories/dtos/QuestionDTO";
 import { IQuizDTO } from "@/repositories/dtos/QuizDTO";
@@ -167,62 +168,68 @@ export default function RegisterQuizQuestion() {
   }, [setQuizSelectOption]);
 
   return (
-    <main className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-800 w-full">
-      <div className="flex flex-col items-center w-[90%] lg:w-[560px] mx-auto">
+    <main className="flex flex-col bg-gray-100 dark:bg-slate-800 w-full h-full pl-[80px] mt-2">
+      <div className="flex flex-col w-full">
         <div className="mb-4 w-full">
-          <ScreenTitleIcon
-            screenTitle="Cadastrar pergunta"
-            iconName="play-circle"
-          />
+          <ScreenTitleIcon screenTitle="Cadastrar pergunta" iconName="edit" />
         </div>
-        <form
-          className="w-full"
-          onSubmit={handleSubmit(handleRegisterQuizQuestion)}
-        >
-          <div className="w-full flex flex-col md:flex-row mb-6">
-            <div className="w-full">
-              <SelectInput
-                label="Selecione um questionário para cadastrar uma pergunta relacionada"
-                options={quizzesOptionsList}
-                onSelectOption={handleQuizSelect as never}
-                placeholder={
-                  selectInput && selectInput.label
-                    ? selectInput?.label
-                    : "Selecione um questionário"
-                }
-                defaultValue={selectInput?.label}
-                isDisabled={
-                  quizIdQueryParam && quizIdQueryParam?.length > 0
-                    ? true
-                    : false
-                }
-              />
-            </div>
-          </div>
+        <div className="w-full flex flex-col xl:flex-row justify-center mt-4">
+          <RegistrationInfo
+            iconName="edit"
+            infoText="Cadastre uma pergunta vinculada ao treinamento que deseja mesnurar o conhecimento obtido."
+            registration="Pergunta"
+          />
+          <div className="flex flex-col items-center w-[90%] xl:w-[40vw] mr-6 xl:ml-4 bg-white dark:bg-slate-700 p-8 rounded-md">
+            <form
+              className="w-full"
+              onSubmit={handleSubmit(handleRegisterQuizQuestion)}
+            >
+              <div className="w-full flex flex-col md:flex-row mb-6">
+                <div className="w-full">
+                  <SelectInput
+                    label="Selecione um questionário para cadastrar uma pergunta relacionada"
+                    options={quizzesOptionsList}
+                    onSelectOption={handleQuizSelect as never}
+                    placeholder={
+                      selectInput && selectInput.label
+                        ? selectInput?.label
+                        : "Selecione um questionário"
+                    }
+                    defaultValue={selectInput?.label}
+                    isDisabled={
+                      quizIdQueryParam && quizIdQueryParam?.length > 0
+                        ? true
+                        : false
+                    }
+                  />
+                </div>
+              </div>
 
-          <div className="w-full mt-2">
-            <TextAreaInput
-              label="Conteúdo da pergunta"
-              placeholder="Conteúdo da pergunta. Máximo de 240 caracters"
-              showTextLength
-              maxTextLength={MAX_QUESTION_CONTENT_LENGTH}
-              currentTextLength={contentValue ? contentValue.length : 0}
-              {...register("content")}
-            />
-            {errors && errors.content && (
-              <ErrorMessage errorMessage={errors.content?.message} />
-            )}
-          </div>
+              <div className="w-full mt-2">
+                <TextAreaInput
+                  label="Conteúdo da pergunta"
+                  placeholder="Conteúdo da pergunta. Máximo de 240 caracters"
+                  showTextLength
+                  maxTextLength={MAX_QUESTION_CONTENT_LENGTH}
+                  currentTextLength={contentValue ? contentValue.length : 0}
+                  {...register("content")}
+                />
+                {errors && errors.content && (
+                  <ErrorMessage errorMessage={errors.content?.message} />
+                )}
+              </div>
 
-          <div className="w-full mt-2">
-            <Button
-              title="Cadastrar Pergunta"
-              type="submit"
-              isLoading={isLoading}
-              disabled={isLoading || !isValid}
-            />
+              <div className="w-full mt-2">
+                <Button
+                  title="Cadastrar Pergunta"
+                  type="submit"
+                  isLoading={isLoading}
+                  disabled={isLoading || !isValid}
+                />
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </main>
   );

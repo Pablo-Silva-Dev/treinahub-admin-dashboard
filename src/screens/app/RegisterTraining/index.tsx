@@ -10,6 +10,7 @@ import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { FileInput } from "@/components/inputs/FileInput";
 import { TextAreaInput } from "@/components/inputs/TextAreaInput";
 import { TextInput } from "@/components/inputs/TextInput";
+import { RegistrationInfo } from "@/components/miscellaneous/RegistrationInfo";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import {
   IFilePreview,
@@ -151,82 +152,91 @@ export default function RegisterTraining() {
   };
 
   return (
-    <main className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-800 w-full">
-      <div className="flex flex-col items-center w-[90%] lg:w-[560px] mx-auto">
+    <main className="flex flex-col bg-gray-100 dark:bg-slate-800 w-full h-full pl-[80px] mt-2">
+      <div className="flex flex-col w-full">
         <div className="mb-4 w-full">
           <ScreenTitleIcon
             screenTitle="Cadastrar treinamento"
             iconName="book-open"
           />
         </div>
-        <form
-          className="w-full"
-          onSubmit={handleSubmit(handleRegisterTraining as never)}
-        >
-          <div className="w-full mb-4">
-            <TextInput
-              inputLabel="Nome"
-              placeholder="Nome do treinamento"
-              {...register("name")}
-            />
-            {errors.name && (
-              <div>
-                <ErrorMessage errorMessage={errors.name?.message} />
+        <div className="w-full flex flex-col xl:flex-row justify-center mt-4">
+          <RegistrationInfo
+            iconName="book-open"
+            infoText="Cadastrar um novo treinamento habilita a criação de videoaulas e questionários."
+            registration="Treinamento"
+          />
+          <div className="flex flex-col items-center w-[90%] xl:w-[40vw] mr-6 xl:ml-4 bg-white dark:bg-slate-700 p-8 rounded-md">
+            <form
+              className="w-full"
+              onSubmit={handleSubmit(handleRegisterTraining as never)}
+            >
+              <div className="w-full mb-4">
+                <TextInput
+                  inputLabel="Nome"
+                  placeholder="Nome do treinamento"
+                  {...register("name")}
+                />
+                {errors.name && (
+                  <div>
+                    <ErrorMessage errorMessage={errors.name?.message} />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          <div className="w-full mb-4">
-            <TextAreaInput
-              label="Descrição"
-              showTextLength
-              currentTextLength={
-                descriptionValue?.length ? descriptionValue.length : 0
-              }
-              maxTextLength={MAX_TRAINING_DESCRIPTION_LENGTH}
-              placeholder="Descrição do treinamento"
-              {...register("description")}
-            />
-            {errors.description && (
-              <div>
-                <ErrorMessage errorMessage={errors.description?.message} />
+              <div className="w-full mb-4">
+                <TextAreaInput
+                  label="Descrição"
+                  showTextLength
+                  currentTextLength={
+                    descriptionValue?.length ? descriptionValue.length : 0
+                  }
+                  maxTextLength={MAX_TRAINING_DESCRIPTION_LENGTH}
+                  placeholder="Descrição do treinamento"
+                  {...register("description")}
+                />
+                {errors.description && (
+                  <div>
+                    <ErrorMessage errorMessage={errors.description?.message} />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <div className="w-full mb-4">
-            {wasFileUploaded && filePreview ? (
-              <UploadedFile
-                file={{
-                  name: filePreview.name,
-                  size: Number((filePreview.size / 1024 / 1024).toFixed(2)),
-                  uri: filePreview.uri,
-                  type: filePreview.type,
-                }}
-                onCancel={handleRemoveUploadedFile}
-              />
-            ) : (
-              <FileInput
-                label="Capa do treinamento"
-                labelDescription="Selecione um arquivo de até 2MB"
-                onUpload={handleUploadFile}
-                {...register("file", { onChange: handleUploadFile })}
-              />
-            )}
-            {errors.file && (
-              <div>
-                <ErrorMessage errorMessage={errors.file?.message} />
+              <div className="w-full mb-4">
+                {wasFileUploaded && filePreview ? (
+                  <UploadedFile
+                    file={{
+                      name: filePreview.name,
+                      size: Number((filePreview.size / 1024 / 1024).toFixed(2)),
+                      uri: filePreview.uri,
+                      type: filePreview.type,
+                    }}
+                    onCancel={handleRemoveUploadedFile}
+                  />
+                ) : (
+                  <FileInput
+                    label="Capa do treinamento"
+                    labelDescription="Selecione um arquivo de até 2MB"
+                    onUpload={handleUploadFile}
+                    {...register("file", { onChange: handleUploadFile })}
+                  />
+                )}
+                {errors.file && (
+                  <div>
+                    <ErrorMessage errorMessage={errors.file?.message} />
+                  </div>
+                )}
               </div>
-            )}
+              <div className="w-full mt-2">
+                <Button
+                  type="submit"
+                  title="Cadastrar Treinamento"
+                  disabled={!isValid || isLoading || exceededStorage}
+                  isLoading={isLoading}
+                />
+              </div>
+            </form>
           </div>
-          <div className="w-full mt-2">
-            <Button
-              type="submit"
-              title="Cadastrar Treinamento"
-              disabled={!isValid || isLoading || exceededStorage}
-              isLoading={isLoading}
-            />
-          </div>
-        </form>
+        </div>
       </div>
     </main>
   );

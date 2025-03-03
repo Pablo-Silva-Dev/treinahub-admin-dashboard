@@ -1,7 +1,6 @@
 import logo from "@/assets/logo.svg";
 import logo_text from "@/assets/logo_text.svg";
 import logo_text_dark from "@/assets/logo_text_dark.svg";
-import { CompanyFooterLink } from "@/components/miscellaneous/CompanyFooterLink";
 import { Loading } from "@/components/miscellaneous/Loading";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Title } from "@/components/typography/Title";
@@ -321,12 +320,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               </div>
             </header>
             <div className="mt-[96px]">{children}</div>
-            <footer className="flex bg-gray-100 dark:bg-slate-800 items-center justify-center md:p-8 px-2 my-8 mx-auto">
-              <CompanyFooterLink
-                companyText="Desenvolvido por PS Code. Acesse nosso site "
-                companyLink="https://www.pablosilvadev.com.br"
-              />
-            </footer>
           </div>
         </div>
       )}

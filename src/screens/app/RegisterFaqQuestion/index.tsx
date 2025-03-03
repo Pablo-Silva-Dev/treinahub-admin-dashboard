@@ -6,6 +6,7 @@ import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { TextAreaInput } from "@/components/inputs/TextAreaInput";
 import { TextInput } from "@/components/inputs/TextInput";
+import { RegistrationInfo } from "@/components/miscellaneous/RegistrationInfo";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { FaqQuestionsRepository } from "@/repositories/faqQuestionsRepository";
 import { useAuthenticationStore } from "@/store/auth";
@@ -81,50 +82,59 @@ export default function RegisterFaqQuestion() {
   };
 
   return (
-    <main className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-800 w-full">
-      <div className="flex flex-col items-center w-[90%] lg:w-[560px] mx-auto">
+    <main className="flex flex-col bg-gray-100 dark:bg-slate-800 w-full h-full pl-[80px] mt-2">
+      <div className="flex flex-col w-full">
         <div className="mb-4 w-full">
           <ScreenTitleIcon
             screenTitle="Cadastrar pergunta frequente"
             iconName="help-circle"
           />
         </div>
-        <form
-          className="w-full"
-          onSubmit={handleSubmit(handleRegisterFaqQuestion)}
-        >
-          <div className="w-full mb-4">
-            <TextInput
-              inputLabel="Pergunta"
-              placeholder="Conteúdo da pergunta"
-              {...register("question")}
-            />
-            {errors && errors.question && (
-              <ErrorMessage errorMessage={errors.question?.message} />
-            )}
+        <div className="w-full flex flex-col xl:flex-row justify-center mt-4">
+          <RegistrationInfo
+            iconName="help-circle"
+            infoText="Cadastre uma pergunta frequente para responder uma possível dúvida que seu colaborador possa ter."
+            registration="Pergunta frequente"
+          />
+          <div className="flex flex-col items-center w-[90%] xl:w-[40vw] mr-6 xl:ml-4 bg-white dark:bg-slate-700 p-8 rounded-md">
+            <form
+              className="w-full"
+              onSubmit={handleSubmit(handleRegisterFaqQuestion)}
+            >
+              <div className="w-full mb-4">
+                <TextInput
+                  inputLabel="Pergunta"
+                  placeholder="Conteúdo da pergunta"
+                  {...register("question")}
+                />
+                {errors && errors.question && (
+                  <ErrorMessage errorMessage={errors.question?.message} />
+                )}
+              </div>
+              <div className="w-full mb-4">
+                <TextAreaInput
+                  label="Resposta"
+                  showTextLength
+                  currentTextLength={answerValue ? answerValue.length : 0}
+                  maxTextLength={MAX_TEXT_LENGTH}
+                  placeholder="Conteúdo da resposta"
+                  {...register("answer")}
+                />
+                {errors && errors.answer && (
+                  <ErrorMessage errorMessage={errors.answer?.message} />
+                )}
+              </div>
+              <div className="w-full mt-2">
+                <Button
+                  title="Cadastrar pergunta"
+                  type="submit"
+                  disabled={!isValid || isLoading}
+                  isLoading={isLoading}
+                />
+              </div>
+            </form>
           </div>
-          <div className="w-full mb-4">
-            <TextAreaInput
-              label="Resposta"
-              showTextLength
-              currentTextLength={answerValue ? answerValue.length : 0}
-              maxTextLength={MAX_TEXT_LENGTH}
-              placeholder="Conteúdo da resposta"
-              {...register("answer")}
-            />
-            {errors && errors.answer && (
-              <ErrorMessage errorMessage={errors.answer?.message} />
-            )}
-          </div>
-          <div className="w-full mt-2">
-            <Button
-              title="Cadastrar pergunta"
-              type="submit"
-              disabled={!isValid || isLoading}
-              isLoading={isLoading}
-            />
-          </div>
-        </form>
+        </div>
       </div>
     </main>
   );

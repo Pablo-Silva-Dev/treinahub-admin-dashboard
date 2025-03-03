@@ -10,6 +10,7 @@ import { FileInput } from "@/components/inputs/FileInput";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { TextAreaInput } from "@/components/inputs/TextAreaInput";
 import { TextInput } from "@/components/inputs/TextInput";
+import { RegistrationInfo } from "@/components/miscellaneous/RegistrationInfo";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import {
   IFilePreview,
@@ -223,114 +224,127 @@ export default function RegisterClass() {
   }, [setTrainingsOptions]);
 
   return (
-    <main className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-800 w-full">
-      <div className="flex flex-col items-center w-[90%] lg:w-[560px] mx-auto">
+    <main className="flex flex-col bg-gray-100 dark:bg-slate-800 w-full h-full pl-[80px] mt-2">
+      <div className="flex flex-col w-full">
         <div className="mb-4 w-full">
           <ScreenTitleIcon
             screenTitle="Cadastrar videoaula"
             iconName="play-circle"
           />
         </div>
-        <form
-          className="w-full"
-          onSubmit={handleSubmit(handleRegisterVideoClass as never)}
-        >
-          <div className="w-full mb-4">
-            <TextInput
-              inputLabel="Nome"
-              placeholder="Nome do aula"
-              {...register("name")}
-            />
-            {errors && errors.name && (
-              <ErrorMessage errorMessage={errors.name?.message} />
-            )}
-          </div>
-          <div className="w-full mb-6">
-            <TextAreaInput
-              label="Descrição"
-              showTextLength
-              currentTextLength={descriptionValue ? descriptionValue.length : 0}
-              maxTextLength={MAX_CLASS_DESCRIPTION_LENGTH}
-              placeholder="Descrição do aula"
-              {...register("description")}
-            />
-            {errors && errors.description && (
-              <ErrorMessage errorMessage={errors.description?.message} />
-            )}
-          </div>
-
-          <div className="w-full mb-2">
-            {wasVideoFileUploaded && videoFilePreview ? (
-              <>
-                <UploadedFile
-                  file={{
-                    name: videoFilePreview.name,
-                    size: Number(
-                      (videoFilePreview.size / 1024 / 1024).toFixed(2)
-                    ),
-                    uri: videoFilePreview.uri,
-                    type: videoFilePreview.type,
-                  }}
-                  onCancel={handleRemoveUploadedFile}
+        <div className="w-full flex flex-col xl:flex-row justify-center mt-4">
+          <RegistrationInfo
+            iconName="play-circle"
+            infoText="Cadastrar uma video aula a um treinamento. A videoaula estará disponível para seus colaboradores no treinamento vinculado após o processamento do vídeo."
+            registration="Videoaula"
+          />
+          <div className="flex flex-col items-center w-[90%] xl:w-[40vw] mr-6 xl:ml-4 bg-white dark:bg-slate-700 p-8 rounded-md">
+            <form
+              className="w-full"
+              onSubmit={handleSubmit(handleRegisterVideoClass as never)}
+            >
+              <div className="w-full mb-4">
+                <TextInput
+                  inputLabel="Nome"
+                  placeholder="Nome do aula"
+                  {...register("name")}
                 />
-                {errors && errors.video_file && (
-                  <ErrorMessage errorMessage={errors.video_file?.message} />
+                {errors && errors.name && (
+                  <ErrorMessage errorMessage={errors.name?.message} />
                 )}
-              </>
-            ) : (
-              <>
-                <FileInput
-                  label="Videoaula"
-                  onUpload={handleSelectVideoFile}
-                  buttonTitle="Selecione um arquivo de vídeo"
-                  labelDescription="Selecione um arquivo de video de até 150MB que seja compatível com os formatos suportados. Formatos suportados: .mp4, .mov, .avi, .mkv, .webm ou .flv."
-                  {...register("video_file", {
-                    onChange: handleSelectVideoFile as never,
-                  })}
+              </div>
+              <div className="w-full mb-6">
+                <TextAreaInput
+                  label="Descrição"
+                  showTextLength
+                  currentTextLength={
+                    descriptionValue ? descriptionValue.length : 0
+                  }
+                  maxTextLength={MAX_CLASS_DESCRIPTION_LENGTH}
+                  placeholder="Descrição do aula"
+                  {...register("description")}
                 />
-                {errors && errors.video_file && (
-                  <ErrorMessage errorMessage={errors.video_file?.message} />
+                {errors && errors.description && (
+                  <ErrorMessage errorMessage={errors.description?.message} />
                 )}
-              </>
-            )}
-          </div>
+              </div>
 
-          <div className="w-full mb-2">
-            <span className="text-gray-700 dark:text-gray-300 text-xs md:text-sm mb-2">
-              * Máximo de 150MB
-            </span>
-          </div>
-          <div className="w-full mb-4">
-            <span className="text-gray-700 dark:text-gray-300 text-xs md:text-sm">
-              * O tamanho final do arquivo pode ser de pelo menos 2 vezes
-              superior ao tamanho do arquivo original devido aos arquivos
-              adicionais gerados pelo processo de encoding necessário para
-              tornar seu vídeo reproduzível no player de vídeo.
-            </span>
-          </div>
+              <div className="w-full mb-2">
+                {wasVideoFileUploaded && videoFilePreview ? (
+                  <>
+                    <UploadedFile
+                      file={{
+                        name: videoFilePreview.name,
+                        size: Number(
+                          (videoFilePreview.size / 1024 / 1024).toFixed(2)
+                        ),
+                        uri: videoFilePreview.uri,
+                        type: videoFilePreview.type,
+                      }}
+                      onCancel={handleRemoveUploadedFile}
+                    />
+                    {errors && errors.video_file && (
+                      <ErrorMessage errorMessage={errors.video_file?.message} />
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <FileInput
+                      label="Videoaula"
+                      onUpload={handleSelectVideoFile}
+                      buttonTitle="Selecione um arquivo de vídeo"
+                      labelDescription="Selecione um arquivo de video de até 150MB que seja compatível com os formatos suportados. Formatos suportados: .mp4, .mov, .avi, .mkv, .webm ou .flv."
+                      {...register("video_file", {
+                        onChange: handleSelectVideoFile as never,
+                      })}
+                    />
+                    {errors && errors.video_file && (
+                      <ErrorMessage errorMessage={errors.video_file?.message} />
+                    )}
+                  </>
+                )}
+              </div>
 
-          <div className="w-full flex flex-col md:flex-row mb-6">
-            <div className="w-full">
-              <SelectInput
-                label="Selecione um treinamento"
-                options={trainingsOptionsList}
-                onSelectOption={handleTrainingSelect as never}
-                placeholder="Selecione um treinamento"
-                defaultValue="Selecione um treinamento"
-                widthVariant="mid"
-              />
-            </div>
-          </div>
+              <div className="w-full mb-2">
+                <span className="text-gray-700 dark:text-gray-300 text-xs md:text-sm mb-2">
+                  * Máximo de 150MB
+                </span>
+              </div>
+              <div className="w-full mb-4">
+                <span className="text-gray-700 dark:text-gray-300 text-xs md:text-sm">
+                  * O tamanho final do arquivo pode ser de pelo menos 2 vezes
+                  superior ao tamanho do arquivo original devido aos arquivos
+                  adicionais gerados pelo processo de encoding necessário para
+                  tornar seu vídeo reproduzível no player de vídeo.
+                </span>
+              </div>
 
-          <div className="w-full mt-2">
-            <Button
-              title="Cadastrar Aula"
-              type="submit"
-              isLoading={isLoading}
-              disabled={isLoading || !isValid || !videoFile || exceededStorage}
-            />
+              <div className="w-full flex flex-col md:flex-row mb-6">
+                <div className="w-full">
+                  <SelectInput
+                    label="Selecione um treinamento"
+                    options={trainingsOptionsList}
+                    onSelectOption={handleTrainingSelect as never}
+                    placeholder="Selecione um treinamento"
+                    defaultValue="Selecione um treinamento"
+                    widthVariant="mid"
+                  />
+                </div>
+              </div>
+
+              <div className="w-full mt-2">
+                <Button
+                  title="Cadastrar Aula"
+                  type="submit"
+                  isLoading={isLoading}
+                  disabled={
+                    isLoading || !isValid || !videoFile || exceededStorage
+                  }
+                />
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </main>
   );

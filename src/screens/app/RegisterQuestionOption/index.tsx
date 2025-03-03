@@ -1,12 +1,11 @@
-import {
-  REQUIRED_FIELD_MESSAGE
-} from "@/appConstants/index";
+import { REQUIRED_FIELD_MESSAGE } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { SelectInput } from "@/components/inputs/SelectInput";
 import { Switcher } from "@/components/inputs/Switch";
 import { TextAreaInput } from "@/components/inputs/TextAreaInput";
 import { DeleteModal } from "@/components/miscellaneous/DeleteModal";
+import { RegistrationInfo } from "@/components/miscellaneous/RegistrationInfo";
 import { ScreenTitleIcon } from "@/components/miscellaneous/ScreenTitleIcon";
 import { IQuizQuestionDTO } from "@/repositories/dtos/QuestionDTO";
 import {
@@ -254,8 +253,8 @@ export default function RegisterQuestionOption() {
         setQuestionOptions(questionOptions);
         setShowRegisteredOptions(true);
         return questionOptions;
-      }else{
-        return []
+      } else {
+        return [];
       }
     } catch (error) {
       console.log(error);
@@ -352,122 +351,131 @@ export default function RegisterQuestionOption() {
   };
 
   return (
-    <main className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-800 w-full">
-      <div className="flex flex-col items-center w-[90%] lg:w-[560px] mx-auto">
+    <main className="flex flex-col bg-gray-100 dark:bg-slate-800 w-full h-full pl-[80px] mt-2">
+      <div className="flex flex-col w-full">
         <div className="mb-4 w-full">
           <ScreenTitleIcon
-            screenTitle="Cadastrar resposta"
-            iconName="play-circle"
+            screenTitle="Cadastrar opção de resposta"
+            iconName="edit"
           />
         </div>
-        <form
-          className="w-full"
-          onSubmit={handleSubmit(handleRegisterQuestionOption)}
-        >
-          <div className="w-full flex flex-col md:flex-row mb-6">
-            <div className="w-full">
-              <SelectInput
-                label="Selecione um questionário"
-                options={quizzesOptionsList}
-                onSelectOption={handleQuizSelect as never}
-                placeholder={
-                  selectQuizInput && selectQuizInput.label
-                    ? selectQuizInput?.label
-                    : "Selecione um questionário"
-                }
-                defaultValue={selectQuizInput?.label}
-                isDisabled={
-                  quizIdQueryParam && quizIdQueryParam?.length > 0
-                    ? true
-                    : false
-                }
-              />
-            </div>
-          </div>
-
-          <div className="w-full flex flex-col md:flex-row mb-6">
-            <div className="w-full">
-              <SelectInput
-                label="Selecione uma pergunta"
-                options={questionOptionsList}
-                onSelectOption={handleQuizQuestionSelect as never}
-                placeholder={
-                  selectQuizQuestionInput && selectQuizQuestionInput.label
-                    ? selectQuizQuestionInput?.label
-                    : "Selecione uma pergunta"
-                }
-                defaultValue={selectQuizQuestionInput?.label}
-                isDisabled={
-                  quizQuestionIdQueryParam &&
-                  quizQuestionIdQueryParam?.length > 0
-                    ? true
-                    : false
-                }
-              />
-            </div>
-          </div>
-
-          <div className="w-full mt-2 h-[100px] mb-[56px]">
-            <TextAreaInput
-              label="Conteúdo da resposta"
-              placeholder="Conteúdo da resposta. Máximo de 120 caracters"
-              showTextLength
-              maxTextLength={MAX_OPTION_CONTENT_LENGTH}
-              currentTextLength={contentValue ? contentValue.length : 0}
-              {...register("content")}
-            />
-            {errors && errors.content && (
-              <ErrorMessage errorMessage={errors.content?.message} />
-            )}
-          </div>
-          <div className="mt-2 mb-4 flex flex-col">
-            <span className="text-gray-700 dark:text-gray-100 text-[13px] mb-1">
-              Resposta correta
-            </span>
-            <Switcher
-              checked={correctOptionSwitch}
-              onChange={handleToggleIsCorrectOptionSwitch}
-              disabled={alreadyHasACorrectOption}
-            />
-          </div>
-
-          <div className="w-full mt-2 mb-5">
-            <Button
-              title="Cadastrar resposta"
-              type="submit"
-              isLoading={isLoading}
-              disabled={
-                isLoading ||
-                !isValid ||
-                questionOptions.length >= MAX_QUESTION_OPTIONS
-              }
-              className="bg-primary-dark w-full h-[52px] flex items-center justify-center normal-case 
-              lg:text-base text-sm font-medium font-poppins rounded-lg disabled:opacity-[0.5] 
-              text-gray-50 font-secondary"
-            />
-          </div>
-          {questionOptionsData && showRegisteredOptions && (
-            <div className="w-full">
-              <span className="text-gray-700 dark:text-gray-100 text-[12px] md:text-[14px] font-bold mb-2">
-                Respostas cadastradas:
-              </span>
-              <QuestionOptionsList
-                questions={questionOptionsData}
-                onDeleteOption={handleToggleDeleteModal}
-              />
-            </div>
-          )}
-        </form>
-        <div className="w-full mt-2 mb-5">
-          <Button
-            title="Finalizar criação de questionários"
-            type="button"
-            disabled={questionOptions.length < MIN_QUESTION_OPTIONS}
-            onClick={handleFinishQuizzesCreation}
-            className="bg-primary w-full h-[52px] flex items-center justify-center normal-case 
-              lg:text-base text-sm font-medium font-poppins rounded-lg disabled:opacity-[0.5] 
-              text-gray-50 font-secondary"
+        <div className="w-full flex flex-col xl:flex-row justify-center mt-4">
+          <RegistrationInfo
+            iconName="edit"
+            infoText="Cadastre uma opção de resposta vinculada à uma pergunta. Somente uma opção de resposta pode ser considerada válida para cada pergunta."
+            registration="Opção de resposta"
           />
+          <div className="flex flex-col items-center w-[90%] xl:w-[40vw] mr-6 xl:ml-4 bg-white dark:bg-slate-700 p-8 rounded-md">
+            <form
+              className="w-full"
+              onSubmit={handleSubmit(handleRegisterQuestionOption)}
+            >
+              <div className="w-full flex flex-col md:flex-row mb-6">
+                <div className="w-full">
+                  <SelectInput
+                    label="Selecione um questionário"
+                    options={quizzesOptionsList}
+                    onSelectOption={handleQuizSelect as never}
+                    placeholder={
+                      selectQuizInput && selectQuizInput.label
+                        ? selectQuizInput?.label
+                        : "Selecione um questionário"
+                    }
+                    defaultValue={selectQuizInput?.label}
+                    isDisabled={
+                      quizIdQueryParam && quizIdQueryParam?.length > 0
+                        ? true
+                        : false
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="w-full flex flex-col md:flex-row mb-6">
+                <div className="w-full">
+                  <SelectInput
+                    label="Selecione uma pergunta"
+                    options={questionOptionsList}
+                    onSelectOption={handleQuizQuestionSelect as never}
+                    placeholder={
+                      selectQuizQuestionInput && selectQuizQuestionInput.label
+                        ? selectQuizQuestionInput?.label
+                        : "Selecione uma pergunta"
+                    }
+                    defaultValue={selectQuizQuestionInput?.label}
+                    isDisabled={
+                      quizQuestionIdQueryParam &&
+                      quizQuestionIdQueryParam?.length > 0
+                        ? true
+                        : false
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="w-full mt-2 h-[100px] mb-[56px]">
+                <TextAreaInput
+                  label="Conteúdo da resposta"
+                  placeholder="Conteúdo da resposta. Máximo de 120 caracters"
+                  showTextLength
+                  maxTextLength={MAX_OPTION_CONTENT_LENGTH}
+                  currentTextLength={contentValue ? contentValue.length : 0}
+                  {...register("content")}
+                />
+                {errors && errors.content && (
+                  <ErrorMessage errorMessage={errors.content?.message} />
+                )}
+              </div>
+              <div className="mt-2 mb-4 flex flex-col">
+                <span className="text-gray-700 dark:text-gray-100 text-[13px] mb-1">
+                  Resposta correta
+                </span>
+                <Switcher
+                  checked={correctOptionSwitch}
+                  onChange={handleToggleIsCorrectOptionSwitch}
+                  disabled={alreadyHasACorrectOption}
+                />
+              </div>
+
+              <div className="w-full mt-2 mb-5">
+                <Button
+                  title="Cadastrar resposta"
+                  type="submit"
+                  isLoading={isLoading}
+                  disabled={
+                    isLoading ||
+                    !isValid ||
+                    questionOptions.length >= MAX_QUESTION_OPTIONS
+                  }
+                  className="bg-primary-dark w-full h-[52px] flex items-center justify-center normal-case 
+              lg:text-base text-sm font-medium font-poppins rounded-lg disabled:opacity-[0.5] 
+              text-gray-50 font-secondary"
+                />
+              </div>
+              {questionOptionsData && showRegisteredOptions && (
+                <div className="w-full">
+                  <span className="text-gray-700 dark:text-gray-100 text-[12px] md:text-[14px] font-bold mb-2">
+                    Respostas cadastradas:
+                  </span>
+                  <QuestionOptionsList
+                    questions={questionOptionsData}
+                    onDeleteOption={handleToggleDeleteModal}
+                  />
+                </div>
+              )}
+            </form>
+            <div className="w-full mt-2 mb-5">
+              <Button
+                title="Finalizar criação de questionários"
+                type="button"
+                disabled={questionOptions.length < MIN_QUESTION_OPTIONS}
+                onClick={handleFinishQuizzesCreation}
+                className="bg-primary w-full h-[52px] flex items-center justify-center normal-case 
+              lg:text-base text-sm font-medium font-poppins rounded-lg disabled:opacity-[0.5] 
+              text-gray-50 font-secondary"
+              />
+            </div>
+          </div>
         </div>
       </div>
       <DeleteModal
