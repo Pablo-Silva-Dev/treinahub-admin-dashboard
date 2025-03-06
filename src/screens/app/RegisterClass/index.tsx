@@ -235,7 +235,7 @@ export default function RegisterClass() {
         <div className="w-full flex flex-col xl:flex-row justify-center mt-4">
           <RegistrationInfo
             iconName="play-circle"
-            infoText="Cadastrar uma video aula a um treinamento. A videoaula estará disponível para seus colaboradores no treinamento vinculado após o processamento do vídeo."
+            infoText="Cadastrar uma video aula a um treinamento. A videoaula estará disponível para seus colaboradores no treinamento vinculado após o processamento do vídeo. Este processo pode levar alguns minutos, a depender do tamanho do arquivo enviado."
             registration="Videoaula"
           />
           <div className="flex flex-col items-center w-[90%] xl:w-[40vw] mr-6 xl:ml-4 bg-white dark:bg-slate-700 p-8 rounded-md">

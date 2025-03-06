@@ -26,7 +26,7 @@ export function TrainingInfoCard({
       <img
         src={cover_url}
         alt="info_card_placeholder"
-        className="w-full max-h-[240px] aspect-auto"
+        className="w-full h-[140px] object-cover rounded-t-md"
       />
       <div className="w-full p-4 flex flex-col ">
         <span className="text-gray-800 dark:text-gray-50 text-[13px] md:text-[14px] font-bold font-secondary mb-1">
