@@ -26,7 +26,7 @@ export interface IRegisterUserRequest {
   cpf: string;
   email: string;
   phone: string;
-  birth_date: Date;
+  birth_date: string;
   password: string;
   is_admin?: boolean;
   company_id: string;

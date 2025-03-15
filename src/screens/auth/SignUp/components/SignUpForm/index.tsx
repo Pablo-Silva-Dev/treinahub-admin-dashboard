@@ -2,16 +2,17 @@ import {
   BIRTH_DATE_INVALID_MESSAGE,
   CPF_INVALID_MESSAGE,
   EMAIL_INVALID_MESSAGE,
+  MIN_ID_LENGTH,
   MIN_PASSWORD_LENGTH,
   PASSWORD_MIN_LENGTH_MESSAGE,
   PHONE_INVALID_MESSAGE,
   REQUIRED_FIELD_MESSAGE,
+  WRONG_COMPANY_ID_MESSAGE,
 } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { MaskedTextInput } from "@/components/inputs/MaskedTextInput";
 import { PasswordTextInput } from "@/components/inputs/PasswordInput";
-import { SelectInput } from "@/components/inputs/SelectInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { PasswordRequirements } from "@/components/miscellaneous/PasswordRequirements";
 import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
@@ -54,7 +55,6 @@ export default function SignUpForm({
   passwordConfirmation,
   setPasswordConfirmation,
   isLoading,
-  companiesList,
 }: SignUpFormProps) {
   const validationSchema = yup.object({
     name: yup.string().required(REQUIRED_FIELD_MESSAGE),
@@ -78,7 +78,10 @@ export default function SignUpForm({
       .string()
       .min(MIN_PASSWORD_LENGTH, PASSWORD_MIN_LENGTH_MESSAGE)
       .required(REQUIRED_FIELD_MESSAGE),
-    company_id: yup.string().required(REQUIRED_FIELD_MESSAGE),
+    company_id: yup
+      .string()
+      .min(MIN_ID_LENGTH, WRONG_COMPANY_ID_MESSAGE)
+      .required(REQUIRED_FIELD_MESSAGE),
   });
   const passwordValidated = useRef(false);
 
@@ -87,7 +90,6 @@ export default function SignUpForm({
     handleSubmit,
     formState: { errors, isValid },
     watch,
-    setValue,
   } = useForm<SignUpFormInputs>({
     resolver: yupResolver(validationSchema),
     mode: "onBlur",
@@ -109,19 +111,9 @@ export default function SignUpForm({
 
   const [wasTermsAccepted, setWasTermsAccepted] = useState(false);
 
-  type IOption = {
-    label: string;
-    value: string;
-  };
-
-  const companiesSelectInputs: IOption[] = companiesList.map((company) => ({
-    value: company.id,
-    label: company.fantasy_name,
-  }));
-
   return (
     <form
-      className="max-w-lg bg-gray-50 dark:bg-slate-800 p-6 shadow-xl rounded-lg mx-auto w-[100%]  max-h-[560px] overflow-x-auto  mb-[40px]"
+      className="max-w-lg bg-gray-50 dark:bg-slate-800 p-6 shadow-xl rounded-lg mx-auto w-[100%] overflow-x-auto  mb-8"
       onSubmit={handleSubmit(handleSubmitForm)}
     >
       <div className="flex flex-col w-full">
@@ -189,21 +181,18 @@ export default function SignUpForm({
                 inputMode="numeric"
                 {...register("phone")}
               />
-              {(errors && errors.phone ||
-                phoneValue && phoneValue.length > PHONE_VALIDATION_LENGTH) && (
+              {((errors && errors.phone) ||
+                (phoneValue &&
+                  phoneValue.length > PHONE_VALIDATION_LENGTH)) && (
                 <ErrorMessage errorMessage={errors.phone?.message} />
               )}
             </div>
             <div className="w-full ml-0.5">
-              <SelectInput
-                options={companiesSelectInputs}
-                label="Empresa"
-                placeholder="Selecione sua empresa"
-                onSelectOption={(value) => {
-                  setValue("company_id", value.value as string, {
-                    shouldValidate: true,
-                  });
-                }}
+              <TextInput
+                inputLabel="Identificador da empresa"
+                placeholder="Identificador enviado via e-mail"
+                style={{ width: "99%" }}
+                {...register("company_id")}
               />
               {errors.company_id && (
                 <ErrorMessage errorMessage={errors.company_id.message} />

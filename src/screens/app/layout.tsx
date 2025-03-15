@@ -174,9 +174,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   }, [user.email, usersRepository]);
 
   const handleSignOut = async () => {
-    navigate("/");
-    await unAuthenticateUser();
+    await unAuthenticateUser()
     signOut();
+    navigate("/");
   };
 
   useEffect(() => {

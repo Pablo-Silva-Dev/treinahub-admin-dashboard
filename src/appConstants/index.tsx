@@ -17,6 +17,9 @@ const NAVIGATION_TIMER = 1000;
 const PRIMARY_COLOR = "#0267FF";
 const MAX_CONTENT_LENGTH_MESSAGE =
   "Conteúdo está excendo a quantidade máxima de caracteres permitidos";
+const MIN_ID_LENGTH = 32;
+const WRONG_COMPANY_ID_MESSAGE =
+  "O identificador da empresa deve ser um código hexadecimal de pelo menos 32 caracteres. Exemplo: 'cce69c68-0c47-491a-9954-1fa7e627aa72'";
 
 const ITEMS_PER_PAGE_OPTIONS = [
   { value: 10, label: "10" },
@@ -57,6 +60,7 @@ export {
   ITEMS_PER_PAGE_OPTIONS,
   ITEMS_PER_PAGE_OPTIONS_SHORT_TABLE,
   MAX_CONTENT_LENGTH_MESSAGE,
+  MIN_ID_LENGTH,
   MIN_PASSWORD_LENGTH,
   NAME_MIN_MESSAGE,
   NAVIGATION_TIMER,
@@ -68,4 +72,5 @@ export {
   STORAGE_LIMIT_BRONZE_PLAN,
   STORAGE_LIMIT_GOLD_PLAN,
   STORAGE_LIMIT_SILVER_PLAN,
+  WRONG_COMPANY_ID_MESSAGE,
 };

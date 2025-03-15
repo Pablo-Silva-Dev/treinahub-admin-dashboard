@@ -1,6 +1,8 @@
 import { NAVIGATION_TIMER } from "@/appConstants/index";
 import { HeaderNavigation } from "@/components/miscellaneous/HeaderNavigation";
 import { CompaniesRepository } from "@/repositories/companiesRepository";
+import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
+import { IRegisterUserRequest } from "@/repositories/interfaces/usersRepository";
 import { UsersRepositories } from "@/repositories/usersRepositories";
 import { useLoading } from "@/store/loading";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
@@ -9,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { PrivacyPolicyModal } from "./components/PrivacyPolicyModal";
 import SignUpForm from "./components/SignUpForm";
 import { UseTermsModal } from "./components/UseTermsModal";
-import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
 
 export default function SignUp() {
   const { isLoading, setIsLoading } = useLoading();
@@ -41,28 +42,39 @@ export default function SignUp() {
     getCompanies();
   }, [getCompanies]);
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: IRegisterUserRequest) => {
     try {
       setIsLoading(true);
       const { phone } = data;
       const brazilianPhoneCode = "+55";
       const completePhone = brazilianPhoneCode + phone;
-      await usersRepository.registerUser({
+      const response = await usersRepository.registerUser({
         ...data,
         is_admin: true,
         phone: completePhone,
       });
-      showAlertSuccess("Cadastro realizado com sucesso!");
-      setTimeout(() => {
-        navigate("/");
-      }, NAVIGATION_TIMER);
+      if (response.id) {
+        showAlertSuccess("Cadastro realizado com sucesso!");
+        setTimeout(() => {
+          navigate("/");
+        }, NAVIGATION_TIMER);
+      }
     } catch (error) {
       if (typeof error === "object" && error !== null && "STATUS" in error) {
         const typedError = error as { STATUS: number };
-        if (typedError.STATUS === 409)
-          showAlertError(
-            "Já existe um usuário cadastrado com os dados informados."
-          );
+        switch (typedError.STATUS) {
+          case 404:
+            showAlertError("Empresa não encontrada.");
+            break;
+          case 403:
+            showAlertError("Empresa ainda não realizou a assinatura.");
+            break;
+          case 409:
+            showAlertError("Já existe um usuário com os dados informados.");
+            break;
+          default:
+            console.log(error);
+        }
         console.log(error);
       }
     } finally {
@@ -83,20 +95,20 @@ export default function SignUp() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-row mb-2 w-full sm:w-[400px] ml-8 sm:mx-auto">
+      <div className="flex flex-row mb-2 w-full sm:w-[400px] sm:mx-auto">
         <HeaderNavigation screenTitle="Cadastro" />
       </div>
-      {!isLoading && (
-        <SignUpForm
-          onSubmit={handleSubmit}
-          onOpenUseTermsModal={handleToggleUseTermsModal}
-          onOpenPrivacyPolicyModal={handleTogglePrivacyPolicyModal}
-          isLoading={isLoading}
-          passwordConfirmation={passwordConfirmation}
-          setPasswordConfirmation={setPasswordConfirmation}
-          companiesList={companiesList}
-        />
-      )}
+
+      <SignUpForm
+        onSubmit={handleSubmit}
+        onOpenUseTermsModal={handleToggleUseTermsModal}
+        onOpenPrivacyPolicyModal={handleTogglePrivacyPolicyModal}
+        isLoading={isLoading}
+        passwordConfirmation={passwordConfirmation}
+        setPasswordConfirmation={setPasswordConfirmation}
+        companiesList={companiesList}
+      />
+
       <UseTermsModal
         onClose={handleToggleUseTermsModal}
         isOpen={useTermsModal}
