@@ -41,11 +41,11 @@ export function usePlan() {
     let planLimitExceeded = false;
     if (company) {
       if (
-        (company.current_plan === "bronze" &&
+        (company.current_plan === "bronze_mensal" || company.current_plan === "bronze_anual" &&
           company.used_storage >= STORAGE_LIMIT_BRONZE_PLAN) ||
-        (company.current_plan === "silver" &&
+        (company.current_plan === "silver_mensal" || company.current_plan === "silver_anual" &&
           company.used_storage >= STORAGE_LIMIT_SILVER_PLAN) ||
-        (company.current_plan === "gold" &&
+        (company.current_plan === "gold_mensal" || company.current_plan === "gold_anual" &&
           company.used_storage >= STORAGE_LIMIT_GOLD_PLAN)
       ) {
         planLimitExceeded = true;

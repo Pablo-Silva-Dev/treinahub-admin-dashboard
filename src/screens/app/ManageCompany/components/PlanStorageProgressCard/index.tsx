@@ -15,9 +15,9 @@ export function PlanStorageProgressCard({
   plan,
 }: PlanStorageProgressCardProps) {
   const availableStorage =
-    plan === "gold"
+    plan === "gold_mensal" || plan === "gold_anual"
       ? STORAGE_LIMIT_GOLD_PLAN
-      : plan === "silver"
+      : plan === "silver_mensal" || plan === "silver_anual"
         ? STORAGE_LIMIT_SILVER_PLAN
         : STORAGE_LIMIT_BRONZE_PLAN;
 
@@ -41,7 +41,8 @@ export function PlanStorageProgressCard({
       </div>
       <div className="flex flex-row w-full items-center justify-start mt-2">
         <span className="text-gray-700 dark:text-gray-100 text-xs">
-          {consumedStorage} de {availableStorage} GBs de armazenamento utilizados
+          {consumedStorage} de {availableStorage} GBs de armazenamento
+          utilizados
         </span>
       </div>
     </div>

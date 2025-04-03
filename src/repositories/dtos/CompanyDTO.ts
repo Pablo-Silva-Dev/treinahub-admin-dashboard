@@ -1,7 +1,14 @@
 import { ITrainingDTO } from "./TrainingDTO";
 import { IUserDTO } from "./UserDTO";
 
-export type TPlan = "bronze" | "silver" | "gold";
+export type TPlan =
+  | "gold_mensal"
+  | "silver_mensal"
+  | "bronze_mensal"
+  | "gold_anual"
+  | "silver_anual"
+  | "bronze_anual"
+  | null;
 
 export interface ICompanyDTO {
   id: string;

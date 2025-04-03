@@ -35,9 +35,11 @@ export function CompanyInfoCard({
 
   const totalFreeEmployees = useMemo(() => {
     const totalEmployees =
-      company.current_plan === "bronze"
+      company.current_plan === "bronze_mensal" ||
+      company.current_plan === "bronze_anual"
         ? FREE_EMPLOYEES_LIMIT_BRONZE_PLAN
-        : company.current_plan === "silver"
+        : company.current_plan === "silver_mensal" ||
+          company.current_plan === "silver_anual"
           ? FREE_EMPLOYEES_LIMIT_SILVER_PLAN
           : FREE_EMPLOYEES_LIMIT_GOLD_PLAN;
     return totalEmployees;
@@ -230,7 +232,7 @@ export function CompanyInfoCard({
                 Plano atual
               </span>
               <span className="text-[12px] md:text-[14px] text-gray-700 dark:text-gray-300">
-                {company.current_plan.toUpperCase()}
+                {company && company.current_plan && company.current_plan.toUpperCase()}
               </span>
             </div>
 
