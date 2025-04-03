@@ -28,7 +28,6 @@ export default function ManageTrainings() {
   const [trainings, setTrainings] = useState<ITrainingDTO[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalTrainingOpen] = useState(false);
   const [isEditModalTrainingOpen, setIsEditModalTrainingOpen] = useState(false);
-  const [isPlanLimitModalOpen, setIsPlanLimitModalOpen] = useState(false);
   const [selectedTraining, setSelectedTraining] = useState<ITrainingDTO | null>(
     null
   );
@@ -136,10 +135,6 @@ export default function ManageTrainings() {
       trainingsRepository,
     ]
   );
-
-  const handleToggleLimitModal = useCallback(() => {
-    setIsPlanLimitModalOpen(!isPlanLimitModalOpen);
-  }, [isPlanLimitModalOpen]);
 
   return (
     <main className="flex flex-1 flex-col w-[85%] md:w-[90%] lg:w-[95%] mt-2 ml-[40px] mx-auto lg:pl-8 bg-gray-100 dark:bg-slate-800">

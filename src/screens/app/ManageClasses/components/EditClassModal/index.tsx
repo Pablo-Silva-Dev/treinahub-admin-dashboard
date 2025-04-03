@@ -48,7 +48,6 @@ export function EditClassModal({
   isLoading,
   selectedVideoClassId,
 }: EditClassModalProps) {
-  const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [trainingId, setTrainingId] = useState("");
 
@@ -86,7 +85,6 @@ export function EditClassModal({
       if (selectedVideoClassId) {
         const videoClass =
           await videoClassesRepository.getVideoClassById(selectedVideoClassId);
-        setName(videoClass.name);
         setDescription(videoClass.description);
         setTrainingId(videoClass.training_id);
       }

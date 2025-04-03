@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "ps-trainings-admin-dsb-client"
-  }
+    "default": "treinahub-admin",
+    "treinahubadmin": "treinahub-admin"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

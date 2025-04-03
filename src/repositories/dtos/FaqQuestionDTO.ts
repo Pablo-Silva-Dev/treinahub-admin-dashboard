@@ -2,7 +2,7 @@ export interface IFaqQuestionDTO {
   id: string;
   question: string;
   answer: string;
-  company_id: string;
+  company_id?: string;
 }
 
 export interface ICreateFaqQuestionDTO {
