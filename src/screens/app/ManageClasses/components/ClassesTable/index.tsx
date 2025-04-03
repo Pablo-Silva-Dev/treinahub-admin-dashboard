@@ -131,8 +131,8 @@ export function VideoClassesTable({
   };
 
   return (
-    <Card className="w-full lg:h-[480px] flex flex-col lg:justify-between mx-auto bg-white dark:bg-slate-900">
-      <CardBody className="overflow-scroll p-0 rounded-lg w-full">
+    <Card className="w-full flex flex-col lg:justify-between mx-auto bg-white dark:bg-slate-900">
+      <CardBody className="overflow-auto p-0 rounded-lg w-full">
         <table className="w-full table-auto text-left">
           <thead>
             <tr className="bg-gray-200 dark:bg-slate-700">
