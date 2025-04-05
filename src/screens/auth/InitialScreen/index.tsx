@@ -31,11 +31,6 @@ export default function InitialScreen() {
         if (typedError.STATUS === 409) {
           showAlertError("Credenciais incorretas.");
         }
-        if (typedError.STATUS === 406) {
-          showAlertError(
-            "Usuário já autenticado em outro dispositivo. Por favor, deslogue-se do outro dispositivo e tente novamente."
-          );
-        }
         console.log(error);
       }
     } finally {
