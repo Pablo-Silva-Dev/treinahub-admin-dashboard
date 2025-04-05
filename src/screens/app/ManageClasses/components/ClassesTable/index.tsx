@@ -25,6 +25,7 @@ import { useCallback, useEffect, useState } from "react";
 import { IoMdTrash } from "react-icons/io";
 import {
   MdEdit,
+  MdInfo,
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
@@ -201,11 +202,7 @@ export function VideoClassesTable({
                           className="flex items-center m-4 mr-0 md:mr-[-5%] xl:mr-[-12px] w-[80px] relative"
                         >
                           <img
-                            src={
-                              thumbnail_url
-                                ? thumbnail_url
-                                : video_thumbnail_placeholder
-                            }
+                            src={video_thumbnail_placeholder}
                             alt="videoaula"
                             width="80%"
                             className="rounded-sm"
@@ -276,6 +273,15 @@ export function VideoClassesTable({
                                   : "block overflow-hidden text-ellipsis whitespace-nowrap text-[10px] md:text[12px] lg:text-sm ml-2 lg:ml-4 text-red-400 mr-1"
                           }
                         />
+                        {status === "CONVERTING" && (
+                          <Tooltip content="O processo de conversão da videoaula está em andamento. O status da videoaula será atualizado assim que a conversão for concluída.">
+                            <button
+                              className="hover:bg-transparent active:bg-transparent mt-1"
+                            >
+                              <MdInfo className="lg:h-5 lg:w-5 h-3 w-3 text-slate-500 dark:text-white ml-8 lg:ml-12" />
+                            </button>
+                          </Tooltip>
+                        )}
                       </td>
                       <td className={classes}>
                         <Tooltip
