@@ -1,8 +1,9 @@
 import { useAuthenticationStore } from "@/store/auth";
+import { showAlertError } from "@/utils/alerts";
 import axios, {
-    AxiosError,
-    AxiosResponse,
-    InternalAxiosRequestConfig,
+  AxiosError,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
 } from "axios";
 
 export const api = axios.create({
@@ -49,6 +50,11 @@ api.interceptors.response.use(
     return response;
   },
   (error: AxiosError<IApiErrorResponse>) => {
+    if (error.response?.status === 429) {
+      showAlertError(
+        "Houve um erro ao tentar realizar sua solicitação. Por favor tente novamente dentro de 1 minuto."
+      );
+    }
     if (error.response && import.meta.env.DEV) {
       console.log("[RESPONSE ERROR] - ", error.response.data);
       return Promise.reject(error.response.data);
@@ -59,4 +65,3 @@ api.interceptors.response.use(
     }
   }
 );
-
