@@ -182,7 +182,6 @@ export function VideoClassesTable({
                     description,
                     duration,
                     status,
-                    thumbnail_url,
                     storage_size,
                   },
                   index
