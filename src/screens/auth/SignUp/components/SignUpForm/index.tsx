@@ -16,6 +16,7 @@ import { PasswordTextInput } from "@/components/inputs/PasswordInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { PasswordRequirements } from "@/components/miscellaneous/PasswordRequirements";
 import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
+import { showAlertError } from "@/utils/alerts";
 import { birthDateMask, cpfMask } from "@/utils/masks";
 import {
   birthDateValidationRegex,
@@ -24,6 +25,7 @@ import {
 } from "@/utils/regex";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Checkbox } from "@material-tailwind/react/";
+import { cpf } from "cpf-cnpj-validator";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -96,6 +98,10 @@ export default function SignUpForm({
   });
 
   const handleSubmitForm: SubmitHandler<SignUpFormInputs> = (data) => {
+    if (!cpf.isValid(data.cpf)) {
+      showAlertError("CPF inválido. Forneça um CPF válido.");
+      return;
+    }
     onSubmit(data);
   };
 
