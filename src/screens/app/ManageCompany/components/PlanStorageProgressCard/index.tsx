@@ -41,7 +41,7 @@ export function PlanStorageProgressCard({
       </div>
       <div className="flex flex-row w-full items-center justify-start mt-2">
         <span className="text-gray-700 dark:text-gray-100 text-xs">
-          {consumedStorage} de {availableStorage} GBs de armazenamento
+          {consumedStorage.toFixed(2)} de {availableStorage} GBs de armazenamento
           utilizados
         </span>
       </div>
