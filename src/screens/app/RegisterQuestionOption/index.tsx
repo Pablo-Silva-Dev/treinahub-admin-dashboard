@@ -350,6 +350,13 @@ export default function RegisterQuestionOption() {
     );
   };
 
+  const hasCorrectOption = useMemo(() => {
+    const hasCorrectOption = questionOptions.some(
+      (question) => question.is_correct
+    )
+    return hasCorrectOption
+  },[questionOptions])
+
   return (
     <main className="flex flex-col bg-gray-100 dark:bg-slate-800 w-full h-full pl-[80px] mt-2">
       <div className="flex flex-col w-full">
@@ -468,7 +475,7 @@ export default function RegisterQuestionOption() {
               <Button
                 title="Finalizar criação de questionários"
                 type="button"
-                disabled={questionOptions.length < MIN_QUESTION_OPTIONS}
+                disabled={questionOptions.length < MIN_QUESTION_OPTIONS || !hasCorrectOption}
                 onClick={handleFinishQuizzesCreation}
                 className="bg-primary w-full h-[52px] flex items-center justify-center normal-case 
               lg:text-base text-sm font-medium font-poppins rounded-lg disabled:opacity-[0.5] 
