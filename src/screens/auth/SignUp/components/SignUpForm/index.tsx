@@ -17,11 +17,11 @@ import { TextInput } from "@/components/inputs/TextInput";
 import { PasswordRequirements } from "@/components/miscellaneous/PasswordRequirements";
 import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
 import { showAlertError } from "@/utils/alerts";
-import { birthDateMask, cpfMask } from "@/utils/masks";
+import { birthDateMask, cpfMask, phoneMask } from "@/utils/masks";
 import {
   birthDateValidationRegex,
   cpfValidationRegex,
-  phoneWithoutCountryCodeValidationRegex,
+  phoneInputValidationRegex,
 } from "@/utils/regex";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Checkbox } from "@material-tailwind/react/";
@@ -74,7 +74,7 @@ export default function SignUpForm({
       .required(REQUIRED_FIELD_MESSAGE),
     phone: yup
       .string()
-      .matches(phoneWithoutCountryCodeValidationRegex, PHONE_INVALID_MESSAGE)
+      .matches(phoneInputValidationRegex, PHONE_INVALID_MESSAGE)
       .required(REQUIRED_FIELD_MESSAGE),
     password: yup
       .string()
@@ -102,7 +102,11 @@ export default function SignUpForm({
       showAlertError("CPF inválido. Forneça um CPF válido.");
       return;
     }
-    onSubmit(data);
+    const formattedData = {
+      ...data,
+      phone: data.phone.replace(/[\s\-().]/g, "").trim(),
+    };
+    onSubmit(formattedData);
   };
 
   const passwordValue = watch("password") || "";
@@ -179,10 +183,11 @@ export default function SignUpForm({
               </div>
             </div>
             <div>
-              <TextInput
+              <MaskedTextInput
+                mask={phoneMask}
                 inputLabel="Telefone"
                 placeholder="DDD + telefone, sem espaços"
-                autoComplete="tel"
+                autoComplete="off"
                 style={{ width: "99%" }}
                 inputMode="numeric"
                 {...register("phone")}
@@ -281,12 +286,12 @@ export default function SignUpForm({
           <Button
             type="submit"
             title="Fazer Cadastro"
+            isLoading={isLoading}
             disabled={
               !isValid ||
               !passwordValidated.current ||
               passwordValue !== passwordConfirmation ||
               !wasTermsAccepted ||
-              phoneValue.length > PHONE_VALIDATION_LENGTH ||
               isLoading
             }
           />
