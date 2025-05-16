@@ -39,7 +39,7 @@ export function CompanyInfoCard({
       company.current_plan === "bronze_anual"
         ? FREE_EMPLOYEES_LIMIT_BRONZE_PLAN
         : company.current_plan === "silver_mensal" ||
-          company.current_plan === "silver_anual"
+            company.current_plan === "silver_anual"
           ? FREE_EMPLOYEES_LIMIT_SILVER_PLAN
           : FREE_EMPLOYEES_LIMIT_GOLD_PLAN;
     return totalEmployees;
@@ -232,14 +232,16 @@ export function CompanyInfoCard({
                 Plano atual
               </span>
               <span className="text-[12px] md:text-[14px] text-gray-700 dark:text-gray-300">
-                {company && company.current_plan && company.current_plan.toUpperCase()}
+                {company &&
+                  company.current_plan &&
+                  company.current_plan.toUpperCase()}
               </span>
             </div>
 
             {company.users && (
               <div className="w-full flex flex-col mb-4">
                 <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200  font-bold">
-                  Número de colaboradores na plataforma
+                  Número de usuários na plataforma
                 </span>
                 <span className="text-[12px] md:text-[14px] text-gray-700 dark:text-gray-300">
                   {totalEmployees}
@@ -249,7 +251,7 @@ export function CompanyInfoCard({
             {company.users && (
               <div className="w-full flex flex-col mb-4">
                 <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200  font-bold">
-                  Número de colaboradores gratuitos inclusos no plano
+                  Número de usuários gratuitos inclusos no plano
                 </span>
                 <span className="text-[12px] md:text-[14px] text-gray-700 dark:text-gray-300">
                   {totalFreeEmployees}
@@ -259,7 +261,7 @@ export function CompanyInfoCard({
             {company.users && (
               <div className="w-full flex flex-col mb-4">
                 <span className="text-[12px] md:text-[14px] text-gray-800 dark:text-gray-200  font-bold">
-                  Número de colaboradores adicionais
+                  Número de usuários adicionais
                 </span>
                 <span className="text-[12px] md:text-[14px] text-gray-700 dark:text-gray-300">
                   {company.number_of_additional_employees}

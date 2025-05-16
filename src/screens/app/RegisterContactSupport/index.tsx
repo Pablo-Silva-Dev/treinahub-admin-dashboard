@@ -95,7 +95,7 @@ export default function RegisterContactSupport() {
         <div className="w-full flex flex-col xl:flex-row justify-center mt-4">
           <RegistrationInfo
             iconName="message-square"
-            infoText="Cadastre contatos responsáveis por atender a possíveis dúvidas dos seus colaboradores."
+            infoText="Cadastre contatos responsáveis por atender a possíveis dúvidas dos seus usuários."
             registration="Contato de suporte"
           />
           <div className="flex flex-col items-center w-[90%] xl:w-[40vw] mr-6 xl:ml-4 bg-white dark:bg-slate-700 p-8 rounded-md">

@@ -93,7 +93,7 @@ export default function RegisterFaqQuestion() {
         <div className="w-full flex flex-col xl:flex-row justify-center mt-4">
           <RegistrationInfo
             iconName="help-circle"
-            infoText="Cadastre uma pergunta frequente para responder uma possível dúvida que seu colaborador possa ter."
+            infoText="Cadastre uma pergunta frequente para responder uma possível dúvida que seu usuário possa ter."
             registration="Pergunta frequente"
           />
           <div className="flex flex-col items-center w-[90%] xl:w-[40vw] mr-6 xl:ml-4 bg-white dark:bg-slate-700 p-8 rounded-md">
