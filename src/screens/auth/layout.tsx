@@ -45,7 +45,7 @@ const AuthenticationLayout: React.FC<AuthenticationLayoutProps> = ({
         <img
           src={dashboard_background}
           alt="logo_text"
-          className="w-full h-full object-cover brightness-[80%]"
+          className="w-full h-[33vh] lg:h-full object-cover brightness-[80%]"
         />
       </section>
     </div>
