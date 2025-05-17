@@ -1,9 +1,11 @@
-import { MdDelete, MdEdit } from "react-icons/md";
+import { IconButton, Tooltip } from "@material-tailwind/react";
+import { MdDelete, MdEdit, MdInfo } from "react-icons/md";
 
 interface TrainingInfoCardProps {
   training: string;
   description: string;
   cover_url: string;
+  isAvailable: boolean;
   onEdit: () => void;
   onDelete: () => void;
   onSeeTraining: (trainingId: string) => void;
@@ -15,6 +17,7 @@ export function TrainingInfoCard({
   cover_url,
   training,
   description,
+  isAvailable,
   onDelete,
   onEdit,
   onSeeTraining,
@@ -56,6 +59,26 @@ export function TrainingInfoCard({
             </button>
           </div>
         </div>
+        {isAvailable ? (
+          <span className="text-green-500 text-xs lg:text-sm py-1 rounded-full w-auto mt-3">
+            Disponível para os usuários.
+          </span>
+        ) : (
+          <span className="text-amber-500 text-xs lg:text-sm py-1 rounded-full w-auto mt-3">
+            Videoaulas ou questionários pendentes.
+            <Tooltip
+              className="hidden lg:flex max-w-[400px]"
+              content="Verifique se há videoaulas ou questionários pendentes. Cada pergunta do questionário deve ter pelo menos 2 alternativas sendo uma a correta."
+            >
+              <IconButton
+                variant="text"
+                className="p-0 bg-transparent hover:bg-transparent hover:p-0 mr-8 lg:mr-4"
+              >
+                <MdInfo className="lg:h-5 lg:w-5 h-4 w-4 p-0 text-gray-700 dark:text-gray-300 rounded-full" />
+              </IconButton>
+            </Tooltip>
+          </span>
+        )}
       </div>
     </div>
   );

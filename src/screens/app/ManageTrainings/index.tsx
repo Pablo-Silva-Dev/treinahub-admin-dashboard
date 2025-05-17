@@ -176,6 +176,25 @@ export default function ManageTrainings() {
                     key={training.id}
                     training={training.name}
                     description={training.description}
+                    isAvailable={
+                      training.video_classes &&
+                      training.video_classes?.length > 0 &&
+                      training.quizes &&
+                      training.quizes.some(
+                        (quiz) =>
+                          quiz.questions &&
+                          quiz.questions.some(
+                            (question) =>
+                              question.options &&
+                              question.options?.length > 0 &&
+                              question.options.some(
+                                (option) => option.is_correct
+                              )
+                          )
+                      )
+                        ? true
+                        : false
+                    }
                     cover_url={
                       training.cover_url
                         ? training.cover_url
