@@ -17,7 +17,7 @@ const AuthenticationLayout: React.FC<AuthenticationLayoutProps> = ({
   return (
     <div className="flex flex-col-reverse lg:flex-row w-full min-h-screen">
       <Toaster />
-      <section className="flex flex-col lg w-full lg:w-1/2 bg-white dark:bg-slate-900  p-10 lg:p-20">
+      <section className="flex flex-col lg w-full lg:w-2/3 bg-white dark:bg-slate-900  p-10 lg:p-20">
         <div className="flex flex-col justify-between h-full">
           {children}
           <div className="flex flex-col w-full items-center">
@@ -30,13 +30,13 @@ const AuthenticationLayout: React.FC<AuthenticationLayoutProps> = ({
           </div>
         </div>
       </section>
-      <section className="flex flex-col w-full lg:w-1/2 ">
+      <section className="flex flex-col w-full lg:w-1/3 ">
         <div className="bg-gradient-to-r from-secondary-light to-secondary-dark p-2 md:p-4 pl-8">
           <div className="w-[80%]">
-            <span className="text-white text-lg md:text-3xl max-w-xs md:max-w-lg font-thin">
+            <span className="text-white text-lg md:text-2xl max-w-xs md:max-w-lg font-regular">
               Gerencie seus treinamentos de maneira{" "}
             </span>
-            <span className="text-white text-lg md:text-3xl max-w-xs md:max-w-lg font-bold">
+            <span className="text-white text-lg md:text-2xl max-w-xs md:max-w-lg font-semibold">
               {" "}
               simples e otimizada
             </span>
@@ -45,7 +45,7 @@ const AuthenticationLayout: React.FC<AuthenticationLayoutProps> = ({
         <img
           src={dashboard_background}
           alt="logo_text"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover brightness-[80%]"
         />
       </section>
     </div>

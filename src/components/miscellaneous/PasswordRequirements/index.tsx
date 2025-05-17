@@ -50,41 +50,41 @@ export function PasswordRequirements({
   }, [checkPassword]);
 
   return (
-    <div className="w-full flex flex-col mb-2">
-      <span className="text-gray-700 dark:text-gray-100 text-[12px] lg:text-sm">
+    <div className="w-full flex flex-col mb-4">
+      <span className="text-gray-700 dark:text-gray-100 text-[12px] lg:text-sm mb-2">
         Sua senha deve conter:{" "}
       </span>
-      <ul className="w-full flex flex-col list-disc pl-8">
+      <ul className="w-full grid grid-cols-2 list-disc pl-4">
         <li
-          className={`text-[12px] lg:text-sm ${
+          className={`text-[11px] 2xl:text-sm ${
             hasMinimalLength ? "text-green-500" : "text-gray-500"
           }`}
         >
           No mínimo {MINIMAL_PASSWORD_LENGTH} caracteres
         </li>
         <li
-          className={`text-[12px] lg:text-sm ${
+          className={`text-[11px] 2xl:text-sm ${
             hasUpperCaseLetter ? "text-green-500" : "text-gray-500"
           }`}
         >
           Pelo menos 1 letra maiúscula
         </li>
         <li
-          className={`text-[12px] lg:text-sm ${
+          className={`text-[11px] 2xl:text-sm ${
             hasLowerCaseLetter ? "text-green-500" : "text-gray-500"
           }`}
         >
           Pelo menos 1 letra minúscula
         </li>
         <li
-          className={`text-[12px] lg:text-sm ${
+          className={`text-[11px] 2xl:text-sm ${
             hasNumberCharacter ? "text-green-500" : "text-gray-500"
           }`}
         >
           Pelo menos 1 número
         </li>
         <li
-          className={`text-[12px] lg:text-sm ${
+          className={`text-[11px] 2xl:text-sm ${
             hasSpecialCharacter ? "text-green-500" : "text-gray-500"
           }`}
         >

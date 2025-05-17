@@ -49,38 +49,47 @@ export function SignInForm({ onSubmit, isLoading }: SignInFormProps) {
   };
 
   return (
-    <form
-      className="max-w-lg bg-gray-50 dark:bg-slate-800  p-6 shadow-xl rounded-lg mx-auto w-[90%] lg:w-[400px]"
-      onSubmit={handleSubmit(handleSubmitForm)}
-    >
-      <TextInput
-        inputLabel="Email"
-        placeholder="Seu email"
-        {...register("email")}
-      />
-      {errors.email && <ErrorMessage errorMessage={errors.email.message} />}
-      <PasswordTextInput
-        inputLabel="Senha"
-        placeholder="Sua senha de pelo menos 8 dígitos"
-        {...register("password")}
-      />
-      {errors.password && (
-        <ErrorMessage errorMessage={errors.password.message} />
-      )}
-      <div className="flex w-full my-6">
+    <div className="flex flex-col max-w-lg bg-gray-50 dark:bg-slate-800  p-6 shadow-xl rounded-lg mx-auto w-[90%] lg:w-[400px]">
+      <form
+        className="w-full flex flex-col"
+        onSubmit={handleSubmit(handleSubmitForm)}
+      >
+        <TextInput
+          inputLabel="Email"
+          placeholder="Seu email"
+          {...register("email")}
+        />
+        {errors.email && <ErrorMessage errorMessage={errors.email.message} />}
+        <PasswordTextInput
+          inputLabel="Senha"
+          placeholder="Sua senha de pelo menos 8 dígitos"
+          {...register("password")}
+        />
+        {errors.password && (
+          <ErrorMessage errorMessage={errors.password.message} />
+        )}
+        <div className="mt-2">
+          <Button
+            title="Acessar a plataforma"
+            type="submit"
+            disabled={!isValid}
+            isLoading={isLoading}
+          />
+        </div>
+      </form>
+      <div className="flex w-full mt-4">
         <Link to="/recuperar-senha">
           <LinkButton title="Esqueci minha senha" />
         </Link>
       </div>
-      <Button title="Acessar a plataforma" type="submit" disabled={!isValid} isLoading={isLoading}/>
-      <div className="flex flex-row w-full mt-6 justify-between items-center">
+      <div className="flex flex-row w-full mt-4 items-center">
         <span className="text-gray-700 dark:text-gray-100 text-sm">
           Não tem uma conta?
         </span>
-        <Link to="/cadastro">
+        <Link to="/cadastro" className="ml-2">
           <LinkButton title="Criar minha conta" />
         </Link>
       </div>
-    </form>
+    </div>
   );
 }

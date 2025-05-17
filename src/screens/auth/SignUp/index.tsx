@@ -1,12 +1,10 @@
 import { NAVIGATION_TIMER } from "@/appConstants/index";
 import { HeaderNavigation } from "@/components/miscellaneous/HeaderNavigation";
-import { CompaniesRepository } from "@/repositories/companiesRepository";
-import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
 import { IRegisterUserRequest } from "@/repositories/interfaces/usersRepository";
 import { UsersRepositories } from "@/repositories/usersRepositories";
 import { useLoading } from "@/store/loading";
 import { showAlertError, showAlertSuccess } from "@/utils/alerts";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PrivacyPolicyModal } from "./components/PrivacyPolicyModal";
 import SignUpForm from "./components/SignUpForm";
@@ -16,31 +14,10 @@ export default function SignUp() {
   const { isLoading, setIsLoading } = useLoading();
   const navigate = useNavigate();
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [companiesList, setCompaniesList] = useState<ICompanyDTO[]>([]);
 
   const usersRepository = useMemo(() => {
     return new UsersRepositories();
   }, []);
-
-  const companiesRepository = useMemo(() => {
-    return new CompaniesRepository();
-  }, []);
-
-  const getCompanies = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const companies = await companiesRepository.listCompanies();
-      setCompaniesList(companies);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [companiesRepository, setIsLoading]);
-
-  useEffect(() => {
-    getCompanies();
-  }, [getCompanies]);
 
   const handleSubmit = async (data: IRegisterUserRequest) => {
     try {
@@ -94,8 +71,8 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-row mb-2 w-full sm:w-[400px] sm:mx-auto">
+    <div className="flex flex-col items-center">
+      <div className="flex flex-row mb-4 mx-auto">
         <HeaderNavigation screenTitle="Cadastro" />
       </div>
 
@@ -106,7 +83,6 @@ export default function SignUp() {
         isLoading={isLoading}
         passwordConfirmation={passwordConfirmation}
         setPasswordConfirmation={setPasswordConfirmation}
-        companiesList={companiesList}
       />
 
       <UseTermsModal
