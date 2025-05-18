@@ -100,7 +100,7 @@ export default function Home() {
       link: "/dashboard/gerenciar-usuarios",
     },
     {
-      title: "Treinamentos disponíveis",
+      title: "Treinamentos cadastrados",
       iconName: "book-open",
       metric: totalTrainings,
       link: "/dashboard/gerenciar-treinamentos",
