@@ -15,7 +15,6 @@ import { MaskedTextInput } from "@/components/inputs/MaskedTextInput";
 import { PasswordTextInput } from "@/components/inputs/PasswordInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { PasswordRequirements } from "@/components/miscellaneous/PasswordRequirements";
-import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
 import { showAlertError } from "@/utils/alerts";
 import { birthDateMask, cpfMask, phoneMask } from "@/utils/masks";
 import {
