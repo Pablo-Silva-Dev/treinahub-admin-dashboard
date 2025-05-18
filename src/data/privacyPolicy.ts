@@ -9,8 +9,9 @@ export const privacyPolicy = [
   {
     title: "Dados Coletados",
     texts: [
-      "Coletamos informações que você nos fornece diretamente ao criar uma conta, tais como nome, e-mail, endereço e data de nascimento.",
+      "Coletamos informações que você nos fornece diretamente ao criar uma conta, tais como nome, cpf, e-mail e data de nascimento.",
       "Automatizamos a coleta de dados quando você acessa e usa nossa plataforma, incluindo atividades de navegação e interações com o site.",
+      "Ao utilizar nossa plataforma você automaticamente autoriza a coleta de seus dados pessoais.",
     ],
   },
   {
@@ -24,7 +25,7 @@ export const privacyPolicy = [
     title: "Compartilhamento de Dados",
     texts: [
       "Podemos compartilhar suas informações com empresas parceiras e prestadores de serviços externos que nos auxiliam na operação da plataforma, como por exemplo, processamento de dados.",
-      "Confiamos que todos os parceiros respeitem a segurança de seus dados e cumpram a legislação vigente sobre proteção de dados.",
+      "Acreditamos que todos os parceiros respeitem a segurança de seus dados e cumpram a legislação vigente sobre proteção de dados.",
     ],
   },
   {
