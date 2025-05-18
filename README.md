@@ -1,7 +1,7 @@
 ## How to execute this project
 
 1. Download this repository.
-2. Run the command `npm install` to install dependecies.
+2. Run the command `npm install` to install dependencies.
 3. Add the .env.development file.
 4. Run `npm run dev` to start the project.
 
