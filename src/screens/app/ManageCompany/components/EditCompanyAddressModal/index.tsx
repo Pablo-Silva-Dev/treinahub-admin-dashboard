@@ -1,6 +1,8 @@
+import { BRAZILIAN_STATE_OPTIONS } from "@/appConstants/index";
 import { Button } from "@/components/buttons/Button";
 import { ErrorMessage } from "@/components/inputs/ErrorMessage";
 import { MaskedTextInput } from "@/components/inputs/MaskedTextInput";
+import { SelectInput } from "@/components/inputs/SelectInput";
 import { TextInput } from "@/components/inputs/TextInput";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Title } from "@/components/typography/Title";
@@ -14,6 +16,7 @@ import {
 } from "@/styles/react-modal";
 import { cepMask } from "@/utils/masks";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 import {
   KeyboardEvent,
   MouseEvent,
@@ -54,6 +57,9 @@ export function EditCompanyAddressModal({
   const { user } = useAuthenticationStore();
 
   const [company, setCompany] = useState<IUpdatableCompanyDTO | null>(null);
+  const [citiesOptions, setCitiesOptions] = useState<
+    { label: string; value: string }[]
+  >([]);
 
   const validationSchema = yup.object({
     id: yup.string(),
@@ -71,10 +77,14 @@ export function EditCompanyAddressModal({
     handleSubmit,
     formState: { errors, isValid },
     reset,
+    setValue,
+    watch,
   } = useForm({
     resolver: yupResolver(validationSchema),
     mode: "onChange",
   });
+
+  const selectedUF = watch("uf") ?? "AP";
 
   const companyRepository = useMemo(() => {
     return new CompaniesRepository();
@@ -116,6 +126,31 @@ export function EditCompanyAddressModal({
     onClose();
   };
 
+  const getCitiesByState = useCallback(async (uf: string) => {
+    if (uf) {
+      axios
+        .get(`https://brasilapi.com.br/api/ibge/municipios/v1/${uf}`)
+        .then((response) => {
+          const cities = response.data.map((city: any) => ({
+            label: city.nome,
+            value: city.nome,
+          }));
+
+          setCitiesOptions(cities);
+        })
+        .catch((error) => {
+          console.error(
+            "There was an error at trying to call BrailAPI: ",
+            error
+          );
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    getCitiesByState(selectedUF);
+  }, [getCitiesByState, selectedUF]);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -146,29 +181,6 @@ export function EditCompanyAddressModal({
           )}
           <div className="w-full md:ml-3">
             <TextInput
-              inputLabel="Cidade"
-              placeholder="Cidade"
-              defaultValue={company?.city}
-              {...register("city")}
-            />
-            {errors && errors.city && (
-              <ErrorMessage errorMessage={errors.city?.message} />
-            )}
-          </div>
-        </div>
-
-        <div className="my-4 flex flex-col md:flex-row items-center">
-          <TextInput
-            inputLabel="Bairro"
-            placeholder="Bairro"
-            defaultValue={company?.district}
-            {...register("district")}
-          />
-          {errors && errors.district && (
-            <ErrorMessage errorMessage={errors.district?.message} />
-          )}
-          <div className="w-full md:ml-3">
-            <TextInput
               inputLabel="Rua"
               placeholder="Rua"
               defaultValue={company?.street}
@@ -181,37 +193,61 @@ export function EditCompanyAddressModal({
         </div>
         <div className="my-4 flex flex-col md:flex-row items-center">
           <TextInput
-            inputLabel="Número"
-            placeholder="Número"
-            defaultValue={company?.residence_number}
-            {...register("residence_number")}
+            inputLabel="Bairro"
+            placeholder="Bairro"
+            defaultValue={company?.district}
+            {...register("district")}
           />
-          {errors && errors.residence_number && (
-            <ErrorMessage errorMessage={errors.residence_number?.message} />
+          {errors && errors.district && (
+            <ErrorMessage errorMessage={errors.district?.message} />
           )}
           <div className="w-full md:ml-3">
             <TextInput
-              inputLabel="Complemento"
-              placeholder="Complemento"
-              defaultValue={company?.residence_complement}
-              {...register("residence_complement")}
+              inputLabel="Número"
+              placeholder="Número"
+              defaultValue={company?.residence_number}
+              {...register("residence_number")}
             />
-            {errors && errors.residence_complement && (
-              <ErrorMessage
-                errorMessage={errors.residence_complement?.message}
-              />
+            {errors && errors.residence_number && (
+              <ErrorMessage errorMessage={errors.residence_number?.message} />
+            )}
+          </div>
+        </div>
+        <div className="my-4 flex flex-col md:flex-row items-center">
+          <TextInput
+            inputLabel="Complemento"
+            placeholder="Complemento"
+            defaultValue={company?.residence_complement}
+            {...register("residence_complement")}
+          />
+          {errors && errors.residence_complement && (
+            <ErrorMessage errorMessage={errors.residence_complement?.message} />
+          )}
+          <div className="w-full md:ml-3">
+            <SelectInput
+              label="UF"
+              placeholder="UF"
+              options={BRAZILIAN_STATE_OPTIONS}
+              onSelectOption={(val) => {
+                setValue("uf", val.value as never);
+              }}
+            />
+            {errors && errors.uf && (
+              <ErrorMessage errorMessage={errors.uf?.message} />
             )}
           </div>
         </div>
         <div className="my-4">
-          <TextInput
-            inputLabel="UF"
-            placeholder="UF"
-            defaultValue={company?.uf}
-            {...register("uf")}
+          <SelectInput
+            label="Cidade"
+            placeholder="Selecione uma cidade"
+            options={citiesOptions}
+            onSelectOption={(val) => {
+              setValue("city", val.value as never);
+            }}
           />
-          {errors && errors.uf && (
-            <ErrorMessage errorMessage={errors.uf?.message} />
+          {errors && errors.city && (
+            <ErrorMessage errorMessage={errors.city?.message} />
           )}
         </div>
         <div className="w-full mt-6">
