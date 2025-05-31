@@ -40,6 +40,16 @@ export const userTerms = [
     ],
   },
   {
+    title: "Política de Cancelamento e Reembolso",
+    texts: [
+      "Ao adicionar um novo usuário à plataforma, o valor correspondente à inclusão será imediatamente acrescido à sua fatura atual, mesmo que o usuário seja excluído durante o mesmo ciclo de cobrança.",
+      "Caso o usuário adicional seja excluído, ele não será cobrado novamente nos ciclos seguintes.",
+      "O cancelamento da assinatura pode ser solicitado a qualquer momento pelo administrador da conta.",
+      "Reembolsos só serão considerados para solicitações de cancelamento feitas em até 7 (sete) dias após a contratação ou renovação do plano, conforme previsto no artigo 49 do Código de Defesa do Consumidor.",
+      "Para solicitar o reembolso, o administrador deve enviar um pedido formal por e-mail para pscodecontato@gmail.com dentro do prazo indicado.",
+    ],
+  },
+  {
     title: "Alterações nos Termos",
     texts: [
       "A empresa reserva-se o direito de alterar estes termos e condições a qualquer momento sem aviso prévio.",
