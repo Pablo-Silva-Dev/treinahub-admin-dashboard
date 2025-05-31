@@ -101,12 +101,8 @@ export const menuItems = [
     title: "FAQ",
     actions: [
       {
-        title: "Cadastrar pergunta frequente",
-        link: "cadastrar-pergunta-frequente",
-      },
-      {
-        title: "Gerenciar perguntas frequentes",
-        link: "gerenciar-perguntas-frequentes",
+        title: "Acessar perguntas frequentes",
+        link: "acessar-perguntas-frequentes",
       },
     ],
     icon: "help-circle",

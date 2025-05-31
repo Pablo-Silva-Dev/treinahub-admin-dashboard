@@ -17,7 +17,6 @@ import ManageTrainings from "@/screens/app/ManageTrainings";
 import ManageUsers from "@/screens/app/ManageUsers";
 import RegisterClass from "@/screens/app/RegisterClass";
 import RegisterContactSupport from "@/screens/app/RegisterContactSupport";
-import RegisterFaqQuestion from "@/screens/app/RegisterFaqQuestion";
 import RegisterQuestionOption from "@/screens/app/RegisterQuestionOption";
 import RegisterQuiz from "@/screens/app/RegisterQuiz";
 import RegisterQuizQuestion from "@/screens/app/RegisterQuizQuestion";
@@ -83,11 +82,7 @@ const appRoutesBase: route[] = [
     element: <ManageQuestionsAndOptions />,
   },
   {
-    path: "/dashboard/cadastrar-pergunta-frequente",
-    element: <RegisterFaqQuestion />,
-  },
-  {
-    path: "/dashboard/gerenciar-perguntas-frequentes",
+    path: "/dashboard/acessar-perguntas-frequentes",
     element: <ManageFaqQuestions />,
   },
   {
