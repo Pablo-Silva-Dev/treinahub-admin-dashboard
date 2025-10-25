@@ -5,8 +5,6 @@ import { Loading } from "@/components/miscellaneous/Loading";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Title } from "@/components/typography/Title";
 import { menuItems } from "@/data/dashboardMenu";
-import { CompaniesRepository } from "@/repositories/companiesRepository";
-import { ICompanyDTO } from "@/repositories/dtos/CompanyDTO";
 import { UsersRepositories } from "@/repositories/usersRepositories";
 import { useAuthenticationStore } from "@/store/auth";
 import { useThemeStore } from "@/store/theme";
@@ -82,7 +80,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [breadCrumbAction, setBreadCrumbAction] = useState(action);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isMobileMenuModalOpen, setIsMobileMenuModalOpen] = useState(false);
-  const [company, setCompany] = useState<ICompanyDTO | null>(null);
   const [internalLoading, setInternalLoading] = useState(false);
 
   const { signOut, user } = useAuthenticationStore();
@@ -92,28 +89,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const navigate = useNavigate();
 
   const ref = useRef<LoadingBarProps>(null);
-
-  const companiesRepository = useMemo(() => {
-    return new CompaniesRepository();
-  }, []);
-
-  const getCompanyStorage = useCallback(async () => {
-    try {
-      setInternalLoading(true);
-      const company = await companiesRepository.getCompany(user.companyId);
-      if (company) {
-        setCompany(company);
-      }
-    } catch (error) {
-      console.log("Error at trying to get company storage: ", error);
-    } finally {
-      setInternalLoading(false);
-    }
-  }, [companiesRepository, user.companyId]);
-
-  useEffect(() => {
-    getCompanyStorage();
-  }, [getCompanyStorage]);
 
   const handleOpenedAccordionIndexes = (idx: number) => {
     const filteredAccordionIndexes = openedAccordionIndexes.filter(
