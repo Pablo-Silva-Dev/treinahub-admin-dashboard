@@ -1,7 +1,6 @@
 import logo from "@/assets/logo.svg";
 import logo_text from "@/assets/logo_text.svg";
 import logo_text_dark from "@/assets/logo_text_dark.svg";
-import { Loading } from "@/components/miscellaneous/Loading";
 import { Subtitle } from "@/components/typography/Subtitle";
 import { Title } from "@/components/typography/Title";
 import { menuItems } from "@/data/dashboardMenu";
@@ -80,7 +79,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [breadCrumbAction, setBreadCrumbAction] = useState(action);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isMobileMenuModalOpen, setIsMobileMenuModalOpen] = useState(false);
-  const [internalLoading, setInternalLoading] = useState(false);
 
   const { signOut, user } = useAuthenticationStore();
 
@@ -169,126 +167,122 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     <section className="flex flex-col h-screen overflow-hidden">
       <LoadingBar ref={ref as never} height={4} color="#0267FF" />
       <Toaster />
-      {internalLoading ? (
-        <Loading />
-      ) : (
-        <div className="flex flex-row w-full min-h-screen">
-          <nav className="hidden xl:flex flex-col w-[320px] min-h-screen overflow-auto p-8 px-4 bg-white dark:bg-slate-900 items-start">
-            <Link to="/dashboard">
-              <img
-                src={theme === "dark" ? logo_text_dark : logo_text}
-                alt="logo-text"
-                width={200}
-                className="mb-2 pl-6"
-              />
-            </Link>
-            {menuItems.map((item, idx) => (
-              <Accordion
-                className="flex flex-col"
-                open={openedAccordionIndexes.includes(idx)}
-                key={item.title}
-              >
-                <AccordionHeader
-                  className="flex justify-start border-none mb-[-24px]"
-                  onClick={() => handleOpenedAccordionIndexes(idx)}
-                >
-                  <Button
-                    className={`bg-transparent hover:shadow-none shadow-none w-full flex flex-row items-center text-[12px] lg:text-[14px] text-black dark:text-white font-secondary hover:bg-transparent focus:bg-transparent rounded-none no-ripple-effect`}
-                    ripple={false}
-                  >
-                    <FeatherIcon
-                      icon={item.icon}
-                      size={28}
-                      className="text-black dark:text-white mr-2"
-                      strokeWidth={1}
-                    />
-                    {item.title}
-                  </Button>
-                </AccordionHeader>
-                <AccordionBody className="flex flex-col py-0 px-4">
-                  {item.actions.map((action) => (
-                    <Link
-                      to={"/dashboard/" + action.link}
-                      key={action.title}
-                      className={`mb-1 p-0 text-[13px] font-bold text-black dark:text-white hover:bg-transparent`}
-                    >
-                      <Button
-                        className={`bg-transparent hover:shadow-none shadow-none flex p-1 pl-2 ml-4 w-full text-[10px] lg:text-[11px] text-gray-700 dark:text-gray-300 font-secondary font-medium hover:bg-transparent focus:bg-transparent focus:border-l-[4px] text-left focus:border-l-primary rounded-none no-ripple-effect focus:font-bold `}
-                        ripple={false}
-                      >
-                        {action.title}
-                      </Button>
-                    </Link>
-                  ))}
-                </AccordionBody>
-              </Accordion>
-            ))}
-          </nav>
-          <div className="flex flex-1 flex-col justify-between pb-0 bg-gray-100 dark:bg-slate-800 h-screen w-full overflow-y-auto">
-            <header
-              className={
-                !isMobileMenuModalOpen
-                  ? "w-full flex flex-row justify-between items-center border-bottom-2 lg:p-4 p-3 fixed bg-gray-50 dark:bg-slate-700 border-b-gray-200 dark:border-b-slate-600 border-b-2 z-50"
-                  : "w-full flex flex-row justify-between items-center border-bottom-2 mb-[400px] lg:p-4 p-3 fixed bg-gray-50 dark:bg-slate-700 border-b-gray-200 dark:border-b-slate-600 border-b-2"
-              }
+      <div className="flex flex-row w-full min-h-screen">
+        <nav className="hidden xl:flex flex-col w-[320px] min-h-screen overflow-auto p-8 px-4 bg-white dark:bg-slate-900 items-start">
+          <Link to="/dashboard">
+            <img
+              src={theme === "dark" ? logo_text_dark : logo_text}
+              alt="logo-text"
+              width={200}
+              className="mb-2 pl-6"
+            />
+          </Link>
+          {menuItems.map((item, idx) => (
+            <Accordion
+              className="flex flex-col"
+              open={openedAccordionIndexes.includes(idx)}
+              key={item.title}
             >
-              <div className="flex flex-row items-center">
-                <Link to="/dashboard">
-                  <img
-                    src={logo}
-                    alt="logo-text"
-                    width={40}
-                    className="block md:hidden"
-                  />
-                </Link>
-                <div className="hidden lg:flex mr-4">
-                  <Breadcrumbs className="ml-4 bg-gray-200 dark:bg-slate-800">
-                    <Link to="/dashboard">
-                      <span className="text-[12px] lx:text-sm hidden sm:flex dark:text-gray-100 text-slate-800">
-                        {breadCrumbBase}
-                      </span>
-                    </Link>
-                    <Link to={`/dashboard/${breadCrumbAction}`}>
-                      <span className="opacity-60 text-[12px] lx:text-sm dark:text-gray-100 text-slate-800">
-                        {breadCrumbAction}
-                      </span>
-                    </Link>
-                  </Breadcrumbs>
-                </div>
-                <div className="flex xl:hidden mx-auto">
-                  <button onClick={handleToggleMobileMenuModal}>
-                    <MdMenu className="w-7 h-7 text-primary dark:text-primary-light ml-3" />
-                  </button>
-                </div>
-              </div>
-              <div className="flex flex-row items-center lg:mr-[320px] ml-8">
-                <button onClick={toggleTheme}>
-                  {theme === "light" ? (
-                    <MdDarkMode className="h-5 w-5  text-slate-800 dark:text-gray-100 mr-4 sm:mr-8" />
-                  ) : (
-                    <MdLightMode className="h-5 w-5 text-slate-800 dark:text-gray-100 mr-4 sm:mr-8" />
-                  )}
-                </button>
-                <div className="flex flex-row items-center justify-center rounded-lg bg-gradient-to-r from-secondary-light to-secondary-dark p-2">
-                  <span className="text-[12px] lg:text-[14px] text-white  font-secondary">
-                    Administrador
-                  </span>
-                </div>
-                <button
-                  className="flex flex-row justify-between items-center p-2 ml-3"
-                  onClick={handleToggleLogoutModal}
+              <AccordionHeader
+                className="flex justify-start border-none mb-[-24px]"
+                onClick={() => handleOpenedAccordionIndexes(idx)}
+              >
+                <Button
+                  className={`bg-transparent hover:shadow-none shadow-none w-full flex flex-row items-center text-[12px] lg:text-[14px] text-black dark:text-white font-secondary hover:bg-transparent focus:bg-transparent rounded-none no-ripple-effect`}
+                  ripple={false}
                 >
-                  <span className="text-[12px] lx:text-sm normal-case text-secondary-dark dark:text-secondary-light">
-                    Sair
-                  </span>
-                  <MdLogout className="w-5 h-5 ml-1 text-secondary-dark dark:text-secondary-light" />
+                  <FeatherIcon
+                    icon={item.icon}
+                    size={28}
+                    className="text-black dark:text-white mr-2"
+                    strokeWidth={1}
+                  />
+                  {item.title}
+                </Button>
+              </AccordionHeader>
+              <AccordionBody className="flex flex-col py-0 px-4">
+                {item.actions.map((action) => (
+                  <Link
+                    to={"/dashboard/" + action.link}
+                    key={action.title}
+                    className={`mb-1 p-0 text-[13px] font-bold text-black dark:text-white hover:bg-transparent`}
+                  >
+                    <Button
+                      className={`bg-transparent hover:shadow-none shadow-none flex p-1 pl-2 ml-4 w-full text-[10px] lg:text-[11px] text-gray-700 dark:text-gray-300 font-secondary font-medium hover:bg-transparent focus:bg-transparent focus:border-l-[4px] text-left focus:border-l-primary rounded-none no-ripple-effect focus:font-bold `}
+                      ripple={false}
+                    >
+                      {action.title}
+                    </Button>
+                  </Link>
+                ))}
+              </AccordionBody>
+            </Accordion>
+          ))}
+        </nav>
+        <div className="flex flex-1 flex-col justify-between pb-0 bg-gray-100 dark:bg-slate-800 h-screen w-full overflow-y-auto">
+          <header
+            className={
+              !isMobileMenuModalOpen
+                ? "w-full flex flex-row justify-between items-center border-bottom-2 lg:p-4 p-3 fixed bg-gray-50 dark:bg-slate-700 border-b-gray-200 dark:border-b-slate-600 border-b-2 z-50"
+                : "w-full flex flex-row justify-between items-center border-bottom-2 mb-[400px] lg:p-4 p-3 fixed bg-gray-50 dark:bg-slate-700 border-b-gray-200 dark:border-b-slate-600 border-b-2"
+            }
+          >
+            <div className="flex flex-row items-center">
+              <Link to="/dashboard">
+                <img
+                  src={logo}
+                  alt="logo-text"
+                  width={40}
+                  className="block md:hidden"
+                />
+              </Link>
+              <div className="hidden lg:flex mr-4">
+                <Breadcrumbs className="ml-4 bg-gray-200 dark:bg-slate-800">
+                  <Link to="/dashboard">
+                    <span className="text-[12px] lx:text-sm hidden sm:flex dark:text-gray-100 text-slate-800">
+                      {breadCrumbBase}
+                    </span>
+                  </Link>
+                  <Link to={`/dashboard/${breadCrumbAction}`}>
+                    <span className="opacity-60 text-[12px] lx:text-sm dark:text-gray-100 text-slate-800">
+                      {breadCrumbAction}
+                    </span>
+                  </Link>
+                </Breadcrumbs>
+              </div>
+              <div className="flex xl:hidden mx-auto">
+                <button onClick={handleToggleMobileMenuModal}>
+                  <MdMenu className="w-7 h-7 text-primary dark:text-primary-light ml-3" />
                 </button>
               </div>
-            </header>
-            <div className="mt-[96px]">{children}</div>
-          </div>
+            </div>
+            <div className="flex flex-row items-center lg:mr-[320px] ml-8">
+              <button onClick={toggleTheme}>
+                {theme === "light" ? (
+                  <MdDarkMode className="h-5 w-5  text-slate-800 dark:text-gray-100 mr-4 sm:mr-8" />
+                ) : (
+                  <MdLightMode className="h-5 w-5 text-slate-800 dark:text-gray-100 mr-4 sm:mr-8" />
+                )}
+              </button>
+              <div className="flex flex-row items-center justify-center rounded-lg bg-gradient-to-r from-secondary-light to-secondary-dark p-2">
+                <span className="text-[12px] lg:text-[14px] text-white  font-secondary">
+                  Administrador
+                </span>
+              </div>
+              <button
+                className="flex flex-row justify-between items-center p-2 ml-3"
+                onClick={handleToggleLogoutModal}
+              >
+                <span className="text-[12px] lx:text-sm normal-case text-secondary-dark dark:text-secondary-light">
+                  Sair
+                </span>
+                <MdLogout className="w-5 h-5 ml-1 text-secondary-dark dark:text-secondary-light" />
+              </button>
+            </div>
+          </header>
+          <div className="mt-[96px]">{children}</div>
         </div>
-      )}
+      </div>
       <Modal
         isOpen={isLogoutModalOpen}
         style={
