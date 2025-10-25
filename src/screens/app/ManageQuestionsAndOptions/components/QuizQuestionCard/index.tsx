@@ -70,7 +70,7 @@ export function QuizQuestionCard({
           </span>
           {question.options.map((option) => (
             <div
-              className="w-full flex flex-row items-center mb-2"
+              className="w-full flex flex-row items-center mb-2 ml-4"
               key={option.id}
             >
               <li className="text-[11px] md:text-[12px] text-gray-800 dark:text-gray-200  list-disc">
