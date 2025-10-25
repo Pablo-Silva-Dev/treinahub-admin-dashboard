@@ -44,7 +44,6 @@ import {
 import Modal from "react-modal";
 import { Link, useNavigate } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
-import { PlanStorageProgressCard } from "./ManageCompany/components/PlanStorageProgressCard";
 interface DashboardLayoutProps {
   children: ReactNode;
 }
@@ -174,7 +173,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   }, [user.email, usersRepository]);
 
   const handleSignOut = async () => {
-    await unAuthenticateUser()
+    await unAuthenticateUser();
     signOut();
     navigate("/");
   };
@@ -249,14 +248,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 </AccordionBody>
               </Accordion>
             ))}
-            {company && (
-              <div className="ml-6 mt-3">
-                <PlanStorageProgressCard
-                  consumedStorage={company.used_storage}
-                  plan={company.current_plan}
-                />
-              </div>
-            )}
           </nav>
           <div className="flex flex-1 flex-col justify-between pb-0 bg-gray-100 dark:bg-slate-800 h-screen w-full overflow-y-auto">
             <header
@@ -418,14 +409,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               </AccordionBody>
             </Accordion>
           ))}
-          {company && (
-            <div className="ml-6 mt-3">
-              <PlanStorageProgressCard
-                consumedStorage={company.used_storage}
-                plan={company.current_plan}
-              />
-            </div>
-          )}
         </nav>
       </Modal>
     </section>
