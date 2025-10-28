@@ -55,13 +55,23 @@ api.interceptors.response.use(
         "Houve um erro ao tentar realizar sua solicitação. Por favor tente novamente dentro de 1 minuto."
       );
     }
-    if (error.response && import.meta.env.DEV) {
-      console.log("[RESPONSE ERROR] - ", error.response.data);
-      return Promise.reject(error.response.data);
+    if (error.response) {
+      if (import.meta.env.DEV) {
+        console.log("[RESPONSE ERROR] - ", error.response.data);
+        return Promise.reject(error.response.data);
+      }
+      const safeError = {
+        STATUS: error.response?.status ?? 500,
+        MESSAGE: "Ocorreu um erro ao processar sua solicitação.",
+        DATA: null,
+      };
+      return Promise.reject(safeError);
     }
-    if (error.request && import.meta.env.DEV) {
-      console.log("[RESPONSE ERROR] - ", error.request.data);
-      return Promise.reject(error.request.data);
+    if (error.request) {
+      if (import.meta.env.DEV) {
+        console.log("[REQUEST ERROR] - ", error.request.data);
+        return Promise.reject(error.request.data);
+      }
     }
   }
 );
